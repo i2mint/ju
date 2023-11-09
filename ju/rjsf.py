@@ -217,8 +217,6 @@ def print_schema(func_key='olab.objects.dpp.accuracy', store=form_specs):
 def wrap_schema_in_opus_spec(schema: dict):
     return {'rjsf': {'schema': schema}}
 
-    return {'rjsf': {'schema': schema}}
-
 
 # -------------------------------------------------------------------------------------
 # utils for routing

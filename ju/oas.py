@@ -34,6 +34,41 @@ dflt_type_mapping = tuple(
 
 @cached_keys
 class Routes(KvReader):
+    """
+    Represents a collection of routes in an OpenAPI specification.
+
+    Each instance of this class contains a list of `Route` objects, which can be accessed and manipulated as needed.
+
+    >>> from yaml import safe_load
+    >>> spec_yaml = '''
+    ... openapi: 3.0.3
+    ... paths:
+    ...   /items:
+    ...     get:
+    ...       summary: List items
+    ...       responses:
+    ...         '200':
+    ...           description: An array of items
+    ...     post:
+    ...       summary: Create item
+    ...       responses:
+    ...         '201':
+    ...           description: Item created
+    ... '''
+    >>> spec = safe_load(spec_yaml)
+    >>> routes = Routes(spec)
+    >>> len(routes)
+    2
+    >>> list(routes)
+    [('get', '/items'), ('post', '/items')]
+    >>> r = routes['get', '/items']
+    >>> r
+    Route(method='get', endpoint='/items')
+    >>> r.method_data
+    {'summary': 'List items', 'responses': {'200': {'description': 'An array of items'}}}
+
+    """
+
     def __init__(self, spec: dict, *, type_mapping: dict = dflt_type_mapping) -> None:
         self.spec = spec
         self._mk_route = partial(Route, spec=spec, type_mapping=type_mapping)
@@ -61,6 +96,44 @@ class Routes(KvReader):
 
 @dataclass
 class Route:
+    """
+    Represents a route in an OpenAPI specification.
+
+    Each route has a method (e.g., 'get', 'post'), an endpoint (e.g., '/items'), and a spec, which is a dictionary
+    containing the details of the route as specified in the OpenAPI document.
+
+    The `type_mapping` attribute is a dictionary that maps OpenAPI types to corresponding Python types.
+
+    >>> from yaml import safe_load
+    >>> spec_yaml = '''
+    ... openapi: 3.0.3
+    ... paths:
+    ...   /items:
+    ...     get:
+    ...       summary: List items
+    ...       parameters:
+    ...         - in: query
+    ...           name: type
+    ...           schema:
+    ...             type: string
+    ...           required: true
+    ...           description: Type of items to list
+    ...       responses:
+    ...         '200':
+    ...           description: An array of items
+    ... '''
+    >>> spec = safe_load(spec_yaml)
+    >>> route_get = Route('get', '/items', spec)
+    >>> route_get.method
+    'get'
+    >>> route_get.endpoint
+    '/items'
+    >>> route_get.method_data['summary']
+    'List items'
+    >>> route_get.params
+    [{'in': 'query', 'name': 'type', 'schema': {'type': 'string'}, 'required': True, 'description': 'Type of items to list'}]
+    """
+
     method: str
     endpoint: str
     spec: dict = field(repr=False)
