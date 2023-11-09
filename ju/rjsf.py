@@ -230,7 +230,7 @@ from functools import partial
 def display_dag_of_code(func, *args, **kwargs):
     from meshed import code_to_dag
 
-    return code_to_dag(func).dot_digraph()
+    return code_to_dag(func).dot_digraph(*args, **kwargs)
 
 
 def apply(func, obj):
