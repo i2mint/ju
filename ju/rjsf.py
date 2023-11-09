@@ -225,10 +225,11 @@ def wrap_schema_in_opus_spec(schema: dict):
 
 from typing import Mapping, Callable
 from functools import partial
-from meshed import code_to_dag
 
 
 def display_dag_of_code(func, *args, **kwargs):
+    from meshed import code_to_dag
+
     return code_to_dag(func).dot_digraph()
 
 
@@ -310,7 +311,9 @@ type_feature_switch = FeatureSwitch(
 
 
 def function_to_json_schema(
-    func: Callable, *, type_feature_switch=type_feature_switch,
+    func: Callable,
+    *,
+    type_feature_switch=type_feature_switch,
 ):
     # Fetch function metadata
     sig = inspect.signature(func)
@@ -423,6 +426,7 @@ test_schema_gen(func_to_schema_to_test)
 
 
 import inspect
+
 
 def _static_function_to_json_schema(func: Callable):
     """A static (hardcoded) version of function_to_json_schema.
