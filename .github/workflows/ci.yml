@@ -33,7 +33,7 @@ jobs:
         uses: i2mint/isee/actions/pylint-validation@master
         with:
           root-dir: ${{ env.PROJECT_NAME }}
-          enable: C0114,E0401
+          enable: C0114
 
       - name: Pytest Validation
         uses: i2mint/isee/actions/pytest-validation@master
