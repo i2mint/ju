@@ -14,7 +14,7 @@ def get_routes(d: Dict[str, Any], include_methods=tuple(http_methods)) -> Iterab
     """
     if isinstance(include_methods, str):
         include_methods = {include_methods}
-    for endpoint in (paths := d.get('paths', {})):
+    for endpoint in (paths := d.get('paths', {})) :
         for method in paths[endpoint]:
             if method in include_methods:
                 yield method, endpoint
@@ -107,11 +107,7 @@ class Route:
             schema_props = content['schema'].get('properties', {})
             for name, details in schema_props.items():
                 p.append(
-                    {
-                        'in': 'requestBody',
-                        'name': name,
-                        'schema': details,
-                    }
+                    {'in': 'requestBody', 'name': name, 'schema': details,}
                 )
 
         return p
