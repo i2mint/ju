@@ -152,11 +152,7 @@ def _func_to_rjsf_schemas(func):
         'properties': {},
         'required': [],
     }
-    ui_schema = {
-        'ui:submitButtonOptions': {
-            'submitText': 'Run',
-        }
-    }
+    ui_schema = {'ui:submitButtonOptions': {'submitText': 'Run',}}
 
     if doc := inspect.getdoc(func):
         schema['description'] = doc
@@ -309,9 +305,7 @@ type_feature_switch = FeatureSwitch(
 
 
 def function_to_json_schema(
-    func: Callable,
-    *,
-    type_feature_switch=type_feature_switch,
+    func: Callable, *, type_feature_switch=type_feature_switch,
 ):
     # Fetch function metadata
     sig = inspect.signature(func)
