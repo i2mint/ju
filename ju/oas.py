@@ -168,11 +168,7 @@ class Route:
         (it should usually just be one or the other, not both).
         We're calling this 'params' because that's what FastAPI calls it.
         """
-        schema = {
-            'type': 'object',
-            'properties': {},
-            'required': []
-        }
+        schema = {'type': 'object', 'properties': {}, 'required': []}
 
         # Process query and path parameters
         for param in self.method_data.get('parameters', []):

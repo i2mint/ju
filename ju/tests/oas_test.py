@@ -85,7 +85,7 @@ def test_routes(openapi_spec):
             'type': {'type': 'string'},
             'limit': {'type': 'integer', 'default': 10},
         },
-        'required': ['type']
+        'required': ['type'],
     }
 
     post_route = routes['post', '/items']
@@ -133,5 +133,5 @@ def test_routes(openapi_spec):
             'name': {'type': 'string'},
             'age': {'type': 'integer', 'default': 42},
         },
-        'required': []
+        'required': [],
     }
