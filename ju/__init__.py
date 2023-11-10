@@ -1,3 +1,3 @@
 """JSON schema Utils"""
 
-from ju.oas import Route
+from ju.oas import Route, Routes
