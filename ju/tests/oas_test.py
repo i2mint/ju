@@ -1,4 +1,4 @@
-"""Test the util module."""
+"""Test the oas module."""
 
 import yaml
 import pytest
@@ -79,22 +79,14 @@ def test_routes(openapi_spec):
         }
     }
 
-    assert get_route.params == [
-        {
-            'in': 'query',
-            'name': 'type',
-            'schema': {'type': 'string'},
-            'required': True,
-            'description': 'Type of items to list',
+    assert get_route.params == {
+        'type': 'object',
+        'properties': {
+            'type': {'type': 'string'},
+            'limit': {'type': 'integer', 'default': 10},
         },
-        {
-            'in': 'query',
-            'name': 'limit',
-            'schema': {'type': 'integer', 'default': 10},
-            'required': False,
-            'description': 'Maximum number of items to return',
-        },
-    ]
+        'required': ['type']
+    }
 
     post_route = routes['post', '/items']
 
@@ -135,11 +127,11 @@ def test_routes(openapi_spec):
         }
     }
 
-    assert post_route.params == [
-        {'in': 'requestBody', 'name': 'name', 'schema': {'type': 'string'}},
-        {
-            'in': 'requestBody',
-            'name': 'age',
-            'schema': {'type': 'integer', 'default': 42},
+    assert post_route.params == {
+        'type': 'object',
+        'properties': {
+            'name': {'type': 'string'},
+            'age': {'type': 'integer', 'default': 42},
         },
-    ]
+        'required': []
+    }

@@ -131,7 +131,7 @@ class Route:
     >>> route_get.method_data['summary']
     'List items'
     >>> route_get.params
-    [{'in': 'query', 'name': 'type', 'schema': {'type': 'string'}, 'required': True, 'description': 'Type of items to list'}]
+    {'type': 'object', 'properties': {'type': {'type': 'string'}}, 'required': ['type']}
     """
 
     method: str
@@ -168,19 +168,31 @@ class Route:
         (it should usually just be one or the other, not both).
         We're calling this 'params' because that's what FastAPI calls it.
         """
-        # Start with the parameters defined in the 'parameters' section
-        p = self.method_data.get('parameters', [])
+        schema = {
+            'type': 'object',
+            'properties': {},
+            'required': []
+        }
 
-        # Check if requestBody is defined and has content with a JSON content type
+        # Process query and path parameters
+        for param in self.method_data.get('parameters', []):
+            # Add each parameter to the properties
+            schema['properties'][param['name']] = param.get('schema', {})
+
+            # Mark as required if specified
+            if param.get('required', False):
+                schema['required'].append(param['name'])
+
+        # Process requestBody
         request_body = self.method_data.get('requestBody', {})
         content = request_body.get('content', {}).get('application/json', {})
-
-        # If there's a schema, we extract its properties and merge with the parameters
         if 'schema' in content:
-            schema_props = content['schema'].get('properties', {})
-            for name, details in schema_props.items():
-                p.append(
-                    {'in': 'requestBody', 'name': name, 'schema': details,}
-                )
+            # Merge the requestBody schema with the existing properties
+            body_schema = content['schema']
+            schema['properties'].update(body_schema.get('properties', {}))
 
-        return p
+            # Add required properties from requestBody
+            if 'required' in body_schema:
+                schema['required'].extend(body_schema['required'])
+
+        return schema
