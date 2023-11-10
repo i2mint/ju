@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ju.oas &mdash; ju 0.1.0 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>ju.oas &mdash; ju 0.1.1 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -211,7 +211,7 @@
 <span class="sd">    &gt;&gt;&gt; route_get.method_data[&#39;summary&#39;]</span>
 <span class="sd">    &#39;List items&#39;</span>
 <span class="sd">    &gt;&gt;&gt; route_get.params</span>
-<span class="sd">    [{&#39;in&#39;: &#39;query&#39;, &#39;name&#39;: &#39;type&#39;, &#39;schema&#39;: {&#39;type&#39;: &#39;string&#39;}, &#39;required&#39;: True, &#39;description&#39;: &#39;Type of items to list&#39;}]</span>
+<span class="sd">    {&#39;type&#39;: &#39;object&#39;, &#39;properties&#39;: {&#39;type&#39;: {&#39;type&#39;: &#39;string&#39;}}, &#39;required&#39;: [&#39;type&#39;]}</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">method</span><span class="p">:</span> <span class="nb">str</span>
@@ -248,22 +248,34 @@
 <span class="sd">        (it should usually just be one or the other, not both).</span>
 <span class="sd">        We&#39;re calling this &#39;params&#39; because that&#39;s what FastAPI calls it.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># Start with the parameters defined in the &#39;parameters&#39; section</span>
-        <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parameters&#39;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="n">schema</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{},</span>
+            <span class="s1">&#39;required&#39;</span><span class="p">:</span> <span class="p">[]</span>
+        <span class="p">}</span>
 
-        <span class="c1"># Check if requestBody is defined and has content with a JSON content type</span>
+        <span class="c1"># Process query and path parameters</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parameters&#39;</span><span class="p">,</span> <span class="p">[]):</span>
+            <span class="c1"># Add each parameter to the properties</span>
+            <span class="n">schema</span><span class="p">[</span><span class="s1">&#39;properties&#39;</span><span class="p">][</span><span class="n">param</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;schema&#39;</span><span class="p">,</span> <span class="p">{})</span>
+
+            <span class="c1"># Mark as required if specified</span>
+            <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;required&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+                <span class="n">schema</span><span class="p">[</span><span class="s1">&#39;required&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+
+        <span class="c1"># Process requestBody</span>
         <span class="n">request_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;requestBody&#39;</span><span class="p">,</span> <span class="p">{})</span>
         <span class="n">content</span> <span class="o">=</span> <span class="n">request_body</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;application/json&#39;</span><span class="p">,</span> <span class="p">{})</span>
-
-        <span class="c1"># If there&#39;s a schema, we extract its properties and merge with the parameters</span>
         <span class="k">if</span> <span class="s1">&#39;schema&#39;</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
-            <span class="n">schema_props</span> <span class="o">=</span> <span class="n">content</span><span class="p">[</span><span class="s1">&#39;schema&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;properties&#39;</span><span class="p">,</span> <span class="p">{})</span>
-            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">details</span> <span class="ow">in</span> <span class="n">schema_props</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="n">p</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-                    <span class="p">{</span><span class="s1">&#39;in&#39;</span><span class="p">:</span> <span class="s1">&#39;requestBody&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s1">&#39;schema&#39;</span><span class="p">:</span> <span class="n">details</span><span class="p">,}</span>
-                <span class="p">)</span>
+            <span class="c1"># Merge the requestBody schema with the existing properties</span>
+            <span class="n">body_schema</span> <span class="o">=</span> <span class="n">content</span><span class="p">[</span><span class="s1">&#39;schema&#39;</span><span class="p">]</span>
+            <span class="n">schema</span><span class="p">[</span><span class="s1">&#39;properties&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">body_schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;properties&#39;</span><span class="p">,</span> <span class="p">{}))</span>
 
-        <span class="k">return</span> <span class="n">p</span></div>
+            <span class="c1"># Add required properties from requestBody</span>
+            <span class="k">if</span> <span class="s1">&#39;required&#39;</span> <span class="ow">in</span> <span class="n">body_schema</span><span class="p">:</span>
+                <span class="n">schema</span><span class="p">[</span><span class="s1">&#39;required&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">body_schema</span><span class="p">[</span><span class="s1">&#39;required&#39;</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">schema</span></div>
 </pre></div>
 
            </div>

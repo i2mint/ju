@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ju.oas &mdash; ju 0.1.0 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>ju.oas &mdash; ju 0.1.1 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -117,7 +117,7 @@ containing the details of the route as specified in the OpenAPI document.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">route_get</span><span class="o">.</span><span class="n">method_data</span><span class="p">[</span><span class="s1">&#39;summary&#39;</span><span class="p">]</span>
 <span class="go">&#39;List items&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">route_get</span><span class="o">.</span><span class="n">params</span>
-<span class="go">[{&#39;in&#39;: &#39;query&#39;, &#39;name&#39;: &#39;type&#39;, &#39;schema&#39;: {&#39;type&#39;: &#39;string&#39;}, &#39;required&#39;: True, &#39;description&#39;: &#39;Type of items to list&#39;}]</span>
+<span class="go">{&#39;type&#39;: &#39;object&#39;, &#39;properties&#39;: {&#39;type&#39;: {&#39;type&#39;: &#39;string&#39;}}, &#39;required&#39;: [&#39;type&#39;]}</span>
 </pre></div>
 </div>
 <dl class="py method">
@@ -174,7 +174,7 @@ We’re calling this ‘params’ because that’s what FastAPI calls it.</p>
 
 <dl class="py function">
 <dt id="ju.oas.get_routes">
-<code class="sig-prename descclassname">ju.oas.</code><code class="sig-name descname">get_routes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">d</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">include_methods</span><span class="o">=</span><span class="default_value">('get', 'head', 'put', 'options', 'post', 'patch', 'delete')</span></em><span class="sig-paren">)</span> &#x2192; Iterable<span class="p">[</span>str<span class="p">]</span><a class="reference internal" href="../../_modules/ju/oas.html#get_routes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ju.oas.get_routes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">ju.oas.</code><code class="sig-name descname">get_routes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">d</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">include_methods</span><span class="o">=</span><span class="default_value">('patch', 'delete', 'head', 'put', 'options', 'get', 'post')</span></em><span class="sig-paren">)</span> &#x2192; Iterable<span class="p">[</span>str<span class="p">]</span><a class="reference internal" href="../../_modules/ju/oas.html#get_routes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ju.oas.get_routes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes OpenAPI specification dict ‘d’ and returns the key-paths to all the endpoints.</p>
 </dd></dl>
 
