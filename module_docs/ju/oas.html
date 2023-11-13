@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ju.oas &mdash; ju 0.1.2 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <title>ju.oas &mdash; ju 0.1.3 documentation</title><link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -174,7 +174,7 @@ We’re calling this ‘params’ because that’s what FastAPI calls it.</p>
 
 <dl class="py function">
 <dt id="ju.oas.get_routes">
-<code class="sig-prename descclassname">ju.oas.</code><code class="sig-name descname">get_routes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">d</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">include_methods</span><span class="o">=</span><span class="default_value">('options', 'put', 'get', 'delete', 'patch', 'head', 'post')</span></em><span class="sig-paren">)</span> &#x2192; Iterable<span class="p">[</span>str<span class="p">]</span><a class="reference internal" href="../../_modules/ju/oas.html#get_routes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ju.oas.get_routes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">ju.oas.</code><code class="sig-name descname">get_routes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">d</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">include_methods</span><span class="o">=</span><span class="default_value">('delete', 'get', 'post', 'put', 'head', 'options', 'patch')</span></em><span class="sig-paren">)</span> &#x2192; Iterable<span class="p">[</span>str<span class="p">]</span><a class="reference internal" href="../../_modules/ju/oas.html#get_routes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ju.oas.get_routes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes OpenAPI specification dict ‘d’ and returns the key-paths to all the endpoints.</p>
 </dd></dl>
 
