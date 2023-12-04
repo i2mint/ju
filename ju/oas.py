@@ -2,10 +2,24 @@
 
 from typing import Any, Dict, Iterable, Iterator
 from functools import cached_property, partial
-from dol import KvReader, cached_keys
+from dol import KvReader, cached_keys, path_get as _path_get
 from dataclasses import dataclass, field
 
 http_methods = {'get', 'post', 'put', 'delete', 'patch', 'options', 'head'}
+
+from dol import path_get
+from functools import partial
+
+
+# Make a function that gets the value of a key in a dict, given a path to that key
+# but returning an empty dict if any element of the path doesn't exist
+def return_empty_dict_on_error(e):
+    return dict()
+
+
+path_get = partial(
+    _path_get, get_value=_path_get.get_item, on_error=return_empty_dict_on_error
+)
 
 
 def get_routes(d: Dict[str, Any], include_methods=tuple(http_methods)) -> Iterable[str]:
@@ -14,7 +28,7 @@ def get_routes(d: Dict[str, Any], include_methods=tuple(http_methods)) -> Iterab
     """
     if isinstance(include_methods, str):
         include_methods = {include_methods}
-    for endpoint in (paths := d.get('paths', {})) :
+    for endpoint in (paths := d.get('paths', {})):
         for method in paths[endpoint]:
             if method in include_methods:
                 yield method, endpoint
@@ -88,10 +102,26 @@ class Routes(KvReader):
         return get_routes(self.spec)
 
     def __getitem__(self, k):
-        return self._mk_route(*k)
+        return self._mk_route(*k, spec=self.spec)
 
     def __repr__(self) -> str:
         return f"{type(self).__name__}('{self._title}')"
+
+
+class ArrayOf(dict):
+    """A class that is simply meant to mark the fact that some properties dict really
+    represents an array of objects, and not just a single object.
+    """
+
+
+def properties_of_schema(schema: dict) -> dict:
+    """Returns the properties of the given schema, encapsulating in ArrayOf to indicate
+    that the schema is for an array of objects, and not just a single object."""
+    if 'items' in schema:
+        # the schema is for an array
+        return ArrayOf(path_get(schema, 'items.properties'))
+    else:
+        return path_get(schema, 'properties')
 
 
 @dataclass
@@ -149,7 +179,7 @@ class Route:
         method_data = self.spec.get('paths', {}).get(endpoint, {}).get(method, None)
         if method_data is None:
             raise KeyError(f"Endpoint '{endpoint}' has no method '{method}'")
-        return method_data
+        return resolve_refs(self.spec, method_data)
 
     @cached_property
     def input_specs(self):
@@ -178,17 +208,61 @@ class Route:
             # Mark as required if specified
             if param.get('required', False):
                 schema['required'].append(param['name'])
-
+        # list(t['content']['application/json']['schema']['items']['properties'])
         # Process requestBody
         request_body = self.method_data.get('requestBody', {})
-        content = request_body.get('content', {}).get('application/json', {})
+        content = path_get(request_body, 'content.application/json')
         if 'schema' in content:
             # Merge the requestBody schema with the existing properties
             body_schema = content['schema']
-            schema['properties'].update(body_schema.get('properties', {}))
-
+            schema['properties'].update(properties_of_schema(body_schema))
             # Add required properties from requestBody
             if 'required' in body_schema:
                 schema['required'].extend(body_schema['required'])
 
         return schema
+
+    @cached_property
+    def output_properties(self, status_code: int = 200):
+        """Returns the schema for the response with the given status code."""
+        schema = path_get(
+            self.output_specs, f"{status_code}.content.application/json.schema"
+        )
+        return properties_of_schema(schema)
+    
+
+
+# def resolve_ref(oas, ref):
+#     from glom import glom
+
+#     if ref.startswith('#/'):
+#         ref = ref[2:]
+#     ref_path = '.'.join(ref.split('/'))
+#     return glom(oas, ref_path)
+
+
+def resolve_refs(open_api_spec: dict, d: dict) -> dict:
+    """
+    Recursively resolves all references in 'd' using 'open_api_spec'.
+
+    :param open_api_spec: The complete OpenAPI specification as a dictionary.
+    :param d: The dictionary in which references need to be resolved.
+    :return: The dictionary with all references resolved.
+    """
+    if isinstance(d, dict):
+        if '$ref' in d:
+            # Extract the path from the reference and resolve it
+            ref_path = d['$ref'].split('/')[1:]
+            ref_value = open_api_spec
+            for key in ref_path:
+                ref_value = ref_value.get(key, {})
+            return resolve_refs(open_api_spec, ref_value)
+        else:
+            # Recursively resolve references in each key-value pair
+            return {k: resolve_refs(open_api_spec, v) for k, v in d.items()}
+    elif isinstance(d, list):
+        # Recursively resolve references in each item of the list
+        return [resolve_refs(open_api_spec, item) for item in d]
+    else:
+        # If 'd' is neither a dict nor a list, return it as is
+        return d
