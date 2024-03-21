@@ -3,6 +3,7 @@
 from functools import partial
 from typing import Callable
 import inspect
+from inspect import Parameter
 
 
 def func_to_form_spec(func: Callable):
@@ -76,7 +77,80 @@ def func_to_form_spec(func: Callable):
     }
 
 
-def _func_to_rjsf_schemas(func):
+def is_type(param: Parameter, type_: type):
+    return param.annotation is type_ or isinstance(param.default, type_)
+
+
+DFLT_TYPE_MAPPING = ((bool, 'boolean'), (float, 'number'), (int, 'integer'))
+
+
+def parametrized_param_to_type(
+    param: Parameter,
+    *,
+    type_mapping=DFLT_TYPE_MAPPING,
+    default='string',
+):
+    for python_type, json_type in type_mapping:
+        if is_type(param, python_type):
+            return json_type
+    return default
+
+
+_dflt_param_to_type = partial(
+    parametrized_param_to_type, type_mapping=DFLT_TYPE_MAPPING
+)
+
+
+# TODO: The loop body could be factored out
+def get_properties(parameters, *, param_to_prop_type):
+    """
+    Returns the properties dict for the JSON schema.
+
+    >>> def foo(
+    ...     a_bool: bool,
+    ...     a_float=3.14,
+    ...     an_int=2,
+    ...     a_str: str = 'hello',
+    ...     something_else=None
+    ... ):
+    ...     '''A Foo function'''
+    >>>
+    >>> parameters = inspect.signature(foo).parameters
+    >>> assert (
+    ...     get_properties(parameters, param_to_prop_type=_dflt_param_to_type)
+    ...     == {
+    ...         'a_bool': {'type': 'boolean'},
+    ...         'a_float': {'type': 'number', 'default': 3.14},
+    ...         'an_int': {'type': 'integer', 'default': 2},
+    ...         'a_str': {'type': 'string', 'default': 'hello'},
+    ...         'something_else': {'type': 'string', 'default': None}
+    ...     }
+    ... )
+
+    """
+    # Build the properties dict
+    properties = {}
+    for i, item in enumerate(parameters.items()):
+        name, param = item
+        field = {}
+        field['type'] = param_to_prop_type(param)
+
+        # If there's a default value, add it
+        if param.default is not inspect.Parameter.empty:
+            field['default'] = param.default
+
+        # Add the field to the schema
+        properties[name] = field
+
+    return properties
+
+
+def get_required(properties: dict):
+    return [name for name in properties if 'default' not in properties[name]]
+
+
+# TODO: This all should really use meshed instead, to be easily composable.
+def _func_to_rjsf_schemas(func, *, param_to_prop_type: Callable = _dflt_param_to_type):
     """
     Returns the JSON schema and the UI schema for a function.
 
@@ -112,52 +186,35 @@ def _func_to_rjsf_schemas(func):
     ... }
     """
 
-    def is_type(param, type_):
-        return param.annotation is type_ or isinstance(param.default, type_)
-
-    def treat_params():
-        # Build the schema for each parameter
-        for i, item in enumerate(parameters.items()):
-            name, param = item
-            if is_type(param, bool):
-                field = {'type': 'boolean'}
-            elif is_type(param, float):
-                field = {'type': 'number'}
-            elif is_type(param, int):
-                field = {'type': 'integer'}
-            else:
-                field = {'type': 'string'}
-
-                # If there's a default value, add it to the schema
-            if param.default is not inspect.Parameter.empty:
-                field['default'] = param.default
-            else:
-                schema['required'].append(name)
-
-                # Add the field to the schema
-            schema['properties'][name] = field
-
-            # Add autofocus to the first field
-            if i == 0:
-                ui_schema[name] = {'ui:autofocus': True}
-
     # Fetch function metadata
     sig = inspect.signature(func)
     parameters = sig.parameters
 
-    # Start building the JSON schema and the UI schema
+    # defaults
     schema = {
         'title': func.__name__,
         'type': 'object',
         'properties': {},
         'required': [],
     }
-    ui_schema = {'ui:submitButtonOptions': {'submitText': 'Run',}}
+    ui_schema = {
+        'ui:submitButtonOptions': {
+            'submitText': 'Run',
+        }
+    }
+
+    schema['properties'] = get_properties(
+        parameters, param_to_prop_type=param_to_prop_type
+    )
+    schema['required'] = get_required(schema['properties'])
 
     if doc := inspect.getdoc(func):
         schema['description'] = doc
 
-    treat_params()
+    # Add autofocus to the first field
+    if len(parameters) > 0:
+        first_param_name = next(iter(parameters))
+        ui_schema[first_param_name] = {'ui:autofocus': True}
 
     # Return the schemas
     return schema, ui_schema
@@ -305,7 +362,9 @@ type_feature_switch = FeatureSwitch(
 
 
 def function_to_json_schema(
-    func: Callable, *, type_feature_switch=type_feature_switch,
+    func: Callable,
+    *,
+    type_feature_switch=type_feature_switch,
 ):
     # Fetch function metadata
     sig = inspect.signature(func)
