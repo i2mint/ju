@@ -301,7 +301,11 @@
 <div class="viewcode-block" id="json_schema_to_signature">
 <a class="viewcode-back" href="../../module_docs/ju/json_schema.html#ju.json_schema.json_schema_to_signature">[docs]</a>
 <span class="k">def</span> <span class="nf">json_schema_to_signature</span><span class="p">(</span>
-    <span class="n">json_schema</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">type_mapper</span><span class="p">:</span> <span class="n">Mapper</span> <span class="o">=</span> <span class="n">DFLT_JSON_PY_TYPE_PAIRS</span>
+    <span class="n">json_schema</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> 
+    <span class="o">*</span><span class="p">,</span> 
+    <span class="n">type_mapper</span><span class="p">:</span> <span class="n">Mapper</span> <span class="o">=</span> <span class="n">DFLT_JSON_PY_TYPE_PAIRS</span><span class="p">,</span>
+    <span class="n">default_default</span><span class="o">=</span><span class="n">Parameter</span><span class="o">.</span><span class="n">empty</span><span class="p">,</span>
+    <span class="n">default_annotation</span><span class="o">=</span><span class="n">Parameter</span><span class="o">.</span><span class="n">empty</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Transforms a JSON schema to a Python function signature.</span>
@@ -328,7 +332,7 @@
 
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">type_mapper</span> <span class="o">=</span> <span class="n">ensure_callable_mapper</span><span class="p">(</span><span class="n">type_mapper</span><span class="p">)</span>
+    <span class="n">type_mapper</span> <span class="o">=</span> <span class="n">ensure_callable_mapper</span><span class="p">(</span><span class="n">type_mapper</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">default_annotation</span><span class="p">)</span>
     <span class="n">properties</span> <span class="o">=</span> <span class="n">json_schema</span><span class="p">[</span><span class="s1">&#39;properties&#39;</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">_params</span><span class="p">():</span>
@@ -342,7 +346,7 @@
                     <span class="n">py_type</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">json_types</span><span class="p">)]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">py_type</span> <span class="o">=</span> <span class="n">Parameter</span><span class="o">.</span><span class="n">empty</span>
-            <span class="n">default</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="n">Parameter</span><span class="o">.</span><span class="n">empty</span><span class="p">)</span>
+            <span class="n">default</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="n">default_default</span><span class="p">)</span>
             <span class="k">yield</span> <span class="n">Parameter</span><span class="p">(</span>
                 <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
                 <span class="n">annotation</span><span class="o">=</span><span class="n">py_type</span><span class="p">,</span>
