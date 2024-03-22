@@ -77,86 +77,7 @@ def func_to_form_spec(func: Callable):
     }
 
 
-# def is_type(param: Parameter, type_: type):
-#     return param.annotation is type_ or isinstance(param.default, type_)
-
-from typing import get_args, get_origin, Any, Union, GenericAlias, Type
-from types import GenericAlias
-
-SomeType = Union[Type, GenericAlias, Any]
-SomeType.__doc__ = "A type or a GenericAlias, but also Any, just in case"
-
-
-def is_type(param: Parameter, type_: SomeType):
-    """
-    Checks if the type of a parameter's default value or its annotation matches a
-    given type.
-
-    This function handles both regular types and subscripted generics.
-
-    Args:
-        param (Parameter): The parameter to check.
-        type_ (type): The type to check against.
-
-    Returns:
-        bool: True if the parameter's type matches the given type, False otherwise.
-
-    Doctests:
-    >>> from inspect import Parameter
-    >>> param = Parameter('p', Parameter.KEYWORD_ONLY, default=3.14)
-    >>> is_type(param, float)
-    True
-    >>> is_type(param, int)
-    False
-    >>> param = Parameter('p', Parameter.KEYWORD_ONLY, default=[1, 2, 3])
-    >>> is_type(param, list)
-    True
-    >>> from typing import List, Union
-    >>> is_type(param, List[int])
-    True
-    >>> is_type(param, List[str])
-    False
-    >>> is_type(param, Union[int, List[int]])
-    True
-    """
-    if param.annotation is type_:
-        return True
-    if isinstance(type_, type):
-        return isinstance(param.default, type_)
-    if hasattr(type_, '__origin__'):
-        origin = get_origin(type_)
-        if origin is Union:
-            args = get_args(type_)
-            return any(is_type(param, arg) for arg in args)
-        else:
-            args = get_args(type_)
-            if isinstance(param.default, origin):
-                if all(
-                    any(isinstance(element, arg) for element in param.default)
-                    for arg in args
-                ):
-                    return True
-    return False
-
-
-from ju.json_schema import DFLT_PY_JSON_TYPE_PAIRS, DFLT_JSON_TYPE
-
-
-def parametrized_param_to_type(
-    param: Parameter,
-    *,
-    type_mapping=DFLT_PY_JSON_TYPE_PAIRS,
-    default=DFLT_JSON_TYPE,
-):
-    for python_type, json_type in type_mapping:
-        if is_type(param, python_type):
-            return json_type
-    return default
-
-
-_dflt_param_to_type = partial(
-    parametrized_param_to_type, type_mapping=DFLT_PY_JSON_TYPE_PAIRS
-)
+from ju.json_schema import DFLT_PARAM_TO_TYPE
 
 
 # TODO: The loop body could be factored out
@@ -173,9 +94,10 @@ def get_properties(parameters, *, param_to_prop_type):
     ... ):
     ...     '''A Foo function'''
     >>>
+    >>> from ju.json_schema import DFLT_PARAM_TO_TYPE
     >>> parameters = inspect.signature(foo).parameters
     >>> assert (
-    ...     get_properties(parameters, param_to_prop_type=_dflt_param_to_type)
+    ...     get_properties(parameters, param_to_prop_type=DFLT_PARAM_TO_TYPE)
     ...     == {
     ...         'a_bool': {'type': 'boolean'},
     ...         'a_float': {'type': 'number', 'default': 3.14},
@@ -208,7 +130,7 @@ def get_required(properties: dict):
 
 
 # TODO: This all should really use meshed instead, to be easily composable.
-def _func_to_rjsf_schemas(func, *, param_to_prop_type: Callable = _dflt_param_to_type):
+def _func_to_rjsf_schemas(func, *, param_to_prop_type: Callable = DFLT_PARAM_TO_TYPE):
     """
     Returns the JSON schema and the UI schema for a function.
 

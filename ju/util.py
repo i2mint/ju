@@ -12,9 +12,16 @@ from typing import (
     Tuple,
     runtime_checkable,
     Protocol,
+    get_args,
+    get_origin,
+    Any,
+    Type,
 )
 from collections import defaultdict
 from dataclasses import dataclass
+from types import GenericAlias
+from inspect import Parameter
+
 from i2 import mk_sentinel
 
 try:
@@ -36,6 +43,65 @@ def is_jsonable(x):
     except (TypeError, OverflowError):
         return False
 
+
+SomeType = Union[Type, GenericAlias, Any]
+SomeType.__doc__ = "A type or a GenericAlias, but also Any, just in case"
+
+
+def is_type(param: Parameter, type_: SomeType):
+    """
+    Checks if the type of a parameter's default value or its annotation matches a
+    given type.
+
+    This function handles both regular types and subscripted generics.
+
+    Args:
+        param (Parameter): The parameter to check.
+        type_ (type): The type to check against.
+
+    Returns:
+        bool: True if the parameter's type matches the given type, False otherwise.
+
+    Doctests:
+    >>> from inspect import Parameter
+    >>> param = Parameter('p', Parameter.KEYWORD_ONLY, default=3.14)
+    >>> is_type(param, float)
+    True
+    >>> is_type(param, int)
+    False
+    >>> param = Parameter('p', Parameter.KEYWORD_ONLY, default=[1, 2, 3])
+    >>> is_type(param, list)
+    True
+    >>> from typing import List, Union
+    >>> is_type(param, List[int])
+    True
+    >>> is_type(param, List[str])
+    False
+    >>> is_type(param, Union[int, List[int]])
+    True
+    """
+    if param.annotation is type_:
+        return True
+    if isinstance(type_, type):
+        return isinstance(param.default, type_)
+    if hasattr(type_, '__origin__'):
+        origin = get_origin(type_)
+        if origin is Union:
+            args = get_args(type_)
+            return any(is_type(param, arg) for arg in args)
+        else:
+            args = get_args(type_)
+            if isinstance(param.default, origin):
+                if all(
+                    any(isinstance(element, arg) for element in param.default)
+                    for arg in args
+                ):
+                    return True
+    return False
+
+
+# -------------------------------------------------------------------------------------
+# Mappers
 
 CallableMapper = Callable[[KT], VT]
 MappingMapper = Mapping[KT, VT]

@@ -23,9 +23,13 @@ Example usage:
 
 """
 
+from typing import Mapping, Sequence, Callable
+from inspect import Parameter
+from functools import partial
+
 from pydantic import BaseModel
 
-from typing import Mapping, Sequence, Callable
+from ju.util import is_type
 
 
 class _BasicPythonTypes(BaseModel):
@@ -73,6 +77,23 @@ DFLT_TYPE_MAPPING = DFLT_PY_JSON_TYPE_PAIRS  # less verbose alias
 
 DFLT_JSON_TYPE = 'string'  # TODO: 'string' or 'object'?
 
+
+def parametrized_param_to_type(
+    param: Parameter,
+    *,
+    type_mapping=DFLT_PY_JSON_TYPE_PAIRS,
+    default=DFLT_JSON_TYPE,
+):
+    for python_type, json_type in type_mapping:
+        if is_type(param, python_type):
+            return json_type
+    return default
+
+
+DFLT_PARAM_TO_TYPE = partial(
+    parametrized_param_to_type, type_mapping=DFLT_PY_JSON_TYPE_PAIRS
+)
+
 # -------------------------------------------------------------------------------------
 # util
 
@@ -104,7 +125,6 @@ def wrap_schema_in_opus_spec(schema: dict):
 
 from typing import Mapping, Sequence
 import inspect
-from inspect import Parameter
 from operator import attrgetter
 from i2 import Sig
 
@@ -129,6 +149,7 @@ type_feature_switch = FeatureSwitch(
 )
 
 
+# TODO: See
 def function_to_json_schema(
     func: Callable,
     *,
