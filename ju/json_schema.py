@@ -23,7 +23,7 @@ Example usage:
 
 """
 
-from typing import Mapping, Sequence, Callable
+from typing import Mapping, Sequence, Callable, Union
 from inspect import Parameter
 from functools import partial
 
@@ -126,7 +126,7 @@ def wrap_schema_in_opus_spec(schema: dict):
 from typing import Mapping, Sequence
 import inspect
 from operator import attrgetter
-from i2 import Sig
+from i2 import Sig, sort_params
 
 from ju.util import FeatureSwitch, Mapper, ensure_callable_mapper
 
@@ -243,7 +243,15 @@ def json_schema_to_signature(
 
     def _params():
         for name, field in properties.items():
-            py_type = type_mapper(field['type']) or Parameter.empty
+            if (json_type := field.get('type', None)) is not None:
+                if not isinstance(json_type, list):
+                    py_type = type_mapper(json_type)
+                else:
+                    json_types = map(type_mapper, json_type)
+                    # Make a typing.Union of the json_types
+                    py_type = Union[tuple(json_types)]
+            else:
+                py_type = Parameter.empty
             default = field.get('default', Parameter.empty)
             yield Parameter(
                 name=name,
@@ -252,7 +260,7 @@ def json_schema_to_signature(
                 kind=Parameter.POSITIONAL_OR_KEYWORD,
             )
 
-    sig = Sig(_params())
+    sig = Sig(sort_params(_params()))
     if title := json_schema.get('title'):
         sig.name = title
     sig.docs = json_schema.get('description', '')
