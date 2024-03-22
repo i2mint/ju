@@ -1,7 +1,7 @@
 """Tools for React-JSONSchema-Form (RJSF)"""
 
 from functools import partial
-from typing import Callable
+from typing import Callable, Sequence, Mapping
 import inspect
 from inspect import Parameter
 
@@ -77,18 +77,76 @@ def func_to_form_spec(func: Callable):
     }
 
 
-def is_type(param: Parameter, type_: type):
-    return param.annotation is type_ or isinstance(param.default, type_)
+# def is_type(param: Parameter, type_: type):
+#     return param.annotation is type_ or isinstance(param.default, type_)
+
+from typing import get_args, get_origin, Any, Union, GenericAlias, Type
+from types import GenericAlias
+
+SomeType = Union[Type, GenericAlias, Any]
+SomeType.__doc__ = "A type or a GenericAlias, but also Any, just in case"
 
 
-DFLT_TYPE_MAPPING = ((bool, 'boolean'), (float, 'number'), (int, 'integer'))
+def is_type(param: Parameter, type_: SomeType):
+    """
+    Checks if the type of a parameter's default value or its annotation matches a
+    given type.
+
+    This function handles both regular types and subscripted generics.
+
+    Args:
+        param (Parameter): The parameter to check.
+        type_ (type): The type to check against.
+
+    Returns:
+        bool: True if the parameter's type matches the given type, False otherwise.
+
+    Doctests:
+    >>> from inspect import Parameter
+    >>> param = Parameter('p', Parameter.KEYWORD_ONLY, default=3.14)
+    >>> is_type(param, float)
+    True
+    >>> is_type(param, int)
+    False
+    >>> param = Parameter('p', Parameter.KEYWORD_ONLY, default=[1, 2, 3])
+    >>> is_type(param, list)
+    True
+    >>> from typing import List, Union
+    >>> is_type(param, List[int])
+    True
+    >>> is_type(param, List[str])
+    False
+    >>> is_type(param, Union[int, List[int]])
+    True
+    """
+    if param.annotation is type_:
+        return True
+    if isinstance(type_, type):
+        return isinstance(param.default, type_)
+    if hasattr(type_, '__origin__'):
+        origin = get_origin(type_)
+        if origin is Union:
+            args = get_args(type_)
+            return any(is_type(param, arg) for arg in args)
+        else:
+            args = get_args(type_)
+            if isinstance(param.default, origin):
+                if all(
+                    any(isinstance(element, arg) for element in param.default)
+                    for arg in args
+                ):
+                    return True
+    return False
+
+
+from ju.json_schema import DFLT_PY_JSON_TYPE_PAIRS, DFLT_JSON_TYPE
 
 
 def parametrized_param_to_type(
     param: Parameter,
     *,
-    type_mapping=DFLT_TYPE_MAPPING,
-    default='string',
+    type_mapping=DFLT_PY_JSON_TYPE_PAIRS,
+    default=DFLT_JSON_TYPE,
 ):
     for python_type, json_type in type_mapping:
         if is_type(param, python_type):
@@ -97,7 +155,7 @@ def parametrized_param_to_type(
 
 
 _dflt_param_to_type = partial(
-    parametrized_param_to_type, type_mapping=DFLT_TYPE_MAPPING
+    parametrized_param_to_type, type_mapping=DFLT_PY_JSON_TYPE_PAIRS
 )
 
 
@@ -165,7 +223,7 @@ def _func_to_rjsf_schemas(func, *, param_to_prop_type: Callable = _dflt_param_to
     ...     something_else=None
     ... ):
     ...     '''A Foo function'''
-    >>>
+
     >>> schema, ui_schema = _func_to_rjsf_schemas(foo)
     >>> assert schema == {
     ...     'title': 'foo',
@@ -184,6 +242,7 @@ def _func_to_rjsf_schemas(func, *, param_to_prop_type: Callable = _dflt_param_to
     ...     'ui:submitButtonOptions': {'submitText': 'Run'},
     ...     'a_bool': {'ui:autofocus': True}
     ... }
+
     """
 
     # Fetch function metadata
@@ -218,304 +277,3 @@ def _func_to_rjsf_schemas(func, *, param_to_prop_type: Callable = _dflt_param_to
 
     # Return the schemas
     return schema, ui_schema
-
-
-"""
-This module provides tools to transform Python functions to React-JSONSchema-Form specifications.
-
-The main function in this module is `transform_function_to_schema`, which takes a Python function as input and returns a JSON schema that can be used to generate a form in a React application.
-
-The module also provides some helper functions to transform specific types of Python objects to JSON schema types, such as `transform_string_to_schema` and `transform_integer_to_schema`.
-
-Example usage:
-
-    >>> def mercury(sweet: float, sour=True):
-    ...     '''Near the sun'''
-    ...     return sweet * sour
-    >>>
-    >>> assert function_to_json_schema(mercury) == {
-    ...         'title': 'mercury', 
-    ...         'type': 'object', 
-    ...         'properties': {
-    ...             'sweet': {'type': 'number'}, 
-    ...             'sour': {'type': 'string', 'default': True}}, 
-    ...          'required': ['sweet'], 
-    ...          'description': 'Near the sun'
-    ... }
-
-"""
-
-# -------------------------------------------------------------------------------------
-# util
-
-import json
-
-
-def print_dict(d):
-    print(json.dumps(d, indent=2))
-
-
-def print_schema(func_key, store):
-    print_dict(store[func_key]['rjsf']['schema'])
-    print_dict(store[func_key]['rjsf']['schema'])
-
-
-form_specs = None
-
-
-def print_schema(func_key='olab.objects.dpp.accuracy', store=form_specs):
-    print_dict(store[func_key]['rjsf']['schema'])
-
-
-def wrap_schema_in_opus_spec(schema: dict):
-    return {'rjsf': {'schema': schema}}
-
-
-# -------------------------------------------------------------------------------------
-# utils for routing
-
-from typing import Mapping, Callable
-from functools import partial
-
-
-def display_dag_of_code(func, *args, **kwargs):
-    from meshed import code_to_dag
-
-    return code_to_dag(func).dot_digraph(*args, **kwargs)
-
-
-def apply(func, obj):
-    return func(obj)
-
-
-def _switch_case(mapping, default, feature):
-    return mapping.get(feature, default)
-
-
-def switch_case(mapping, default):
-    return partial(_switch_case, mapping, default)
-
-
-def _feature_based_search(
-    feature_processor_pairs, feature_similarity, default, feature
-):
-    if isinstance(feature_processor_pairs, Mapping):
-        feature_processor_pairs = feature_processor_pairs.items()
-    feature_matches = partial(feature_similarity, feature)
-    for feature_compared_to, then_ in feature_processor_pairs:
-        if feature_matches(feature_compared_to):
-            return then_
-    return default
-
-
-def feature_based_search(feature_processor_pairs, feature_similarity, default):
-    return partial(
-        _feature_based_search, feature_processor_pairs, feature_similarity, default
-    )
-
-
-def feature_switch(obj, *, featurizer, feature_to_output_mapping, default):
-    feature = apply(featurizer, obj)
-    get_output_for_feature = switch_case(feature_to_output_mapping, default)
-    output = apply(get_output_for_feature, feature)
-    return output
-
-
-def feature_similarity_search(
-    obj,
-    *,
-    featurizer,
-    feature_based_search,
-    feature_output_pairs,
-    feature_similarity,
-    similarity_base_match=lambda x, y: x == y,
-):
-    feature = apply(obj, featurizer)
-    get_output_for_feature = feature_based_search(
-        feature_output_pairs, feature_similarity, similarity_base_match
-    )
-    output = apply(get_output_for_feature, feature)
-    return output
-
-
-# -------------------------------------------------------------------------------------
-# The function_to_json_schema function
-
-import inspect
-from operator import attrgetter
-from i2 import FuncFactory
-
-FeatureSwitch = FuncFactory(feature_switch)
-
-dflt_type_mapping = {
-    int: {'type': 'integer'},
-    float: {'type': 'number'},
-    bool: {'type': 'boolean'},
-    str: {'type': 'string'},
-}
-
-type_feature_switch = FeatureSwitch(
-    featurizer=attrgetter('annotation'),
-    feature_to_output_mapping=dflt_type_mapping,
-    default={'type': 'string'},
-)
-
-
-def function_to_json_schema(
-    func: Callable,
-    *,
-    type_feature_switch=type_feature_switch,
-):
-    # Fetch function metadata
-    sig = inspect.signature(func)
-    parameters = sig.parameters
-
-    # Start building the JSON schema
-    schema = {
-        'title': func.__name__,
-        'type': 'object',
-        'properties': {},
-        'required': [],
-    }
-
-    if doc := inspect.getdoc(func):
-        schema['description'] = doc
-
-    # Build the schema for each parameter
-    for name, param in parameters.items():
-        field = type_feature_switch(param)
-
-        # If there's a default value, add it to the schema
-        if param.default is not inspect.Parameter.empty:
-            field['default'] = param.default
-        else:
-            schema['required'].append(name)
-
-        # Add the field to the schema
-        schema['properties'][name] = field
-
-    return schema
-
-
-# -------------------------------------------------------------------------------------
-# tests
-
-
-def mercury(sweet: float, sour=True):
-    return sweet * sour
-
-
-def venus():
-    """Nothing from nothing"""
-
-
-def earth(north: str, south: bool, east: int = 1, west: float = 2.0):
-    return f'{north=}, {south=}, {east=}, {west=}'
-
-
-mercury_schema = {
-    'title': 'mercury',
-    'type': 'object',
-    'properties': {
-        'sweet': {'type': 'number'},
-        'sour': {'type': 'string', 'default': True},
-    },
-    'required': ['sweet'],
-}
-
-venus_schema = {
-    'title': 'venus',
-    'type': 'object',
-    'properties': {},
-    'required': [],
-    'description': 'Nothing from nothing',
-}
-
-earth_schema = {
-    'title': 'earth',
-    'type': 'object',
-    'properties': {
-        'north': {'type': 'string'},
-        'south': {'type': 'boolean'},
-        'east': {'type': 'integer', 'default': 1},
-        'west': {'type': 'number', 'default': 2.0},
-    },
-    'required': ['north', 'south'],
-}
-
-expected = {mercury: mercury_schema, venus: venus_schema, earth: earth_schema}
-
-
-# test
-def test_schema_gen(func_to_schema=function_to_json_schema, expected=expected):
-    for func, schema in expected.items():
-        assert func_to_schema(func) == schema, (
-            f'{func=}, \n' f'{func_to_schema(func)=}, \n' f'{schema=}\n'
-        )
-
-
-feature_to_output_mapping_to_test = {
-    int: {'type': 'integer'},
-    float: {'type': 'number'},
-    bool: {'type': 'boolean'},
-    str: {'type': 'string'},
-}
-
-type_feature_switch_to_test = FeatureSwitch(
-    featurizer=attrgetter('annotation'),
-    feature_to_output_mapping=feature_to_output_mapping_to_test,
-    default={'type': 'string'},
-)
-
-func_to_schema_to_test = partial(
-    function_to_json_schema, type_feature_switch=type_feature_switch_to_test
-)
-test_schema_gen(func_to_schema_to_test)
-
-# -------------------------------------------------------------------------------------
-# old version of transform
-
-
-import inspect
-
-
-def _static_function_to_json_schema(func: Callable):
-    """A static (hardcoded) version of function_to_json_schema.
-    It's used to test the dynamic version.
-    """
-    # Fetch function metadata
-    sig = inspect.signature(func)
-    parameters = sig.parameters
-
-    # Start building the JSON schema
-    schema = {
-        'title': func.__name__,
-        'type': 'object',
-        'properties': {},
-        'required': [],
-    }
-
-    if doc := inspect.getdoc(func):
-        schema['description'] = doc
-
-    # Build the schema for each parameter
-    for name, param in parameters.items():
-        if param.annotation is int:
-            field = {'type': 'integer'}
-        elif param.annotation is float:
-            field = {'type': 'number'}
-        elif param.annotation is bool:
-            field = {'type': 'boolean'}
-        else:
-            field = {'type': 'string'}
-
-        # If there's a default value, add it to the schema
-        if param.default is not inspect.Parameter.empty:
-            field['default'] = param.default
-        else:
-            schema['required'].append(name)
-
-        # Add the field to the schema
-        schema['properties'][name] = field
-
-    return schema

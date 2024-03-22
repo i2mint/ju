@@ -118,17 +118,6 @@ class GetWithCaller:
         )
 
 
-# def ensure_mapping_mapper(mapper: Mapper, *, default=NotSpecified) -> MappingMapper:
-#     if isinstance(mapper, Mapping):
-#         return mapper
-#     elif callable(mapper):
-#         return dict(mapper).__getitem__  # not .get, because want to raise KeyError
-#     elif isinstance(mapper, Sequence):
-#         return dict(mapper)
-#     else:
-#         raise TypeError(f'Cannot convert {mapper} to a MappingMapper')
-
-
 def _handle_default(obj, default=NotSpecified):
     """
     Adds default handling to an object.
@@ -207,29 +196,6 @@ def ensure_callable_mapper(mapper: Mapper, *, default=NotSpecified) -> CallableM
         mapper = mapper.__getitem__
     assert callable(mapper), f"Cannot convert {mapper} to a CallableMapper"
     return _handle_default(mapper, default=default)
-
-
-
-# def ensure_callable_mapper(mapper: Mapper, *, default=NotSpecified) -> CallableMapper:
-#     if callable(mapper):
-#         return mapper
-#     elif isinstance(mapper, Mapping):
-#         return mapper.__getitem__
-#     elif isinstance(mapper, Sequence):
-#         return dict(mapper).get
-#     else:
-#         raise TypeError(f'Cannot convert {mapper} to a CallableMapper')
-
-
-# def ensure_pairs_mapper(mapper: Mapper, *, default=NotSpecified) -> PairsMapper:
-#     if isinstance(mapper, Sequence):
-#         return mapper
-#     elif isinstance(mapper, Mapping):
-#         return list(mapper.items())
-#     elif callable(mapper):
-#         return list(mapper())
-#     else:
-#         raise TypeError(f'Cannot convert {mapper} to a PairsMapper')
 
 
 # -------------------------------------------------------------------------------------

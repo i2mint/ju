@@ -6,7 +6,8 @@ from functools import partial
 from typing import Callable
 import inspect
 from operator import attrgetter
-from ju.rjsf import function_to_json_schema, FeatureSwitch
+from ju.json_schema import function_to_json_schema
+from ju.util import FeatureSwitch
 
 
 def mercury(sweet: float, sour=True):
@@ -18,6 +19,7 @@ def venus():
 
 
 def earth(north: str, south: bool, east: int = 1, west: float = 2.0):
+    """Earth docs"""
     return f'{north=}, {south=}, {east=}, {west=}'
 
 
@@ -40,6 +42,7 @@ venus_schema = {
 }
 
 earth_schema = {
+    'description': 'Earth docs',
     'title': 'earth',
     'type': 'object',
     'properties': {
