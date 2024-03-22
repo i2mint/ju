@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ju.util &mdash; ju 0.1.4 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=fd825880"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ju
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju.html">ju</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/json_schema.html">ju.json_schema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/oas.html">ju.oas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/rjsf.html">ju.rjsf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/tests.html">ju.tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/tests/oas_test.html">ju.tests.oas_test</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/tests/rjsf_test.html">ju.tests.rjsf_test</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/util.html">ju.util</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ju</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ju.util</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ju.util</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Ju base utils.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Mapping</span><span class="p">,</span>
+    <span class="n">Callable</span><span class="p">,</span>
+    <span class="n">Union</span><span class="p">,</span>
+    <span class="n">KT</span><span class="p">,</span>
+    <span class="n">VT</span><span class="p">,</span>
+    <span class="n">Sequence</span><span class="p">,</span>
+    <span class="n">Tuple</span><span class="p">,</span>
+    <span class="n">runtime_checkable</span><span class="p">,</span>
+    <span class="n">Protocol</span><span class="p">,</span>
+    <span class="n">get_args</span><span class="p">,</span>
+    <span class="n">get_origin</span><span class="p">,</span>
+    <span class="n">Any</span><span class="p">,</span>
+    <span class="n">Type</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">GenericAlias</span>
+<span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">Parameter</span>
+
+<span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">mk_sentinel</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">importlib.resources</span>
+
+    <span class="n">_files</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">resources</span><span class="o">.</span><span class="n">files</span>  <span class="c1"># only valid in 3.9+</span>
+<span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">importlib_resources</span>  <span class="c1"># needs pip install</span>
+
+    <span class="n">_files</span> <span class="o">=</span> <span class="n">importlib_resources</span><span class="o">.</span><span class="n">files</span>
+
+<span class="n">ju_files</span> <span class="o">=</span> <span class="n">_files</span><span class="p">(</span><span class="s1">&#39;ju&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">is_jsonable</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">OverflowError</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+
+<span class="n">SomeType</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">Type</span><span class="p">,</span> <span class="n">GenericAlias</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+<span class="n">SomeType</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;A type or a GenericAlias, but also Any, just in case&quot;</span>
+
+
+<div class="viewcode-block" id="is_type">
+<a class="viewcode-back" href="../../module_docs/ju/util.html#ju.util.is_type">[docs]</a>
+<span class="k">def</span> <span class="nf">is_type</span><span class="p">(</span><span class="n">param</span><span class="p">:</span> <span class="n">Parameter</span><span class="p">,</span> <span class="n">type_</span><span class="p">:</span> <span class="n">SomeType</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Checks if the type of a parameter&#39;s default value or its annotation matches a</span>
+<span class="sd">    given type.</span>
+
+<span class="sd">    This function handles both regular types and subscripted generics.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        param (Parameter): The parameter to check.</span>
+<span class="sd">        type_ (type): The type to check against.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if the parameter&#39;s type matches the given type, False otherwise.</span>
+
+<span class="sd">    Doctests:</span>
+<span class="sd">    &gt;&gt;&gt; from inspect import Parameter</span>
+<span class="sd">    &gt;&gt;&gt; param = Parameter(&#39;p&#39;, Parameter.KEYWORD_ONLY, default=3.14)</span>
+<span class="sd">    &gt;&gt;&gt; is_type(param, float)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; is_type(param, int)</span>
+<span class="sd">    False</span>
+<span class="sd">    &gt;&gt;&gt; param = Parameter(&#39;p&#39;, Parameter.KEYWORD_ONLY, default=[1, 2, 3])</span>
+<span class="sd">    &gt;&gt;&gt; is_type(param, list)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; from typing import List, Union</span>
+<span class="sd">    &gt;&gt;&gt; is_type(param, List[int])</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; is_type(param, List[str])</span>
+<span class="sd">    False</span>
+<span class="sd">    &gt;&gt;&gt; is_type(param, Union[int, List[int]])</span>
+<span class="sd">    True</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">annotation</span> <span class="ow">is</span> <span class="n">type_</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">type_</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">default</span><span class="p">,</span> <span class="n">type_</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">type_</span><span class="p">,</span> <span class="s1">&#39;__origin__&#39;</span><span class="p">):</span>
+        <span class="n">origin</span> <span class="o">=</span> <span class="n">get_origin</span><span class="p">(</span><span class="n">type_</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">origin</span> <span class="ow">is</span> <span class="n">Union</span><span class="p">:</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="n">get_args</span><span class="p">(</span><span class="n">type_</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">is_type</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">args</span> <span class="o">=</span> <span class="n">get_args</span><span class="p">(</span><span class="n">type_</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">default</span><span class="p">,</span> <span class="n">origin</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">all</span><span class="p">(</span>
+                    <span class="nb">any</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">param</span><span class="o">.</span><span class="n">default</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span>
+                <span class="p">):</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+
+
+<span class="c1"># -------------------------------------------------------------------------------------</span>
+<span class="c1"># Mappers</span>
+
+<span class="n">CallableMapper</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">KT</span><span class="p">],</span> <span class="n">VT</span><span class="p">]</span>
+<span class="n">MappingMapper</span> <span class="o">=</span> <span class="n">Mapping</span><span class="p">[</span><span class="n">KT</span><span class="p">,</span> <span class="n">VT</span><span class="p">]</span>
+<span class="n">PairsMapper</span> <span class="o">=</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">KT</span><span class="p">,</span> <span class="n">VT</span><span class="p">]]</span>
+<span class="n">Mapper</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">PairsMapper</span><span class="p">,</span> <span class="n">MappingMapper</span><span class="p">,</span> <span class="n">CallableMapper</span><span class="p">]</span>
+<span class="n">Mapper</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;A Mapper is a specification of (key, value) pairs&quot;</span>
+
+<span class="n">Exceptions</span> <span class="o">=</span> <span class="n">Sequence</span><span class="p">[</span><span class="ne">BaseException</span><span class="p">]</span>
+<span class="n">NotSpecified</span> <span class="o">=</span> <span class="n">mk_sentinel</span><span class="p">(</span><span class="s1">&#39;NotSpecified&#39;</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_return_this</span><span class="p">(</span><span class="n">_obj</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">_obj</span>
+
+
+<span class="k">def</span> <span class="nf">mk_function_returning</span><span class="p">(</span><span class="n">_obj</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">partial</span><span class="p">(</span><span class="n">_return_this</span><span class="p">,</span> <span class="n">_obj</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Gettable">
+<a class="viewcode-back" href="../../module_docs/ju/util.html#ju.util.Gettable">[docs]</a>
+<span class="nd">@runtime_checkable</span>
+<span class="k">class</span> <span class="nc">Gettable</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The missing type for objects that can be fetched from.</span>
+<span class="sd">    The contract is that we can fetch an element from ``obj`` with brackets: ``obj[k]``.</span>
+<span class="sd">    That is, ``obj`` has a ``__getitem__`` method.</span>
+
+<span class="sd">    &gt;&gt;&gt; isinstance(3, Gettable)  # 3 is not Gettable (can&#39;t do 3[...])</span>
+<span class="sd">    False</span>
+
+<span class="sd">    But ``dict``, ``list``, and ``str`` are Gettable:</span>
+
+<span class="sd">    &gt;&gt;&gt; isinstance([1, 2, 3], Gettable)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; isinstance({&#39;foo&#39;: &#39;bar&#39;}, Gettable)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; isinstance(&#39;foo&#39;, Gettable)</span>
+<span class="sd">    True</span>
+
+<span class="sd">    Note that so are their types:</span>
+<span class="sd">    &gt;&gt;&gt; all(isinstance(c, Gettable) for c in (list, dict, str))</span>
+<span class="sd">    True</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="n">KT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">VT</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+
+
+
+<span class="k">def</span> <span class="nf">_defaulted_function_call</span><span class="p">(</span>
+    <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">arg</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">NotSpecified</span><span class="p">,</span> <span class="n">handle_exceptions</span><span class="p">:</span> <span class="n">Exceptions</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="n">handle_exceptions</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">default</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">NotSpecified</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">handle_exceptions</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">default</span> <span class="ow">is</span> <span class="n">NotSpecified</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">e</span>
+            <span class="k">return</span> <span class="n">default</span>
+
+
+<div class="viewcode-block" id="GetWithCaller">
+<a class="viewcode-back" href="../../module_docs/ju/util.html#ju.util.GetWithCaller">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">GetWithCaller</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implements the [.] operator with a backend caller.</span>
+
+<span class="sd">    &gt;&gt;&gt; g = GetWithCaller(lambda x: x + 1)</span>
+<span class="sd">    &gt;&gt;&gt; g[4]</span>
+<span class="sd">    5</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">getter_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">KT</span><span class="p">],</span> <span class="n">VT</span><span class="p">]</span>
+    <span class="n">default</span><span class="p">:</span> <span class="n">VT</span> <span class="o">=</span> <span class="n">NotSpecified</span>
+    <span class="n">handle_exceptions</span><span class="p">:</span> <span class="n">Exceptions</span> <span class="o">=</span> <span class="p">(</span><span class="ne">KeyError</span><span class="p">,)</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="n">KT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">VT</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the value for a given a key k.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">_defaulted_function_call</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">getter_func</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">default</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_exceptions</span>
+        <span class="p">)</span></div>
+
+
+
+<span class="k">def</span> <span class="nf">_handle_default</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">NotSpecified</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Adds default handling to an object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">default</span> <span class="ow">is</span> <span class="n">NotSpecified</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">obj</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">defaultdict</span><span class="p">(</span><span class="n">mk_function_returning</span><span class="p">(</span><span class="n">default</span><span class="p">),</span> <span class="n">obj</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">callable</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">partial</span><span class="p">(</span>
+            <span class="n">_defaulted_function_call</span><span class="p">,</span>
+            <span class="n">obj</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="n">default</span><span class="p">,</span>
+            <span class="n">handle_exceptions</span><span class="o">=</span><span class="p">(</span><span class="ne">KeyError</span><span class="p">,),</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cannot add defaulting handling to this type of object: </span><span class="si">{</span><span class="n">obj</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="ensure_mapping_mapper">
+<a class="viewcode-back" href="../../module_docs/ju/util.html#ju.util.ensure_mapping_mapper">[docs]</a>
+<span class="k">def</span> <span class="nf">ensure_mapping_mapper</span><span class="p">(</span><span class="n">mapper</span><span class="p">:</span> <span class="n">Mapper</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">NotSpecified</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MappingMapper</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Will return a MappingMapper (a dict really) from the specification of a Mapper,</span>
+<span class="sd">    which could be a Mapping itself, a callable, or (key, value) pairs.</span>
+
+<span class="sd">    Further, if default is specified, the mapper will return that default if the</span>
+<span class="sd">    requested key is not found.</span>
+
+<span class="sd">    &gt;&gt;&gt; func = lambda k: {&#39;a&#39;: 1, &#39;b&#39;: 2}[k]</span>
+<span class="sd">    &gt;&gt;&gt; d = ensure_mapping_mapper(func, default=3)</span>
+<span class="sd">    &gt;&gt;&gt; d[&#39;a&#39;]</span>
+<span class="sd">    1</span>
+<span class="sd">    &gt;&gt;&gt; d[&#39;c&#39;]</span>
+<span class="sd">    3</span>
+<span class="sd">    &gt;&gt;&gt; items = [(&#39;a&#39;, 1), (&#39;b&#39;, 2)]</span>
+<span class="sd">    &gt;&gt;&gt; d = ensure_mapping_mapper(items, default=3)</span>
+<span class="sd">    &gt;&gt;&gt; d[&#39;a&#39;]</span>
+<span class="sd">    1</span>
+<span class="sd">    &gt;&gt;&gt; d[&#39;c&#39;]</span>
+<span class="sd">    3</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">mapper</span><span class="p">):</span>
+        <span class="n">getter_func</span> <span class="o">=</span> <span class="n">mapper</span>
+        <span class="k">return</span> <span class="n">GetWithCaller</span><span class="p">(</span><span class="n">getter_func</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">default</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mapper</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">):</span>
+        <span class="n">mapper</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">mapper</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">_handle_default</span><span class="p">(</span><span class="n">mapper</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">default</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="ensure_callable_mapper">
+<a class="viewcode-back" href="../../module_docs/ju/util.html#ju.util.ensure_callable_mapper">[docs]</a>
+<span class="k">def</span> <span class="nf">ensure_callable_mapper</span><span class="p">(</span><span class="n">mapper</span><span class="p">:</span> <span class="n">Mapper</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">NotSpecified</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CallableMapper</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Will return a CallableMapper from the specification of a Mapper,</span>
+<span class="sd">    which could be a Mapping itself, a callable, or (key, value) pairs.</span>
+
+<span class="sd">    Further, if default is specified, the mapper will return that default if the</span>
+<span class="sd">    requested key is not found.</span>
+
+<span class="sd">    &gt;&gt;&gt; mapping = {&#39;a&#39;: 1, &#39;b&#39;: 2}</span>
+<span class="sd">    &gt;&gt;&gt; func = ensure_callable_mapper(mapping, default=3)</span>
+<span class="sd">    &gt;&gt;&gt; func(&#39;a&#39;)</span>
+<span class="sd">    1</span>
+<span class="sd">    &gt;&gt;&gt; func(&#39;c&#39;)</span>
+<span class="sd">    3</span>
+<span class="sd">    &gt;&gt;&gt; items = [(&#39;a&#39;, 1), (&#39;b&#39;, 2)]</span>
+<span class="sd">    &gt;&gt;&gt; func = ensure_callable_mapper(items, default=3)</span>
+<span class="sd">    &gt;&gt;&gt; func(&#39;a&#39;)</span>
+<span class="sd">    1</span>
+<span class="sd">    &gt;&gt;&gt; func(&#39;c&#39;)</span>
+<span class="sd">    3</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mapper</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">):</span>
+        <span class="n">mapper</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">mapper</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mapper</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
+        <span class="n">mapper</span> <span class="o">=</span> <span class="n">mapper</span><span class="o">.</span><span class="fm">__getitem__</span>
+    <span class="k">assert</span> <span class="nb">callable</span><span class="p">(</span><span class="n">mapper</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Cannot convert </span><span class="si">{</span><span class="n">mapper</span><span class="si">}</span><span class="s2"> to a CallableMapper&quot;</span>
+    <span class="k">return</span> <span class="n">_handle_default</span><span class="p">(</span><span class="n">mapper</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">default</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># -------------------------------------------------------------------------------------</span>
+<span class="c1"># utils for routing</span>
+<span class="c1"># See https://github.com/i2mint/i2//blob/f547257c272433b7651d09276afdfb1bb7b2f67b/misc/i2.routing.ipynb#L17</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Callable</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+
+
+<span class="k">def</span> <span class="nf">display_dag_of_code</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">meshed</span> <span class="kn">import</span> <span class="n">code_to_dag</span>
+
+    <span class="k">return</span> <span class="n">code_to_dag</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="apply">
+<a class="viewcode-back" href="../../module_docs/ju/util.html#ju.util.apply">[docs]</a>
+<span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calls a function to an object, returing the result</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span></div>
+
+
+
+<span class="k">def</span> <span class="nf">_switch_case</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">default</span><span class="p">,</span> <span class="n">feature</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the value of a feature in a mapping or a default value</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="switch_case">
+<a class="viewcode-back" href="../../module_docs/ju/util.html#ju.util.switch_case">[docs]</a>
+<span class="k">def</span> <span class="nf">switch_case</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">default</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a function that switches between cases based on a feature</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">partial</span><span class="p">(</span><span class="n">_switch_case</span><span class="p">,</span> <span class="n">mapping</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span></div>
+
+
+
+<span class="k">def</span> <span class="nf">_feature_based_search</span><span class="p">(</span>
+    <span class="n">feature_processor_pairs</span><span class="p">,</span> <span class="n">feature_similarity</span><span class="p">,</span> <span class="n">default</span><span class="p">,</span> <span class="n">feature</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the output of a feature based on a list of feature_processor_pairs</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">feature_processor_pairs</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
+        <span class="n">feature_processor_pairs</span> <span class="o">=</span> <span class="n">feature_processor_pairs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="n">feature_matches</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">feature_similarity</span><span class="p">,</span> <span class="n">feature</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">feature_compared_to</span><span class="p">,</span> <span class="n">then_</span> <span class="ow">in</span> <span class="n">feature_processor_pairs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">feature_matches</span><span class="p">(</span><span class="n">feature_compared_to</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">then_</span>
+    <span class="k">return</span> <span class="n">default</span>
+
+
+<div class="viewcode-block" id="feature_based_search">
+<a class="viewcode-back" href="../../module_docs/ju/util.html#ju.util.feature_based_search">[docs]</a>
+<span class="k">def</span> <span class="nf">feature_based_search</span><span class="p">(</span><span class="n">feature_processor_pairs</span><span class="p">,</span> <span class="n">feature_similarity</span><span class="p">,</span> <span class="n">default</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a function that searches for a feature in a list of feature_processor_pairs</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">partial</span><span class="p">(</span>
+        <span class="n">_feature_based_search</span><span class="p">,</span> <span class="n">feature_processor_pairs</span><span class="p">,</span> <span class="n">feature_similarity</span><span class="p">,</span> <span class="n">default</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="feature_switch">
+<a class="viewcode-back" href="../../module_docs/ju/util.html#ju.util.feature_switch">[docs]</a>
+<span class="k">def</span> <span class="nf">feature_switch</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">featurizer</span><span class="p">,</span> <span class="n">feature_to_output_mapping</span><span class="p">,</span> <span class="n">default</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the output of a feature based on a featurizer and a mapping</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">feature</span> <span class="o">=</span> <span class="n">apply</span><span class="p">(</span><span class="n">featurizer</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+    <span class="n">get_output_for_feature</span> <span class="o">=</span> <span class="n">switch_case</span><span class="p">(</span><span class="n">feature_to_output_mapping</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">apply</span><span class="p">(</span><span class="n">get_output_for_feature</span><span class="p">,</span> <span class="n">feature</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output</span></div>
+
+
+
+<div class="viewcode-block" id="feature_similarity_search">
+<a class="viewcode-back" href="../../module_docs/ju/util.html#ju.util.feature_similarity_search">[docs]</a>
+<span class="k">def</span> <span class="nf">feature_similarity_search</span><span class="p">(</span>
+    <span class="n">obj</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">featurizer</span><span class="p">,</span>
+    <span class="n">feature_based_search</span><span class="p">,</span>
+    <span class="n">feature_output_pairs</span><span class="p">,</span>
+    <span class="n">feature_similarity</span><span class="p">,</span>
+    <span class="n">similarity_base_match</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span> <span class="o">==</span> <span class="n">y</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the output of a feature based on a featurizer and a list of feature_output_pairs</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">feature</span> <span class="o">=</span> <span class="n">apply</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">featurizer</span><span class="p">)</span>
+    <span class="n">get_output_for_feature</span> <span class="o">=</span> <span class="n">feature_based_search</span><span class="p">(</span>
+        <span class="n">feature_output_pairs</span><span class="p">,</span> <span class="n">feature_similarity</span><span class="p">,</span> <span class="n">similarity_base_match</span>
+    <span class="p">)</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">apply</span><span class="p">(</span><span class="n">get_output_for_feature</span><span class="p">,</span> <span class="n">feature</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output</span></div>
+
+
+
+<span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">FuncFactory</span>
+
+<span class="n">FeatureSwitch</span> <span class="o">=</span> <span class="n">FuncFactory</span><span class="p">(</span><span class="n">feature_switch</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

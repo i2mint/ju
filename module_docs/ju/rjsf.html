@@ -52,11 +52,11 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../ju.html">ju</a></li>
+<li class="toctree-l1"><a class="reference internal" href="json_schema.html">ju.json_schema</a></li>
 <li class="toctree-l1"><a class="reference internal" href="oas.html">ju.oas</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">ju.rjsf</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#ju.rjsf.func_to_form_spec"><code class="docutils literal notranslate"><span class="pre">func_to_form_spec()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#ju.rjsf.get_properties"><code class="docutils literal notranslate"><span class="pre">get_properties()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ju.rjsf.venus"><code class="docutils literal notranslate"><span class="pre">venus()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tests.html">ju.tests</a></li>
@@ -158,9 +158,10 @@ return: The form specification for the function</p>
 <span class="gp">... </span><span class="p">):</span>
 <span class="gp">... </span><span class="w">    </span><span class="sd">&#39;&#39;&#39;A Foo function&#39;&#39;&#39;</span>
 <span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ju.json_schema</span> <span class="kn">import</span> <span class="n">DFLT_PARAM_TO_TYPE</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">parameters</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">foo</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="p">(</span>
-<span class="gp">... </span>    <span class="n">get_properties</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">param_to_prop_type</span><span class="o">=</span><span class="n">_dflt_param_to_type</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">get_properties</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">param_to_prop_type</span><span class="o">=</span><span class="n">DFLT_PARAM_TO_TYPE</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="o">==</span> <span class="p">{</span>
 <span class="gp">... </span>        <span class="s1">&#39;a_bool&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;boolean&#39;</span><span class="p">},</span>
 <span class="gp">... </span>        <span class="s1">&#39;a_float&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="mf">3.14</span><span class="p">},</span>
@@ -171,12 +172,6 @@ return: The form specification for the function</p>
 <span class="gp">... </span><span class="p">)</span>
 </pre></div>
 </div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ju.rjsf.venus">
-<span class="sig-prename descclassname"><span class="pre">ju.rjsf.</span></span><span class="sig-name descname"><span class="pre">venus</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ju/rjsf.html#venus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.rjsf.venus" title="Link to this definition"></a></dt>
-<dd><p>Nothing from nothing</p>
 </dd></dl>
 
 </section>

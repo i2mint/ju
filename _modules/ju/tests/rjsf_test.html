@@ -49,6 +49,7 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/ju.html">ju</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../module_docs/ju/json_schema.html">ju.json_schema</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/ju/oas.html">ju.oas</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/ju/rjsf.html">ju.rjsf</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../module_docs/ju/tests.html">ju.tests</a></li>
@@ -90,7 +91,8 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">attrgetter</span>
-<span class="kn">from</span> <span class="nn">ju.rjsf</span> <span class="kn">import</span> <span class="n">function_to_json_schema</span><span class="p">,</span> <span class="n">FeatureSwitch</span>
+<span class="kn">from</span> <span class="nn">ju.json_schema</span> <span class="kn">import</span> <span class="n">function_to_json_schema</span>
+<span class="kn">from</span> <span class="nn">ju.util</span> <span class="kn">import</span> <span class="n">FeatureSwitch</span>
 
 
 <span class="k">def</span> <span class="nf">mercury</span><span class="p">(</span><span class="n">sweet</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">sour</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -104,8 +106,12 @@
 
 
 
+<div class="viewcode-block" id="earth">
+<a class="viewcode-back" href="../../../module_docs/ju/tests/rjsf_test.html#ju.tests.rjsf_test.earth">[docs]</a>
 <span class="k">def</span> <span class="nf">earth</span><span class="p">(</span><span class="n">north</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">south</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">east</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">west</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">):</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">north</span><span class="si">=}</span><span class="s1">, </span><span class="si">{</span><span class="n">south</span><span class="si">=}</span><span class="s1">, </span><span class="si">{</span><span class="n">east</span><span class="si">=}</span><span class="s1">, </span><span class="si">{</span><span class="n">west</span><span class="si">=}</span><span class="s1">&#39;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Earth docs&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">north</span><span class="si">=}</span><span class="s1">, </span><span class="si">{</span><span class="n">south</span><span class="si">=}</span><span class="s1">, </span><span class="si">{</span><span class="n">east</span><span class="si">=}</span><span class="s1">, </span><span class="si">{</span><span class="n">west</span><span class="si">=}</span><span class="s1">&#39;</span></div>
+
 
 
 <span class="n">mercury_schema</span> <span class="o">=</span> <span class="p">{</span>
@@ -127,6 +133,7 @@
 <span class="p">}</span>
 
 <span class="n">earth_schema</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Earth docs&#39;</span><span class="p">,</span>
     <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;earth&#39;</span><span class="p">,</span>
     <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
     <span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{</span>

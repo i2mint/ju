@@ -51,12 +51,25 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../ju.html">ju</a></li>
+<li class="toctree-l1"><a class="reference internal" href="json_schema.html">ju.json_schema</a></li>
 <li class="toctree-l1"><a class="reference internal" href="oas.html">ju.oas</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rjsf.html">ju.rjsf</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tests.html">ju.tests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tests/oas_test.html">ju.tests.oas_test</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tests/rjsf_test.html">ju.tests.rjsf_test</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">ju.util</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">ju.util</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#ju.util.GetWithCaller"><code class="docutils literal notranslate"><span class="pre">GetWithCaller</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ju.util.Gettable"><code class="docutils literal notranslate"><span class="pre">Gettable</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ju.util.apply"><code class="docutils literal notranslate"><span class="pre">apply()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ju.util.ensure_callable_mapper"><code class="docutils literal notranslate"><span class="pre">ensure_callable_mapper()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ju.util.ensure_mapping_mapper"><code class="docutils literal notranslate"><span class="pre">ensure_mapping_mapper()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ju.util.feature_based_search"><code class="docutils literal notranslate"><span class="pre">feature_based_search()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ju.util.feature_similarity_search"><code class="docutils literal notranslate"><span class="pre">feature_similarity_search()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ju.util.feature_switch"><code class="docutils literal notranslate"><span class="pre">feature_switch()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ju.util.is_type"><code class="docutils literal notranslate"><span class="pre">is_type()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ju.util.switch_case"><code class="docutils literal notranslate"><span class="pre">switch_case()</span></code></a></li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -86,6 +99,156 @@
   <section id="module-ju.util">
 <span id="ju-util"></span><h1>ju.util<a class="headerlink" href="#module-ju.util" title="Link to this heading"></a></h1>
 <p>Ju base utils.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="ju.util.GetWithCaller">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ju.util.</span></span><span class="sig-name descname"><span class="pre">GetWithCaller</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">getter_func:</span> <span class="pre">~typing.Callable[[KT],</span> <span class="pre">VT],</span> <span class="pre">default:</span> <span class="pre">VT</span> <span class="pre">=</span> <span class="pre">Sentinel('NotSpecified'),</span> <span class="pre">handle_exceptions:</span> <span class="pre">~typing.Sequence[BaseException]</span> <span class="pre">=</span> <span class="pre">(&lt;class</span> <span class="pre">'KeyError'&gt;,)</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ju/util.html#GetWithCaller"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.util.GetWithCaller" title="Link to this definition"></a></dt>
+<dd><p>Implements the [.] operator with a backend caller.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g</span> <span class="o">=</span> <span class="n">GetWithCaller</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+<span class="go">5</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ju.util.Gettable">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ju.util.</span></span><span class="sig-name descname"><span class="pre">Gettable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ju/util.html#Gettable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.util.Gettable" title="Link to this definition"></a></dt>
+<dd><p>The missing type for objects that can be fetched from.
+The contract is that we can fetch an element from <code class="docutils literal notranslate"><span class="pre">obj</span></code> with brackets: <code class="docutils literal notranslate"><span class="pre">obj[k]</span></code>.
+That is, <code class="docutils literal notranslate"><span class="pre">obj</span></code> has a <code class="docutils literal notranslate"><span class="pre">__getitem__</span></code> method.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">Gettable</span><span class="p">)</span>  <span class="c1"># 3 is not Gettable (can&#39;t do 3[...])</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+<p>But <code class="docutils literal notranslate"><span class="pre">dict</span></code>, <code class="docutils literal notranslate"><span class="pre">list</span></code>, and <code class="docutils literal notranslate"><span class="pre">str</span></code> are Gettable:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">Gettable</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">({</span><span class="s1">&#39;foo&#39;</span><span class="p">:</span> <span class="s1">&#39;bar&#39;</span><span class="p">},</span> <span class="n">Gettable</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="n">Gettable</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>Note that so are their types:
+&gt;&gt;&gt; all(isinstance(c, Gettable) for c in (list, dict, str))
+True</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ju.util.apply">
+<span class="sig-prename descclassname"><span class="pre">ju.util.</span></span><span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ju/util.html#apply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.util.apply" title="Link to this definition"></a></dt>
+<dd><p>Calls a function to an object, returing the result</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ju.util.ensure_callable_mapper">
+<span class="sig-prename descclassname"><span class="pre">ju.util.</span></span><span class="sig-name descname"><span class="pre">ensure_callable_mapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapper</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Mapping</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">KT</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">VT</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Sentinel('NotSpecified')</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">KT</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">VT</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/ju/util.html#ensure_callable_mapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.util.ensure_callable_mapper" title="Link to this definition"></a></dt>
+<dd><p>Will return a CallableMapper from the specification of a Mapper,
+which could be a Mapping itself, a callable, or (key, value) pairs.</p>
+<p>Further, if default is specified, the mapper will return that default if the
+requested key is not found.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">func</span> <span class="o">=</span> <span class="n">ensure_callable_mapper</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">func</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">func</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>
+<span class="go">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">items</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">func</span> <span class="o">=</span> <span class="n">ensure_callable_mapper</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">func</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">func</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">)</span>
+<span class="go">3</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ju.util.ensure_mapping_mapper">
+<span class="sig-prename descclassname"><span class="pre">ju.util.</span></span><span class="sig-name descname"><span class="pre">ensure_mapping_mapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapper</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Mapping</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">KT</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">VT</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Sentinel('NotSpecified')</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Mapping</span></span></span><a class="reference internal" href="../../_modules/ju/util.html#ensure_mapping_mapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.util.ensure_mapping_mapper" title="Link to this definition"></a></dt>
+<dd><p>Will return a MappingMapper (a dict really) from the specification of a Mapper,
+which could be a Mapping itself, a callable, or (key, value) pairs.</p>
+<p>Further, if default is specified, the mapper will return that default if the
+requested key is not found.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">func</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">}[</span><span class="n">k</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">ensure_mapping_mapper</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">]</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">]</span>
+<span class="go">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">items</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="n">ensure_mapping_mapper</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">]</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span><span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">]</span>
+<span class="go">3</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ju.util.feature_based_search">
+<span class="sig-prename descclassname"><span class="pre">ju.util.</span></span><span class="sig-name descname"><span class="pre">feature_based_search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_processor_pairs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_similarity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ju/util.html#feature_based_search"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.util.feature_based_search" title="Link to this definition"></a></dt>
+<dd><p>Returns a function that searches for a feature in a list of feature_processor_pairs</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ju.util.feature_similarity_search">
+<span class="sig-prename descclassname"><span class="pre">ju.util.</span></span><span class="sig-name descname"><span class="pre">feature_similarity_search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">featurizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_based_search</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_output_pairs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_similarity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">similarity_base_match=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ju/util.html#feature_similarity_search"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.util.feature_similarity_search" title="Link to this definition"></a></dt>
+<dd><p>Returns the output of a feature based on a featurizer and a list of feature_output_pairs</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ju.util.feature_switch">
+<span class="sig-prename descclassname"><span class="pre">ju.util.</span></span><span class="sig-name descname"><span class="pre">feature_switch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">featurizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_to_output_mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ju/util.html#feature_switch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.util.feature_switch" title="Link to this definition"></a></dt>
+<dd><p>Returns the output of a feature based on a featurizer and a mapping</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ju.util.is_type">
+<span class="sig-prename descclassname"><span class="pre">ju.util.</span></span><span class="sig-name descname"><span class="pre">is_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Parameter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Type</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">GenericAlias</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ju/util.html#is_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.util.is_type" title="Link to this definition"></a></dt>
+<dd><p>Checks if the type of a parameter’s default value or its annotation matches a
+given type.</p>
+<p>This function handles both regular types and subscripted generics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>param</strong> (<em>Parameter</em>) – The parameter to check.</p></li>
+<li><p><strong>type</strong> (<em>type</em>) – The type to check against.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the parameter’s type matches the given type, False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+<p>Doctests:
+&gt;&gt;&gt; from inspect import Parameter
+&gt;&gt;&gt; param = Parameter(‘p’, Parameter.KEYWORD_ONLY, default=3.14)
+&gt;&gt;&gt; is_type(param, float)
+True
+&gt;&gt;&gt; is_type(param, int)
+False
+&gt;&gt;&gt; param = Parameter(‘p’, Parameter.KEYWORD_ONLY, default=[1, 2, 3])
+&gt;&gt;&gt; is_type(param, list)
+True
+&gt;&gt;&gt; from typing import List, Union
+&gt;&gt;&gt; is_type(param, List[int])
+True
+&gt;&gt;&gt; is_type(param, List[str])
+False
+&gt;&gt;&gt; is_type(param, Union[int, List[int]])
+True</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ju.util.switch_case">
+<span class="sig-prename descclassname"><span class="pre">ju.util.</span></span><span class="sig-name descname"><span class="pre">switch_case</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ju/util.html#switch_case"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.util.switch_case" title="Link to this definition"></a></dt>
+<dd><p>Returns a function that switches between cases based on a feature</p>
+</dd></dl>
+
 </section>
 
 

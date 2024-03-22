@@ -49,6 +49,7 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju.html">ju</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/json_schema.html">ju.json_schema</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/oas.html">ju.oas</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/rjsf.html">ju.rjsf</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/tests.html">ju.tests</a></li>
@@ -85,7 +86,7 @@
 <span></span><span class="sd">&quot;&quot;&quot;Tools for React-JSONSchema-Form (RJSF)&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Mapping</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">Parameter</span>
 
@@ -164,28 +165,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">is_type</span><span class="p">(</span><span class="n">param</span><span class="p">:</span> <span class="n">Parameter</span><span class="p">,</span> <span class="n">type_</span><span class="p">:</span> <span class="nb">type</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">param</span><span class="o">.</span><span class="n">annotation</span> <span class="ow">is</span> <span class="n">type_</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">default</span><span class="p">,</span> <span class="n">type_</span><span class="p">)</span>
-
-
-<span class="n">DFLT_TYPE_MAPPING</span> <span class="o">=</span> <span class="p">((</span><span class="nb">bool</span><span class="p">,</span> <span class="s1">&#39;boolean&#39;</span><span class="p">),</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="s1">&#39;number&#39;</span><span class="p">),</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="s1">&#39;integer&#39;</span><span class="p">))</span>
-
-
-<span class="k">def</span> <span class="nf">parametrized_param_to_type</span><span class="p">(</span>
-    <span class="n">param</span><span class="p">:</span> <span class="n">Parameter</span><span class="p">,</span>
-    <span class="o">*</span><span class="p">,</span>
-    <span class="n">type_mapping</span><span class="o">=</span><span class="n">DFLT_TYPE_MAPPING</span><span class="p">,</span>
-    <span class="n">default</span><span class="o">=</span><span class="s1">&#39;string&#39;</span><span class="p">,</span>
-<span class="p">):</span>
-    <span class="k">for</span> <span class="n">python_type</span><span class="p">,</span> <span class="n">json_type</span> <span class="ow">in</span> <span class="n">type_mapping</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">is_type</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">python_type</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">json_type</span>
-    <span class="k">return</span> <span class="n">default</span>
-
-
-<span class="n">_dflt_param_to_type</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
-    <span class="n">parametrized_param_to_type</span><span class="p">,</span> <span class="n">type_mapping</span><span class="o">=</span><span class="n">DFLT_TYPE_MAPPING</span>
-<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">ju.json_schema</span> <span class="kn">import</span> <span class="n">DFLT_PARAM_TO_TYPE</span>
 
 
 <span class="c1"># TODO: The loop body could be factored out</span>
@@ -204,9 +184,10 @@
 <span class="sd">    ... ):</span>
 <span class="sd">    ...     &#39;&#39;&#39;A Foo function&#39;&#39;&#39;</span>
 <span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; from ju.json_schema import DFLT_PARAM_TO_TYPE</span>
 <span class="sd">    &gt;&gt;&gt; parameters = inspect.signature(foo).parameters</span>
 <span class="sd">    &gt;&gt;&gt; assert (</span>
-<span class="sd">    ...     get_properties(parameters, param_to_prop_type=_dflt_param_to_type)</span>
+<span class="sd">    ...     get_properties(parameters, param_to_prop_type=DFLT_PARAM_TO_TYPE)</span>
 <span class="sd">    ...     == {</span>
 <span class="sd">    ...         &#39;a_bool&#39;: {&#39;type&#39;: &#39;boolean&#39;},</span>
 <span class="sd">    ...         &#39;a_float&#39;: {&#39;type&#39;: &#39;number&#39;, &#39;default&#39;: 3.14},</span>
@@ -240,7 +221,7 @@
 
 
 <span class="c1"># TODO: This all should really use meshed instead, to be easily composable.</span>
-<span class="k">def</span> <span class="nf">_func_to_rjsf_schemas</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">param_to_prop_type</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">_dflt_param_to_type</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">_func_to_rjsf_schemas</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">param_to_prop_type</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">DFLT_PARAM_TO_TYPE</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns the JSON schema and the UI schema for a function.</span>
 
@@ -255,7 +236,7 @@
 <span class="sd">    ...     something_else=None</span>
 <span class="sd">    ... ):</span>
 <span class="sd">    ...     &#39;&#39;&#39;A Foo function&#39;&#39;&#39;</span>
-<span class="sd">    &gt;&gt;&gt;</span>
+
 <span class="sd">    &gt;&gt;&gt; schema, ui_schema = _func_to_rjsf_schemas(foo)</span>
 <span class="sd">    &gt;&gt;&gt; assert schema == {</span>
 <span class="sd">    ...     &#39;title&#39;: &#39;foo&#39;,</span>
@@ -274,6 +255,7 @@
 <span class="sd">    ...     &#39;ui:submitButtonOptions&#39;: {&#39;submitText&#39;: &#39;Run&#39;},</span>
 <span class="sd">    ...     &#39;a_bool&#39;: {&#39;ui:autofocus&#39;: True}</span>
 <span class="sd">    ... }</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Fetch function metadata</span>
@@ -308,310 +290,6 @@
 
     <span class="c1"># Return the schemas</span>
     <span class="k">return</span> <span class="n">schema</span><span class="p">,</span> <span class="n">ui_schema</span>
-
-
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">This module provides tools to transform Python functions to React-JSONSchema-Form specifications.</span>
-
-<span class="sd">The main function in this module is `transform_function_to_schema`, which takes a Python function as input and returns a JSON schema that can be used to generate a form in a React application.</span>
-
-<span class="sd">The module also provides some helper functions to transform specific types of Python objects to JSON schema types, such as `transform_string_to_schema` and `transform_integer_to_schema`.</span>
-
-<span class="sd">Example usage:</span>
-
-<span class="sd">    &gt;&gt;&gt; def mercury(sweet: float, sour=True):</span>
-<span class="sd">    ...     &#39;&#39;&#39;Near the sun&#39;&#39;&#39;</span>
-<span class="sd">    ...     return sweet * sour</span>
-<span class="sd">    &gt;&gt;&gt;</span>
-<span class="sd">    &gt;&gt;&gt; assert function_to_json_schema(mercury) == {</span>
-<span class="sd">    ...         &#39;title&#39;: &#39;mercury&#39;, </span>
-<span class="sd">    ...         &#39;type&#39;: &#39;object&#39;, </span>
-<span class="sd">    ...         &#39;properties&#39;: {</span>
-<span class="sd">    ...             &#39;sweet&#39;: {&#39;type&#39;: &#39;number&#39;}, </span>
-<span class="sd">    ...             &#39;sour&#39;: {&#39;type&#39;: &#39;string&#39;, &#39;default&#39;: True}}, </span>
-<span class="sd">    ...          &#39;required&#39;: [&#39;sweet&#39;], </span>
-<span class="sd">    ...          &#39;description&#39;: &#39;Near the sun&#39;</span>
-<span class="sd">    ... }</span>
-
-<span class="sd">&quot;&quot;&quot;</span>
-
-<span class="c1"># -------------------------------------------------------------------------------------</span>
-<span class="c1"># util</span>
-
-<span class="kn">import</span> <span class="nn">json</span>
-
-
-<span class="k">def</span> <span class="nf">print_dict</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
-
-
-<span class="k">def</span> <span class="nf">print_schema</span><span class="p">(</span><span class="n">func_key</span><span class="p">,</span> <span class="n">store</span><span class="p">):</span>
-    <span class="n">print_dict</span><span class="p">(</span><span class="n">store</span><span class="p">[</span><span class="n">func_key</span><span class="p">][</span><span class="s1">&#39;rjsf&#39;</span><span class="p">][</span><span class="s1">&#39;schema&#39;</span><span class="p">])</span>
-    <span class="n">print_dict</span><span class="p">(</span><span class="n">store</span><span class="p">[</span><span class="n">func_key</span><span class="p">][</span><span class="s1">&#39;rjsf&#39;</span><span class="p">][</span><span class="s1">&#39;schema&#39;</span><span class="p">])</span>
-
-
-<span class="n">form_specs</span> <span class="o">=</span> <span class="kc">None</span>
-
-
-<span class="k">def</span> <span class="nf">print_schema</span><span class="p">(</span><span class="n">func_key</span><span class="o">=</span><span class="s1">&#39;olab.objects.dpp.accuracy&#39;</span><span class="p">,</span> <span class="n">store</span><span class="o">=</span><span class="n">form_specs</span><span class="p">):</span>
-    <span class="n">print_dict</span><span class="p">(</span><span class="n">store</span><span class="p">[</span><span class="n">func_key</span><span class="p">][</span><span class="s1">&#39;rjsf&#39;</span><span class="p">][</span><span class="s1">&#39;schema&#39;</span><span class="p">])</span>
-
-
-<span class="k">def</span> <span class="nf">wrap_schema_in_opus_spec</span><span class="p">(</span><span class="n">schema</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;rjsf&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;schema&#39;</span><span class="p">:</span> <span class="n">schema</span><span class="p">}}</span>
-
-
-<span class="c1"># -------------------------------------------------------------------------------------</span>
-<span class="c1"># utils for routing</span>
-
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Callable</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
-
-
-<span class="k">def</span> <span class="nf">display_dag_of_code</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">meshed</span> <span class="kn">import</span> <span class="n">code_to_dag</span>
-
-    <span class="k">return</span> <span class="n">code_to_dag</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-
-<span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
-
-
-<span class="k">def</span> <span class="nf">_switch_case</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">default</span><span class="p">,</span> <span class="n">feature</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
-
-
-<span class="k">def</span> <span class="nf">switch_case</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">default</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">partial</span><span class="p">(</span><span class="n">_switch_case</span><span class="p">,</span> <span class="n">mapping</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
-
-
-<span class="k">def</span> <span class="nf">_feature_based_search</span><span class="p">(</span>
-    <span class="n">feature_processor_pairs</span><span class="p">,</span> <span class="n">feature_similarity</span><span class="p">,</span> <span class="n">default</span><span class="p">,</span> <span class="n">feature</span>
-<span class="p">):</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">feature_processor_pairs</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
-        <span class="n">feature_processor_pairs</span> <span class="o">=</span> <span class="n">feature_processor_pairs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-    <span class="n">feature_matches</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">feature_similarity</span><span class="p">,</span> <span class="n">feature</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">feature_compared_to</span><span class="p">,</span> <span class="n">then_</span> <span class="ow">in</span> <span class="n">feature_processor_pairs</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">feature_matches</span><span class="p">(</span><span class="n">feature_compared_to</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">then_</span>
-    <span class="k">return</span> <span class="n">default</span>
-
-
-<span class="k">def</span> <span class="nf">feature_based_search</span><span class="p">(</span><span class="n">feature_processor_pairs</span><span class="p">,</span> <span class="n">feature_similarity</span><span class="p">,</span> <span class="n">default</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">partial</span><span class="p">(</span>
-        <span class="n">_feature_based_search</span><span class="p">,</span> <span class="n">feature_processor_pairs</span><span class="p">,</span> <span class="n">feature_similarity</span><span class="p">,</span> <span class="n">default</span>
-    <span class="p">)</span>
-
-
-<span class="k">def</span> <span class="nf">feature_switch</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">featurizer</span><span class="p">,</span> <span class="n">feature_to_output_mapping</span><span class="p">,</span> <span class="n">default</span><span class="p">):</span>
-    <span class="n">feature</span> <span class="o">=</span> <span class="n">apply</span><span class="p">(</span><span class="n">featurizer</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
-    <span class="n">get_output_for_feature</span> <span class="o">=</span> <span class="n">switch_case</span><span class="p">(</span><span class="n">feature_to_output_mapping</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
-    <span class="n">output</span> <span class="o">=</span> <span class="n">apply</span><span class="p">(</span><span class="n">get_output_for_feature</span><span class="p">,</span> <span class="n">feature</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">output</span>
-
-
-<span class="k">def</span> <span class="nf">feature_similarity_search</span><span class="p">(</span>
-    <span class="n">obj</span><span class="p">,</span>
-    <span class="o">*</span><span class="p">,</span>
-    <span class="n">featurizer</span><span class="p">,</span>
-    <span class="n">feature_based_search</span><span class="p">,</span>
-    <span class="n">feature_output_pairs</span><span class="p">,</span>
-    <span class="n">feature_similarity</span><span class="p">,</span>
-    <span class="n">similarity_base_match</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">x</span> <span class="o">==</span> <span class="n">y</span><span class="p">,</span>
-<span class="p">):</span>
-    <span class="n">feature</span> <span class="o">=</span> <span class="n">apply</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">featurizer</span><span class="p">)</span>
-    <span class="n">get_output_for_feature</span> <span class="o">=</span> <span class="n">feature_based_search</span><span class="p">(</span>
-        <span class="n">feature_output_pairs</span><span class="p">,</span> <span class="n">feature_similarity</span><span class="p">,</span> <span class="n">similarity_base_match</span>
-    <span class="p">)</span>
-    <span class="n">output</span> <span class="o">=</span> <span class="n">apply</span><span class="p">(</span><span class="n">get_output_for_feature</span><span class="p">,</span> <span class="n">feature</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">output</span>
-
-
-<span class="c1"># -------------------------------------------------------------------------------------</span>
-<span class="c1"># The function_to_json_schema function</span>
-
-<span class="kn">import</span> <span class="nn">inspect</span>
-<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">attrgetter</span>
-<span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">FuncFactory</span>
-
-<span class="n">FeatureSwitch</span> <span class="o">=</span> <span class="n">FuncFactory</span><span class="p">(</span><span class="n">feature_switch</span><span class="p">)</span>
-
-<span class="n">dflt_type_mapping</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="nb">int</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;integer&#39;</span><span class="p">},</span>
-    <span class="nb">float</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;number&#39;</span><span class="p">},</span>
-    <span class="nb">bool</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;boolean&#39;</span><span class="p">},</span>
-    <span class="nb">str</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">},</span>
-<span class="p">}</span>
-
-<span class="n">type_feature_switch</span> <span class="o">=</span> <span class="n">FeatureSwitch</span><span class="p">(</span>
-    <span class="n">featurizer</span><span class="o">=</span><span class="n">attrgetter</span><span class="p">(</span><span class="s1">&#39;annotation&#39;</span><span class="p">),</span>
-    <span class="n">feature_to_output_mapping</span><span class="o">=</span><span class="n">dflt_type_mapping</span><span class="p">,</span>
-    <span class="n">default</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">},</span>
-<span class="p">)</span>
-
-
-<span class="k">def</span> <span class="nf">function_to_json_schema</span><span class="p">(</span>
-    <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
-    <span class="o">*</span><span class="p">,</span>
-    <span class="n">type_feature_switch</span><span class="o">=</span><span class="n">type_feature_switch</span><span class="p">,</span>
-<span class="p">):</span>
-    <span class="c1"># Fetch function metadata</span>
-    <span class="n">sig</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
-    <span class="n">parameters</span> <span class="o">=</span> <span class="n">sig</span><span class="o">.</span><span class="n">parameters</span>
-
-    <span class="c1"># Start building the JSON schema</span>
-    <span class="n">schema</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-        <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{},</span>
-        <span class="s1">&#39;required&#39;</span><span class="p">:</span> <span class="p">[],</span>
-    <span class="p">}</span>
-
-    <span class="k">if</span> <span class="n">doc</span> <span class="o">:=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getdoc</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-        <span class="n">schema</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">doc</span>
-
-    <span class="c1"># Build the schema for each parameter</span>
-    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">parameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">field</span> <span class="o">=</span> <span class="n">type_feature_switch</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
-
-        <span class="c1"># If there&#39;s a default value, add it to the schema</span>
-        <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">default</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">inspect</span><span class="o">.</span><span class="n">Parameter</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-            <span class="n">field</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">default</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">schema</span><span class="p">[</span><span class="s1">&#39;required&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-
-        <span class="c1"># Add the field to the schema</span>
-        <span class="n">schema</span><span class="p">[</span><span class="s1">&#39;properties&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span>
-
-    <span class="k">return</span> <span class="n">schema</span>
-
-
-<span class="c1"># -------------------------------------------------------------------------------------</span>
-<span class="c1"># tests</span>
-
-
-<span class="k">def</span> <span class="nf">mercury</span><span class="p">(</span><span class="n">sweet</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">sour</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">sweet</span> <span class="o">*</span> <span class="n">sour</span>
-
-
-<div class="viewcode-block" id="venus">
-<a class="viewcode-back" href="../../module_docs/ju/rjsf.html#ju.rjsf.venus">[docs]</a>
-<span class="k">def</span> <span class="nf">venus</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Nothing from nothing&quot;&quot;&quot;</span></div>
-
-
-
-<span class="k">def</span> <span class="nf">earth</span><span class="p">(</span><span class="n">north</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">south</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">east</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">west</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">):</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">north</span><span class="si">=}</span><span class="s1">, </span><span class="si">{</span><span class="n">south</span><span class="si">=}</span><span class="s1">, </span><span class="si">{</span><span class="n">east</span><span class="si">=}</span><span class="s1">, </span><span class="si">{</span><span class="n">west</span><span class="si">=}</span><span class="s1">&#39;</span>
-
-
-<span class="n">mercury_schema</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;mercury&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;sweet&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;number&#39;</span><span class="p">},</span>
-        <span class="s1">&#39;sour&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
-    <span class="p">},</span>
-    <span class="s1">&#39;required&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;sweet&#39;</span><span class="p">],</span>
-<span class="p">}</span>
-
-<span class="n">venus_schema</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;venus&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{},</span>
-    <span class="s1">&#39;required&#39;</span><span class="p">:</span> <span class="p">[],</span>
-    <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Nothing from nothing&#39;</span><span class="p">,</span>
-<span class="p">}</span>
-
-<span class="n">earth_schema</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;earth&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;north&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">},</span>
-        <span class="s1">&#39;south&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;boolean&#39;</span><span class="p">},</span>
-        <span class="s1">&#39;east&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;integer&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
-        <span class="s1">&#39;west&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">},</span>
-    <span class="p">},</span>
-    <span class="s1">&#39;required&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;north&#39;</span><span class="p">,</span> <span class="s1">&#39;south&#39;</span><span class="p">],</span>
-<span class="p">}</span>
-
-<span class="n">expected</span> <span class="o">=</span> <span class="p">{</span><span class="n">mercury</span><span class="p">:</span> <span class="n">mercury_schema</span><span class="p">,</span> <span class="n">venus</span><span class="p">:</span> <span class="n">venus_schema</span><span class="p">,</span> <span class="n">earth</span><span class="p">:</span> <span class="n">earth_schema</span><span class="p">}</span>
-
-
-<span class="c1"># test</span>
-<span class="k">def</span> <span class="nf">test_schema_gen</span><span class="p">(</span><span class="n">func_to_schema</span><span class="o">=</span><span class="n">function_to_json_schema</span><span class="p">,</span> <span class="n">expected</span><span class="o">=</span><span class="n">expected</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">func</span><span class="p">,</span> <span class="n">schema</span> <span class="ow">in</span> <span class="n">expected</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="k">assert</span> <span class="n">func_to_schema</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="o">==</span> <span class="n">schema</span><span class="p">,</span> <span class="p">(</span>
-            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">func</span><span class="si">=}</span><span class="s1">, </span><span class="se">\n</span><span class="s1">&#39;</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">func_to_schema</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="si">=}</span><span class="s1">, </span><span class="se">\n</span><span class="s1">&#39;</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">schema</span><span class="si">=}</span><span class="se">\n</span><span class="s1">&#39;</span>
-        <span class="p">)</span>
-
-
-<span class="n">feature_to_output_mapping_to_test</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="nb">int</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;integer&#39;</span><span class="p">},</span>
-    <span class="nb">float</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;number&#39;</span><span class="p">},</span>
-    <span class="nb">bool</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;boolean&#39;</span><span class="p">},</span>
-    <span class="nb">str</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">},</span>
-<span class="p">}</span>
-
-<span class="n">type_feature_switch_to_test</span> <span class="o">=</span> <span class="n">FeatureSwitch</span><span class="p">(</span>
-    <span class="n">featurizer</span><span class="o">=</span><span class="n">attrgetter</span><span class="p">(</span><span class="s1">&#39;annotation&#39;</span><span class="p">),</span>
-    <span class="n">feature_to_output_mapping</span><span class="o">=</span><span class="n">feature_to_output_mapping_to_test</span><span class="p">,</span>
-    <span class="n">default</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">},</span>
-<span class="p">)</span>
-
-<span class="n">func_to_schema_to_test</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
-    <span class="n">function_to_json_schema</span><span class="p">,</span> <span class="n">type_feature_switch</span><span class="o">=</span><span class="n">type_feature_switch_to_test</span>
-<span class="p">)</span>
-<span class="n">test_schema_gen</span><span class="p">(</span><span class="n">func_to_schema_to_test</span><span class="p">)</span>
-
-<span class="c1"># -------------------------------------------------------------------------------------</span>
-<span class="c1"># old version of transform</span>
-
-
-<span class="kn">import</span> <span class="nn">inspect</span>
-
-
-<span class="k">def</span> <span class="nf">_static_function_to_json_schema</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A static (hardcoded) version of function_to_json_schema.</span>
-<span class="sd">    It&#39;s used to test the dynamic version.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Fetch function metadata</span>
-    <span class="n">sig</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
-    <span class="n">parameters</span> <span class="o">=</span> <span class="n">sig</span><span class="o">.</span><span class="n">parameters</span>
-
-    <span class="c1"># Start building the JSON schema</span>
-    <span class="n">schema</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-        <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{},</span>
-        <span class="s1">&#39;required&#39;</span><span class="p">:</span> <span class="p">[],</span>
-    <span class="p">}</span>
-
-    <span class="k">if</span> <span class="n">doc</span> <span class="o">:=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getdoc</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-        <span class="n">schema</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">doc</span>
-
-    <span class="c1"># Build the schema for each parameter</span>
-    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">parameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">annotation</span> <span class="ow">is</span> <span class="nb">int</span><span class="p">:</span>
-            <span class="n">field</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;integer&#39;</span><span class="p">}</span>
-        <span class="k">elif</span> <span class="n">param</span><span class="o">.</span><span class="n">annotation</span> <span class="ow">is</span> <span class="nb">float</span><span class="p">:</span>
-            <span class="n">field</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;number&#39;</span><span class="p">}</span>
-        <span class="k">elif</span> <span class="n">param</span><span class="o">.</span><span class="n">annotation</span> <span class="ow">is</span> <span class="nb">bool</span><span class="p">:</span>
-            <span class="n">field</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;boolean&#39;</span><span class="p">}</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">field</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">}</span>
-
-        <span class="c1"># If there&#39;s a default value, add it to the schema</span>
-        <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">default</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">inspect</span><span class="o">.</span><span class="n">Parameter</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-            <span class="n">field</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">default</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">schema</span><span class="p">[</span><span class="s1">&#39;required&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-
-        <span class="c1"># Add the field to the schema</span>
-        <span class="n">schema</span><span class="p">[</span><span class="s1">&#39;properties&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span>
-
-    <span class="k">return</span> <span class="n">schema</span>
 </pre></div>
 
            </div>
