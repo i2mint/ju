@@ -211,7 +211,11 @@ def function_to_json_schema(
 
 
 def json_schema_to_signature(
-    json_schema: dict, *, type_mapper: Mapper = DFLT_JSON_PY_TYPE_PAIRS
+    json_schema: dict, 
+    *, 
+    type_mapper: Mapper = DFLT_JSON_PY_TYPE_PAIRS,
+    default_default=Parameter.empty,
+    default_annotation=Parameter.empty,
 ):
     """
     Transforms a JSON schema to a Python function signature.
@@ -238,7 +242,7 @@ def json_schema_to_signature(
 
 
     """
-    type_mapper = ensure_callable_mapper(type_mapper)
+    type_mapper = ensure_callable_mapper(type_mapper, default=default_annotation)
     properties = json_schema['properties']
 
     def _params():
@@ -252,7 +256,7 @@ def json_schema_to_signature(
                     py_type = Union[tuple(json_types)]
             else:
                 py_type = Parameter.empty
-            default = field.get('default', Parameter.empty)
+            default = field.get('default', default_default)
             yield Parameter(
                 name=name,
                 annotation=py_type,
