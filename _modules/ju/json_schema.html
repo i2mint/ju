@@ -108,7 +108,7 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Callable</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">Parameter</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 
@@ -211,7 +211,7 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Sequence</span>
 <span class="kn">import</span> <span class="nn">inspect</span>
 <span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">attrgetter</span>
-<span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">Sig</span>
+<span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">Sig</span><span class="p">,</span> <span class="n">sort_params</span>
 
 <span class="kn">from</span> <span class="nn">ju.util</span> <span class="kn">import</span> <span class="n">FeatureSwitch</span><span class="p">,</span> <span class="n">Mapper</span><span class="p">,</span> <span class="n">ensure_callable_mapper</span>
 
@@ -333,7 +333,15 @@
 
     <span class="k">def</span> <span class="nf">_params</span><span class="p">():</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">properties</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">py_type</span> <span class="o">=</span> <span class="n">type_mapper</span><span class="p">(</span><span class="n">field</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">])</span> <span class="ow">or</span> <span class="n">Parameter</span><span class="o">.</span><span class="n">empty</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">json_type</span> <span class="o">:=</span> <span class="n">field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">json_type</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="n">py_type</span> <span class="o">=</span> <span class="n">type_mapper</span><span class="p">(</span><span class="n">json_type</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">json_types</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">type_mapper</span><span class="p">,</span> <span class="n">json_type</span><span class="p">)</span>
+                    <span class="c1"># Make a typing.Union of the json_types</span>
+                    <span class="n">py_type</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">json_types</span><span class="p">)]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">py_type</span> <span class="o">=</span> <span class="n">Parameter</span><span class="o">.</span><span class="n">empty</span>
             <span class="n">default</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="n">Parameter</span><span class="o">.</span><span class="n">empty</span><span class="p">)</span>
             <span class="k">yield</span> <span class="n">Parameter</span><span class="p">(</span>
                 <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
@@ -342,7 +350,7 @@
                 <span class="n">kind</span><span class="o">=</span><span class="n">Parameter</span><span class="o">.</span><span class="n">POSITIONAL_OR_KEYWORD</span><span class="p">,</span>
             <span class="p">)</span>
 
-    <span class="n">sig</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span><span class="n">_params</span><span class="p">())</span>
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span><span class="n">sort_params</span><span class="p">(</span><span class="n">_params</span><span class="p">()))</span>
     <span class="k">if</span> <span class="n">title</span> <span class="o">:=</span> <span class="n">json_schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">):</span>
         <span class="n">sig</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">title</span>
     <span class="n">sig</span><span class="o">.</span><span class="n">docs</span> <span class="o">=</span> <span class="n">json_schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
