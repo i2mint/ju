@@ -101,27 +101,34 @@
 <span class="sd">...         &#39;type&#39;: &#39;object&#39;, </span>
 <span class="sd">...         &#39;properties&#39;: {</span>
 <span class="sd">...             &#39;sweet&#39;: {&#39;type&#39;: &#39;number&#39;}, </span>
-<span class="sd">...             &#39;sour&#39;: {&#39;type&#39;: &#39;string&#39;, &#39;default&#39;: True}}, </span>
+<span class="sd">...             &#39;sour&#39;: {&#39;type&#39;: &#39;boolean&#39;, &#39;default&#39;: True}}, </span>
 <span class="sd">...          &#39;required&#39;: [&#39;sweet&#39;], </span>
 <span class="sd">...          &#39;description&#39;: &#39;Near the sun&#39;</span>
 <span class="sd">... }</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span>
 <span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">Parameter</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
 
 <span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">name_of_obj</span> <span class="k">as</span> <span class="n">_name_of_obj</span>
 
 <span class="kn">from</span> <span class="nn">ju.util</span> <span class="kn">import</span> <span class="n">is_type</span>
+
+<span class="n">DFLT_FUNC_TITLE</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+<span class="n">name_of_obj</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">_name_of_obj</span><span class="p">,</span> <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">DFLT_FUNC_TITLE</span><span class="p">)</span>
 
 
 <span class="k">class</span> <span class="nc">_BasicPythonTypes</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">a_string</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">a_boolean</span><span class="p">:</span> <span class="nb">bool</span>  <span class="c1"># isinstance(True, int) so bool needs to be before int</span>
     <span class="n">an_integer</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">a_float</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="n">a_boolean</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="n">a_mapping</span><span class="p">:</span> <span class="n">Mapping</span>
     <span class="n">a_sequence</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 
@@ -169,6 +176,8 @@
     <span class="n">type_mapping</span><span class="o">=</span><span class="n">DFLT_PY_JSON_TYPE_PAIRS</span><span class="p">,</span>
     <span class="n">default</span><span class="o">=</span><span class="n">DFLT_JSON_TYPE</span><span class="p">,</span>
 <span class="p">):</span>
+    <span class="c1"># TODO: validate type_mapping. (namely child before parent)</span>
+    <span class="c1">#   If parent was before child, the child would never be reached.</span>
     <span class="k">for</span> <span class="n">python_type</span><span class="p">,</span> <span class="n">json_type</span> <span class="ow">in</span> <span class="n">type_mapping</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">is_type</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">python_type</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">json_type</span>
@@ -205,6 +214,107 @@
     <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;rjsf&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;schema&#39;</span><span class="p">:</span> <span class="n">schema</span><span class="p">}}</span>
 
 
+<div class="viewcode-block" id="merge_with_defaults">
+<a class="viewcode-back" href="../../module_docs/ju/json_schema.html#ju.json_schema.merge_with_defaults">[docs]</a>
+<span class="k">def</span> <span class="nf">merge_with_defaults</span><span class="p">(</span><span class="n">defaults</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">overwrites</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a new dictionary that combines two dictionaries by using the keys</span>
+<span class="sd">    and order from the first dictionary (defaults) and overwriting its values</span>
+<span class="sd">    with those from the second dictionary (overwrites) when they exist.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    - defaults (dict): The base dictionary containing default key-value pairs.</span>
+<span class="sd">    - overwrites (dict): The dictionary containing values to overwrite those in defaults.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    - dict: A merged dictionary with values from `overwrites` applied to `defaults`.</span>
+
+<span class="sd">    Example:</span>
+
+<span class="sd">    &gt;&gt;&gt; defaults = {&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 3}</span>
+<span class="sd">    &gt;&gt;&gt; overwrites = {&#39;b&#39;: 4, &#39;c&#39;: 5, &#39;d&#39;: 6}  # note the extra key &#39;d&#39;, not in defaults</span>
+<span class="sd">    &gt;&gt;&gt; merge_with_defaults(defaults, overwrites)</span>
+<span class="sd">    {&#39;a&#39;: 1, &#39;b&#39;: 4, &#39;c&#39;: 5}</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">overwrites</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">defaults</span><span class="p">[</span><span class="n">key</span><span class="p">])</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">defaults</span><span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="pyname_to_title">
+<a class="viewcode-back" href="../../module_docs/ju/json_schema.html#ju.json_schema.pyname_to_title">[docs]</a>
+<span class="k">def</span> <span class="nf">pyname_to_title</span><span class="p">(</span><span class="n">pyname</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts a Python name to a title.</span>
+
+<span class="sd">    It does this by replacing underscores with spaces and capitalizing the first</span>
+<span class="sd">    letter of each word.</span>
+<span class="sd">    If the name contains camel case, it will be split into words.</span>
+
+<span class="sd">    A sort of (imperfect) inverse of `title_to_pyname`.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">    &gt;&gt;&gt; pyname_to_title(&#39;hello_world&#39;)</span>
+<span class="sd">    &#39;Hello World&#39;</span>
+<span class="sd">    &gt;&gt;&gt; pyname_to_title(&#39;helloWorld&#39;)</span>
+<span class="sd">    &#39;Hello World&#39;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># split camel case</span>
+    <span class="n">pyname</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;([a-z0-9])([A-Z])&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;\1 \2&#39;</span><span class="p">,</span> <span class="n">pyname</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pyname</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">()</span></div>
+
+
+
+<span class="c1"># TODO: Replace asis with pyname_to_title when time to update tests</span>
+<span class="c1"># DFLT_PYNAME_TO_TITLE = pyname_to_title</span>
+<span class="kn">from</span> <span class="nn">ju.util</span> <span class="kn">import</span> <span class="n">asis</span>
+
+<span class="n">DFLT_PYNAME_TO_TITLE</span> <span class="o">=</span> <span class="n">asis</span>
+
+
+<div class="viewcode-block" id="title_to_pyname">
+<a class="viewcode-back" href="../../module_docs/ju/json_schema.html#ju.json_schema.title_to_pyname">[docs]</a>
+<span class="k">def</span> <span class="nf">title_to_pyname</span><span class="p">(</span><span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts a title to a Python name.</span>
+
+<span class="sd">    A sort of (imperfect) inverse of `pyname_to_title`.</span>
+
+<span class="sd">    It does this by replacing spaces with underscores and lowercasing the first</span>
+<span class="sd">    letter of each word.</span>
+<span class="sd">    If the title contains camel case, it will be split into words.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">    &gt;&gt;&gt; title_to_pyname(&#39;Hello World&#39;)</span>
+<span class="sd">    &#39;hello_world&#39;</span>
+<span class="sd">    &gt;&gt;&gt; title_to_pyname(&#39;HelloWorld&#39;)</span>
+<span class="sd">    &#39;hello_world&#39;</span>
+<span class="sd">    &gt;&gt;&gt; title_to_pyname(&#39;3: Hello World&#39;)</span>
+<span class="sd">    &#39;_3_hello_world&#39;</span>
+<span class="sd">    &gt;&gt;&gt; title_to_pyname(&#39;   heL----lO  \n\t;; wo__rld&#39;)</span>
+<span class="sd">    &#39;_he_l_l_o_wo__rld&#39;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># if title begins with a digit, prepend an underscore</span>
+    <span class="n">original_title</span> <span class="o">=</span> <span class="n">title</span>
+    <span class="k">if</span> <span class="n">title</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">title</span>
+    <span class="c1"># split camel case</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;([a-z0-9])([A-Z])&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;\1 \2&#39;</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
+    <span class="c1"># remove non-alphanumeric characters, replacing them with a single space</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\W+&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
+    <span class="c1"># replace any sequence of spaces with a single underscore</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\s+&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
+    <span class="n">pyname</span> <span class="o">=</span> <span class="n">title</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="c1"># assert pyname is a valid Python identifier</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="n">pyname</span><span class="o">.</span><span class="n">isidentifier</span><span class="p">()</span>
+    <span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;Invalid Python identifier: </span><span class="si">{</span><span class="n">pyname</span><span class="si">}</span><span class="s1">, computed from title: </span><span class="si">{</span><span class="n">original_title</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="k">return</span> <span class="n">pyname</span></div>
+
+
+
 <span class="c1"># -------------------------------------------------------------------------------------</span>
 <span class="c1"># The function_to_json_schema function</span>
 
@@ -233,21 +343,30 @@
     <span class="n">default</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">},</span>
 <span class="p">)</span>
 
+<span class="n">BASE_SCHEMA</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="n">DFLT_FUNC_TITLE</span><span class="p">,</span>
+    <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{},</span>
+    <span class="s1">&#39;required&#39;</span><span class="p">:</span> <span class="p">[],</span>
+<span class="p">}</span>
 
-<span class="c1"># TODO: See</span>
+
+<span class="c1"># TODO: See rjsf _func_to_rjsf_schemas and merge with it</span>
 <div class="viewcode-block" id="function_to_json_schema">
 <a class="viewcode-back" href="../../module_docs/ju/json_schema.html#ju.json_schema.function_to_json_schema">[docs]</a>
 <span class="k">def</span> <span class="nf">function_to_json_schema</span><span class="p">(</span>
     <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">type_feature_switch</span><span class="o">=</span><span class="n">type_feature_switch</span><span class="p">,</span>
-<span class="p">):</span>
+    <span class="n">doc</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">name_of_obj</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">name_of_obj</span><span class="p">,</span>
+    <span class="n">pyname_to_title</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">DFLT_PYNAME_TO_TITLE</span><span class="p">,</span>
+    <span class="n">param_to_prop_type</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">DFLT_PARAM_TO_TYPE</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Transforms a Python function to a JSON schema.</span>
 
 <span class="sd">    param func: The function to transform</span>
-<span class="sd">    param type_feature_switch: A function that maps a parameter to a JSON schema type</span>
-<span class="sd">    return: The JSON schema for the function</span>
+<span class="sd">    return: The JSON schema (as a dict) for the function</span>
 
 <span class="sd">    &gt;&gt;&gt; def mercury(sweet: float, sour=True):</span>
 <span class="sd">    ...     &#39;&#39;&#39;Near the sun&#39;&#39;&#39;</span>
@@ -258,7 +377,7 @@
 <span class="sd">    ...         &#39;type&#39;: &#39;object&#39;,</span>
 <span class="sd">    ...         &#39;properties&#39;: {</span>
 <span class="sd">    ...             &#39;sweet&#39;: {&#39;type&#39;: &#39;number&#39;},</span>
-<span class="sd">    ...             &#39;sour&#39;: {&#39;type&#39;: &#39;string&#39;, &#39;default&#39;: True}},</span>
+<span class="sd">    ...             &#39;sour&#39;: {&#39;type&#39;: &#39;boolean&#39;, &#39;default&#39;: True}},</span>
 <span class="sd">    ...          &#39;required&#39;: [&#39;sweet&#39;],</span>
 <span class="sd">    ...          &#39;description&#39;: &#39;Near the sun&#39;</span>
 <span class="sd">    ... }</span>
@@ -270,29 +389,34 @@
     <span class="n">sig</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
     <span class="n">parameters</span> <span class="o">=</span> <span class="n">sig</span><span class="o">.</span><span class="n">parameters</span>
 
-    <span class="c1"># Start building the JSON schema</span>
-    <span class="n">schema</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-        <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{},</span>
-        <span class="s1">&#39;required&#39;</span><span class="p">:</span> <span class="p">[],</span>
-    <span class="p">}</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">BASE_SCHEMA</span><span class="p">)</span>
+    <span class="n">schema</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pyname_to_title</span><span class="p">(</span><span class="n">name_of_obj</span><span class="p">(</span><span class="n">func</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="n">doc</span> <span class="o">:=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getdoc</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+    <span class="n">schema</span><span class="p">[</span><span class="s1">&#39;properties&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_properties</span><span class="p">(</span>
+        <span class="n">parameters</span><span class="p">,</span> <span class="n">param_to_prop_type</span><span class="o">=</span><span class="n">param_to_prop_type</span>
+    <span class="p">)</span>
+    <span class="n">schema</span><span class="p">[</span><span class="s1">&#39;required&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_required</span><span class="p">(</span><span class="n">schema</span><span class="p">[</span><span class="s1">&#39;properties&#39;</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">doc</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="c1"># if doc is True, use the function docstring</span>
+        <span class="n">doc</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getdoc</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">doc</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;doc must be a string, was: </span><span class="si">{</span><span class="n">doc</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="n">schema</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">doc</span>
 
-    <span class="c1"># Build the schema for each parameter</span>
-    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">parameters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">field</span> <span class="o">=</span> <span class="n">type_feature_switch</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+    <span class="c1"># # Build the schema for each parameter</span>
+    <span class="c1"># for name, param in parameters.items():</span>
+    <span class="c1">#     field = type_feature_switch(param)</span>
 
-        <span class="c1"># If there&#39;s a default value, add it to the schema</span>
-        <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">default</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Parameter</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-            <span class="n">field</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">default</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">schema</span><span class="p">[</span><span class="s1">&#39;required&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="c1">#     # If there&#39;s a default value, add it to the schema</span>
+    <span class="c1">#     if param.default is not Parameter.empty:</span>
+    <span class="c1">#         field[&#39;default&#39;] = param.default</span>
+    <span class="c1">#     else:</span>
+    <span class="c1">#         schema[&#39;required&#39;].append(name)</span>
 
-        <span class="c1"># Add the field to the schema</span>
-        <span class="n">schema</span><span class="p">[</span><span class="s1">&#39;properties&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span>
+    <span class="c1">#     # Add the field to the schema</span>
+    <span class="c1">#     schema[&#39;properties&#39;][name] = field</span>
 
     <span class="k">return</span> <span class="n">schema</span></div>
 
@@ -301,11 +425,13 @@
 <div class="viewcode-block" id="json_schema_to_signature">
 <a class="viewcode-back" href="../../module_docs/ju/json_schema.html#ju.json_schema.json_schema_to_signature">[docs]</a>
 <span class="k">def</span> <span class="nf">json_schema_to_signature</span><span class="p">(</span>
-    <span class="n">json_schema</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> 
-    <span class="o">*</span><span class="p">,</span> 
+    <span class="n">json_schema</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
     <span class="n">type_mapper</span><span class="p">:</span> <span class="n">Mapper</span> <span class="o">=</span> <span class="n">DFLT_JSON_PY_TYPE_PAIRS</span><span class="p">,</span>
     <span class="n">default_default</span><span class="o">=</span><span class="n">Parameter</span><span class="o">.</span><span class="n">empty</span><span class="p">,</span>
+    <span class="n">title_to_pyname</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">title_to_pyname</span><span class="p">,</span>
     <span class="n">default_annotation</span><span class="o">=</span><span class="n">Parameter</span><span class="o">.</span><span class="n">empty</span><span class="p">,</span>
+    <span class="n">default_description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Transforms a JSON schema to a Python function signature.</span>
@@ -356,11 +482,67 @@
 
     <span class="n">sig</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span><span class="n">sort_params</span><span class="p">(</span><span class="n">_params</span><span class="p">()))</span>
     <span class="k">if</span> <span class="n">title</span> <span class="o">:=</span> <span class="n">json_schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">):</span>
-        <span class="n">sig</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">title</span>
-    <span class="n">sig</span><span class="o">.</span><span class="n">docs</span> <span class="o">=</span> <span class="n">json_schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">sig</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">title_to_pyname</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="n">sig</span><span class="o">.</span><span class="n">docs</span> <span class="o">=</span> <span class="n">json_schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="n">default_description</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">sig</span></div>
 
+
+
+<span class="c1"># -------------------------------------------------------------------------------------</span>
+<span class="c1"># Utils</span>
+
+
+<span class="c1"># TODO: The loop body could be factored out</span>
+<div class="viewcode-block" id="get_properties">
+<a class="viewcode-back" href="../../module_docs/ju/json_schema.html#ju.json_schema.get_properties">[docs]</a>
+<span class="k">def</span> <span class="nf">get_properties</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">param_to_prop_type</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">DFLT_PARAM_TO_TYPE</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the properties dict for the JSON schema.</span>
+
+<span class="sd">    &gt;&gt;&gt; def foo(</span>
+<span class="sd">    ...     a_bool: bool,</span>
+<span class="sd">    ...     a_float=3.14,</span>
+<span class="sd">    ...     an_int=2,</span>
+<span class="sd">    ...     a_str: str = &#39;hello&#39;,</span>
+<span class="sd">    ...     something_else=None</span>
+<span class="sd">    ... ):</span>
+<span class="sd">    ...     &#39;&#39;&#39;A Foo function&#39;&#39;&#39;</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; from ju.json_schema import DFLT_PARAM_TO_TYPE</span>
+<span class="sd">    &gt;&gt;&gt; parameters = inspect.signature(foo).parameters</span>
+<span class="sd">    &gt;&gt;&gt; assert (</span>
+<span class="sd">    ...     get_properties(parameters, param_to_prop_type=DFLT_PARAM_TO_TYPE)</span>
+<span class="sd">    ...     == {</span>
+<span class="sd">    ...         &#39;a_bool&#39;: {&#39;type&#39;: &#39;boolean&#39;},</span>
+<span class="sd">    ...         &#39;a_float&#39;: {&#39;type&#39;: &#39;number&#39;, &#39;default&#39;: 3.14},</span>
+<span class="sd">    ...         &#39;an_int&#39;: {&#39;type&#39;: &#39;integer&#39;, &#39;default&#39;: 2},</span>
+<span class="sd">    ...         &#39;a_str&#39;: {&#39;type&#39;: &#39;string&#39;, &#39;default&#39;: &#39;hello&#39;},</span>
+<span class="sd">    ...         &#39;something_else&#39;: {&#39;type&#39;: &#39;string&#39;, &#39;default&#39;: None}</span>
+<span class="sd">    ...     }</span>
+<span class="sd">    ... )</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Build the properties dict</span>
+    <span class="n">properties</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+        <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="o">=</span> <span class="n">item</span>
+        <span class="n">field</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">field</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">param_to_prop_type</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+
+        <span class="c1"># If there&#39;s a default value, add it</span>
+        <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">default</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">inspect</span><span class="o">.</span><span class="n">Parameter</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="n">field</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">default</span>
+
+        <span class="c1"># Add the field to the schema</span>
+        <span class="n">properties</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span>
+
+    <span class="k">return</span> <span class="n">properties</span></div>
+
+
+
+<span class="k">def</span> <span class="nf">get_required</span><span class="p">(</span><span class="n">properties</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">properties</span> <span class="k">if</span> <span class="s1">&#39;default&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">[</span><span class="n">name</span><span class="p">]]</span>
 </pre></div>
 
            </div>

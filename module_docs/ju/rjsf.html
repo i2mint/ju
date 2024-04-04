@@ -56,7 +56,6 @@
 <li class="toctree-l1"><a class="reference internal" href="oas.html">ju.oas</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">ju.rjsf</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#ju.rjsf.func_to_form_spec"><code class="docutils literal notranslate"><span class="pre">func_to_form_spec()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ju.rjsf.get_properties"><code class="docutils literal notranslate"><span class="pre">get_properties()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tests.html">ju.tests</a></li>
@@ -94,7 +93,7 @@
 <p>Tools for React-JSONSchema-Form (RJSF)</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="ju.rjsf.func_to_form_spec">
-<span class="sig-prename descclassname"><span class="pre">ju.rjsf.</span></span><span class="sig-name descname"><span class="pre">func_to_form_spec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ju/rjsf.html#func_to_form_spec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.rjsf.func_to_form_spec" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">ju.rjsf.</span></span><span class="sig-name descname"><span class="pre">func_to_form_spec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">func:</span> <span class="pre">~typing.Callable,</span> <span class="pre">*,</span> <span class="pre">doc:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">bool</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">True,</span> <span class="pre">param_to_prop_type:</span> <span class="pre">~typing.Callable</span> <span class="pre">=</span> <span class="pre">functools.partial(&lt;function</span> <span class="pre">parametrized_param_to_type&gt;,</span> <span class="pre">type_mapping=((&lt;class</span> <span class="pre">'str'&gt;,</span> <span class="pre">'string'),</span> <span class="pre">(&lt;class</span> <span class="pre">'bool'&gt;,</span> <span class="pre">'boolean'),</span> <span class="pre">(&lt;class</span> <span class="pre">'int'&gt;,</span> <span class="pre">'integer'),</span> <span class="pre">(&lt;class</span> <span class="pre">'float'&gt;,</span> <span class="pre">'number'),</span> <span class="pre">(typing.Mapping,</span> <span class="pre">'object'),</span> <span class="pre">(typing.Sequence[str],</span> <span class="pre">'array'))),</span> <span class="pre">nest_under_field:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">'rjsf',</span> <span class="pre">base_rjsf_spec:</span> <span class="pre">dict</span> <span class="pre">=</span> <span class="pre">{'disabled':</span> <span class="pre">False,</span> <span class="pre">'focusOnFirstError':</span> <span class="pre">False,</span> <span class="pre">'liveOmit':</span> <span class="pre">False,</span> <span class="pre">'liveValidate':</span> <span class="pre">False,</span> <span class="pre">'noHtml5Validate':</span> <span class="pre">False,</span> <span class="pre">'noValidate':</span> <span class="pre">False,</span> <span class="pre">'omitExtraData':</span> <span class="pre">False,</span> <span class="pre">'readonly':</span> <span class="pre">False,</span> <span class="pre">'schema':</span> <span class="pre">{'properties':</span> <span class="pre">{},</span> <span class="pre">'required':</span> <span class="pre">[],</span> <span class="pre">'title':</span> <span class="pre">'',</span> <span class="pre">'type':</span> <span class="pre">'object'},</span> <span class="pre">'showErrorList':</span> <span class="pre">'top',</span> <span class="pre">'uiSchema':</span> <span class="pre">{'ui:submitButtonOptions':</span> <span class="pre">{'submitText':</span> <span class="pre">'Run'}}},</span> <span class="pre">pyname_to_title:</span> <span class="pre">~typing.Callable[[str],</span> <span class="pre">str]</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">asis&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ju/rjsf.html#func_to_form_spec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.rjsf.func_to_form_spec" title="Link to this definition"></a></dt>
 <dd><p>Returns a JSON object that can be used as a form specification, along with the
 function, to generate a FuncCaller React component in a React application.</p>
 <p>param func: The function to transform
@@ -141,35 +140,6 @@ return: The form specification for the function</p>
 <span class="gp">... </span>        <span class="s1">&#39;showErrorList&#39;</span><span class="p">:</span> <span class="s1">&#39;top&#39;</span>
 <span class="gp">... </span>    <span class="p">}</span>
 <span class="gp">... </span><span class="p">}</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ju.rjsf.get_properties">
-<span class="sig-prename descclassname"><span class="pre">ju.rjsf.</span></span><span class="sig-name descname"><span class="pre">get_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_to_prop_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ju/rjsf.html#get_properties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.rjsf.get_properties" title="Link to this definition"></a></dt>
-<dd><p>Returns the properties dict for the JSON schema.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="n">a_bool</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">a_float</span><span class="o">=</span><span class="mf">3.14</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">an_int</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">a_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;hello&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">something_else</span><span class="o">=</span><span class="kc">None</span>
-<span class="gp">... </span><span class="p">):</span>
-<span class="gp">... </span><span class="w">    </span><span class="sd">&#39;&#39;&#39;A Foo function&#39;&#39;&#39;</span>
-<span class="gp">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ju.json_schema</span> <span class="kn">import</span> <span class="n">DFLT_PARAM_TO_TYPE</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">parameters</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">foo</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="p">(</span>
-<span class="gp">... </span>    <span class="n">get_properties</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">param_to_prop_type</span><span class="o">=</span><span class="n">DFLT_PARAM_TO_TYPE</span><span class="p">)</span>
-<span class="gp">... </span>    <span class="o">==</span> <span class="p">{</span>
-<span class="gp">... </span>        <span class="s1">&#39;a_bool&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;boolean&#39;</span><span class="p">},</span>
-<span class="gp">... </span>        <span class="s1">&#39;a_float&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="mf">3.14</span><span class="p">},</span>
-<span class="gp">... </span>        <span class="s1">&#39;an_int&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;integer&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
-<span class="gp">... </span>        <span class="s1">&#39;a_str&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="s1">&#39;hello&#39;</span><span class="p">},</span>
-<span class="gp">... </span>        <span class="s1">&#39;something_else&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
-<span class="gp">... </span>    <span class="p">}</span>
-<span class="gp">... </span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>

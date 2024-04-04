@@ -54,7 +54,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../ju.html">ju</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">ju.json_schema</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#ju.json_schema.function_to_json_schema"><code class="docutils literal notranslate"><span class="pre">function_to_json_schema()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ju.json_schema.get_properties"><code class="docutils literal notranslate"><span class="pre">get_properties()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#ju.json_schema.json_schema_to_signature"><code class="docutils literal notranslate"><span class="pre">json_schema_to_signature()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ju.json_schema.merge_with_defaults"><code class="docutils literal notranslate"><span class="pre">merge_with_defaults()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ju.json_schema.pyname_to_title"><code class="docutils literal notranslate"><span class="pre">pyname_to_title()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ju.json_schema.title_to_pyname"><code class="docutils literal notranslate"><span class="pre">title_to_pyname()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="oas.html">ju.oas</a></li>
@@ -105,7 +109,7 @@ a form in a React application.</p>
 <span class="gp">... </span>        <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
 <span class="gp">... </span>        <span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{</span>
 <span class="gp">... </span>            <span class="s1">&#39;sweet&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;number&#39;</span><span class="p">},</span>
-<span class="gp">... </span>            <span class="s1">&#39;sour&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}},</span>
+<span class="gp">... </span>            <span class="s1">&#39;sour&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;boolean&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}},</span>
 <span class="gp">... </span>         <span class="s1">&#39;required&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;sweet&#39;</span><span class="p">],</span>
 <span class="gp">... </span>         <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Near the sun&#39;</span>
 <span class="gp">... </span><span class="p">}</span>
@@ -113,11 +117,10 @@ a form in a React application.</p>
 </div>
 <dl class="py function">
 <dt class="sig sig-object py" id="ju.json_schema.function_to_json_schema">
-<span class="sig-prename descclassname"><span class="pre">ju.json_schema.</span></span><span class="sig-name descname"><span class="pre">function_to_json_schema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func:</span> <span class="pre">~typing.Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_feature_switch=functools.partial(&lt;function</span> <span class="pre">feature_switch&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">featurizer=operator.attrgetter('annotation')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_to_output_mapping={&lt;class</span> <span class="pre">'str'&gt;:</span> <span class="pre">{'type':</span> <span class="pre">'string'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'int'&gt;:</span> <span class="pre">{'type':</span> <span class="pre">'integer'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'float'&gt;:</span> <span class="pre">{'type':</span> <span class="pre">'number'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'bool'&gt;:</span> <span class="pre">{'type':</span> <span class="pre">'boolean'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typing.Mapping:</span> <span class="pre">{'type':</span> <span class="pre">'object'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typing.Sequence[str]:</span> <span class="pre">{'type':</span> <span class="pre">'array'}}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default={'type':</span> <span class="pre">'string'})</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ju/json_schema.html#function_to_json_schema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.json_schema.function_to_json_schema" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">ju.json_schema.</span></span><span class="sig-name descname"><span class="pre">function_to_json_schema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">func:</span> <span class="pre">~typing.Callable,</span> <span class="pre">*,</span> <span class="pre">doc:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">bool</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">True,</span> <span class="pre">name_of_obj:</span> <span class="pre">~typing.Callable[[~typing.Any],</span> <span class="pre">str]</span> <span class="pre">=</span> <span class="pre">functools.partial(&lt;function</span> <span class="pre">name_of_obj&gt;,</span> <span class="pre">default_factory=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;),</span> <span class="pre">pyname_to_title:</span> <span class="pre">~typing.Callable[[str],</span> <span class="pre">str]</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">asis&gt;,</span> <span class="pre">param_to_prop_type:</span> <span class="pre">~typing.Callable</span> <span class="pre">=</span> <span class="pre">functools.partial(&lt;function</span> <span class="pre">parametrized_param_to_type&gt;,</span> <span class="pre">type_mapping=((&lt;class</span> <span class="pre">'str'&gt;,</span> <span class="pre">'string'),</span> <span class="pre">(&lt;class</span> <span class="pre">'bool'&gt;,</span> <span class="pre">'boolean'),</span> <span class="pre">(&lt;class</span> <span class="pre">'int'&gt;,</span> <span class="pre">'integer'),</span> <span class="pre">(&lt;class</span> <span class="pre">'float'&gt;,</span> <span class="pre">'number'),</span> <span class="pre">(typing.Mapping,</span> <span class="pre">'object'),</span> <span class="pre">(typing.Sequence[str],</span> <span class="pre">'array')))</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../../_modules/ju/json_schema.html#function_to_json_schema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.json_schema.function_to_json_schema" title="Link to this definition"></a></dt>
 <dd><p>Transforms a Python function to a JSON schema.</p>
 <p>param func: The function to transform
-param type_feature_switch: A function that maps a parameter to a JSON schema type
-return: The JSON schema for the function</p>
+return: The JSON schema (as a dict) for the function</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">mercury</span><span class="p">(</span><span class="n">sweet</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">sour</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="gp">... </span><span class="w">    </span><span class="sd">&#39;&#39;&#39;Near the sun&#39;&#39;&#39;</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">sweet</span> <span class="o">*</span> <span class="n">sour</span>
@@ -127,7 +130,7 @@ return: The JSON schema for the function</p>
 <span class="gp">... </span>        <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
 <span class="gp">... </span>        <span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{</span>
 <span class="gp">... </span>            <span class="s1">&#39;sweet&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;number&#39;</span><span class="p">},</span>
-<span class="gp">... </span>            <span class="s1">&#39;sour&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}},</span>
+<span class="gp">... </span>            <span class="s1">&#39;sour&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;boolean&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}},</span>
 <span class="gp">... </span>         <span class="s1">&#39;required&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;sweet&#39;</span><span class="p">],</span>
 <span class="gp">... </span>         <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Near the sun&#39;</span>
 <span class="gp">... </span><span class="p">}</span>
@@ -137,8 +140,37 @@ return: The JSON schema for the function</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="ju.json_schema.get_properties">
+<span class="sig-prename descclassname"><span class="pre">ju.json_schema.</span></span><span class="sig-name descname"><span class="pre">get_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">parameters,</span> <span class="pre">*,</span> <span class="pre">param_to_prop_type:</span> <span class="pre">~typing.Callable</span> <span class="pre">=</span> <span class="pre">functools.partial(&lt;function</span> <span class="pre">parametrized_param_to_type&gt;,</span> <span class="pre">type_mapping=((&lt;class</span> <span class="pre">'str'&gt;,</span> <span class="pre">'string'),</span> <span class="pre">(&lt;class</span> <span class="pre">'bool'&gt;,</span> <span class="pre">'boolean'),</span> <span class="pre">(&lt;class</span> <span class="pre">'int'&gt;,</span> <span class="pre">'integer'),</span> <span class="pre">(&lt;class</span> <span class="pre">'float'&gt;,</span> <span class="pre">'number'),</span> <span class="pre">(typing.Mapping,</span> <span class="pre">'object'),</span> <span class="pre">(typing.Sequence[str],</span> <span class="pre">'array')))</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ju/json_schema.html#get_properties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.json_schema.get_properties" title="Link to this definition"></a></dt>
+<dd><p>Returns the properties dict for the JSON schema.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">a_bool</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">a_float</span><span class="o">=</span><span class="mf">3.14</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">an_int</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">a_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;hello&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">something_else</span><span class="o">=</span><span class="kc">None</span>
+<span class="gp">... </span><span class="p">):</span>
+<span class="gp">... </span><span class="w">    </span><span class="sd">&#39;&#39;&#39;A Foo function&#39;&#39;&#39;</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ju.json_schema</span> <span class="kn">import</span> <span class="n">DFLT_PARAM_TO_TYPE</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">parameters</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">foo</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="p">(</span>
+<span class="gp">... </span>    <span class="n">get_properties</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">param_to_prop_type</span><span class="o">=</span><span class="n">DFLT_PARAM_TO_TYPE</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="o">==</span> <span class="p">{</span>
+<span class="gp">... </span>        <span class="s1">&#39;a_bool&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;boolean&#39;</span><span class="p">},</span>
+<span class="gp">... </span>        <span class="s1">&#39;a_float&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="mf">3.14</span><span class="p">},</span>
+<span class="gp">... </span>        <span class="s1">&#39;an_int&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;integer&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+<span class="gp">... </span>        <span class="s1">&#39;a_str&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="s1">&#39;hello&#39;</span><span class="p">},</span>
+<span class="gp">... </span>        <span class="s1">&#39;something_else&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+<span class="gp">... </span>    <span class="p">}</span>
+<span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="ju.json_schema.json_schema_to_signature">
-<span class="sig-prename descclassname"><span class="pre">ju.json_schema.</span></span><span class="sig-name descname"><span class="pre">json_schema_to_signature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">json_schema:</span> <span class="pre">dict,</span> <span class="pre">*,</span> <span class="pre">type_mapper:</span> <span class="pre">~typing.Sequence[~typing.Tuple]</span> <span class="pre">|</span> <span class="pre">~typing.Mapping</span> <span class="pre">|</span> <span class="pre">~typing.Callable[[KT],</span> <span class="pre">VT]</span> <span class="pre">=</span> <span class="pre">(('string',</span> <span class="pre">&lt;class</span> <span class="pre">'str'&gt;),</span> <span class="pre">('integer',</span> <span class="pre">&lt;class</span> <span class="pre">'int'&gt;),</span> <span class="pre">('number',</span> <span class="pre">&lt;class</span> <span class="pre">'float'&gt;),</span> <span class="pre">('boolean',</span> <span class="pre">&lt;class</span> <span class="pre">'bool'&gt;),</span> <span class="pre">('object',</span> <span class="pre">typing.Mapping),</span> <span class="pre">('array',</span> <span class="pre">typing.Sequence[str])),</span> <span class="pre">default_default,</span> <span class="pre">default_annotation</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ju/json_schema.html#json_schema_to_signature"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.json_schema.json_schema_to_signature" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">ju.json_schema.</span></span><span class="sig-name descname"><span class="pre">json_schema_to_signature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">json_schema:</span> <span class="pre">dict,</span> <span class="pre">*,</span> <span class="pre">type_mapper:</span> <span class="pre">~typing.Sequence[~typing.Tuple]</span> <span class="pre">|</span> <span class="pre">~typing.Mapping</span> <span class="pre">|</span> <span class="pre">~typing.Callable[[KT],</span> <span class="pre">VT]</span> <span class="pre">=</span> <span class="pre">(('string',</span> <span class="pre">&lt;class</span> <span class="pre">'str'&gt;),</span> <span class="pre">('boolean',</span> <span class="pre">&lt;class</span> <span class="pre">'bool'&gt;),</span> <span class="pre">('integer',</span> <span class="pre">&lt;class</span> <span class="pre">'int'&gt;),</span> <span class="pre">('number',</span> <span class="pre">&lt;class</span> <span class="pre">'float'&gt;),</span> <span class="pre">('object',</span> <span class="pre">typing.Mapping),</span> <span class="pre">('array',</span> <span class="pre">typing.Sequence[str])),</span> <span class="pre">default_default,</span> <span class="pre">title_to_pyname:</span> <span class="pre">~typing.Callable[[str],</span> <span class="pre">str]</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">title_to_pyname&gt;,</span> <span class="pre">default_annotation,</span> <span class="pre">default_description:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ju/json_schema.html#json_schema_to_signature"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.json_schema.json_schema_to_signature" title="Link to this definition"></a></dt>
 <dd><p>Transforms a JSON schema to a Python function signature.</p>
 <p>param schema: The JSON schema to transform
 return: The Python function signature</p>
@@ -161,6 +193,60 @@ return: The Python function signature</p>
 <span class="go">&#39;Earth docs&#39;</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ju.json_schema.merge_with_defaults">
+<span class="sig-prename descclassname"><span class="pre">ju.json_schema.</span></span><span class="sig-name descname"><span class="pre">merge_with_defaults</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">defaults</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrites</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Mapping</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../../_modules/ju/json_schema.html#merge_with_defaults"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.json_schema.merge_with_defaults" title="Link to this definition"></a></dt>
+<dd><p>Returns a new dictionary that combines two dictionaries by using the keys
+and order from the first dictionary (defaults) and overwriting its values
+with those from the second dictionary (overwrites) when they exist.</p>
+<p>Parameters:
+- defaults (dict): The base dictionary containing default key-value pairs.
+- overwrites (dict): The dictionary containing values to overwrite those in defaults.</p>
+<p>Returns:
+- dict: A merged dictionary with values from <cite>overwrites</cite> applied to <cite>defaults</cite>.</p>
+<p>Example:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">defaults</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">overwrites</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">:</span> <span class="mi">6</span><span class="p">}</span>  <span class="c1"># note the extra key &#39;d&#39;, not in defaults</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">merge_with_defaults</span><span class="p">(</span><span class="n">defaults</span><span class="p">,</span> <span class="n">overwrites</span><span class="p">)</span>
+<span class="go">{&#39;a&#39;: 1, &#39;b&#39;: 4, &#39;c&#39;: 5}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ju.json_schema.pyname_to_title">
+<span class="sig-prename descclassname"><span class="pre">ju.json_schema.</span></span><span class="sig-name descname"><span class="pre">pyname_to_title</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pyname</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../_modules/ju/json_schema.html#pyname_to_title"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.json_schema.pyname_to_title" title="Link to this definition"></a></dt>
+<dd><p>Converts a Python name to a title.</p>
+<p>It does this by replacing underscores with spaces and capitalizing the first
+letter of each word.
+If the name contains camel case, it will be split into words.</p>
+<p>A sort of (imperfect) inverse of <cite>title_to_pyname</cite>.</p>
+<p>Example:
+&gt;&gt;&gt; pyname_to_title(‘hello_world’)
+‘Hello World’
+&gt;&gt;&gt; pyname_to_title(‘helloWorld’)
+‘Hello World’</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ju.json_schema.title_to_pyname">
+<span class="sig-prename descclassname"><span class="pre">ju.json_schema.</span></span><span class="sig-name descname"><span class="pre">title_to_pyname</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../_modules/ju/json_schema.html#title_to_pyname"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.json_schema.title_to_pyname" title="Link to this definition"></a></dt>
+<dd><p>Converts a title to a Python name.</p>
+<p>A sort of (imperfect) inverse of <cite>pyname_to_title</cite>.</p>
+<p>It does this by replacing spaces with underscores and lowercasing the first
+letter of each word.
+If the title contains camel case, it will be split into words.</p>
+<p>Example:
+&gt;&gt;&gt; title_to_pyname(‘Hello World’)
+‘hello_world’
+&gt;&gt;&gt; title_to_pyname(‘HelloWorld’)
+‘hello_world’
+&gt;&gt;&gt; title_to_pyname(‘3: Hello World’)
+‘_3_hello_world’
+&gt;&gt;&gt; title_to_pyname(’   heL—-lO  nt;; wo__rld’)
+‘_he_l_l_o_wo__rld’</p>
 </dd></dl>
 
 </section>
