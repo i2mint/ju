@@ -8,7 +8,6 @@ from ju.json_schema import (
     function_to_json_schema,
     DFLT_PARAM_TO_TYPE,
     DFLT_FUNC_TITLE,
-    name_of_obj,
     merge_with_defaults,
 )
 from ju.util import asis
@@ -171,7 +170,12 @@ def _func_to_rjsf_schemas(
 
     """
 
-    schema = function_to_json_schema(func)
+    schema = function_to_json_schema(
+        func,
+        doc=doc,
+        pyname_to_title=pyname_to_title,
+        param_to_prop_type=param_to_prop_type,
+    )
 
     ui_schema = deepcopy(base_rjsf_spec['uiSchema'])
 
