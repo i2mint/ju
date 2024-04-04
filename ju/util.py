@@ -48,6 +48,10 @@ SomeType = Union[Type, GenericAlias, Any]
 SomeType.__doc__ = "A type or a GenericAlias, but also Any, just in case"
 
 
+def asis(obj):
+    return obj
+
+
 def is_type(param: Parameter, type_: SomeType):
     """
     Checks if the type of a parameter's default value or its annotation matches a

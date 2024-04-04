@@ -28,7 +28,7 @@ mercury_schema = {
     'type': 'object',
     'properties': {
         'sweet': {'type': 'number'},
-        'sour': {'type': 'string', 'default': True},
+        'sour': {'type': 'boolean', 'default': True},
     },
     'required': ['sweet'],
 }
@@ -66,68 +66,35 @@ def test_schema_gen(func_to_schema=function_to_json_schema, expected=expected):
 
 
 feature_to_output_mapping_to_test = {
-    int: {'type': 'integer'},
-    float: {'type': 'number'},
-    bool: {'type': 'boolean'},
-    str: {'type': 'string'},
+    bool: 'boolean',  # note that bool is a subclass of int, so needs to be before
+    int: 'integer',
+    float: 'number',
+    str: 'string',
 }
 
 type_feature_switch_to_test = FeatureSwitch(
     featurizer=attrgetter('annotation'),
     feature_to_output_mapping=feature_to_output_mapping_to_test,
-    default={'type': 'string'},
+    default='string',
 )
 
 func_to_schema_to_test = partial(
-    function_to_json_schema, type_feature_switch=type_feature_switch_to_test
+    function_to_json_schema, param_to_prop_type=type_feature_switch_to_test
 )
 
-test_schema_gen(func_to_schema_to_test)
+# since type_feature_switch_to_test only switches on the annotation
+# and mercury has no annotation, the FeatureSwitch will default to 'string'
+# so the expected schema needs to be changed for this test
+from copy import deepcopy
 
-# -------------------------------------------------------------------------------------
-# old version of transform
+modified_mercury_schema = deepcopy(mercury_schema)
+modified_mercury_schema['properties']['sour']['type'] = 'string'
 
-
-import inspect
-
-
-def static_function_to_json_schema(func: Callable):
-    """A static (hardcoded) version of function_to_json_schema.
-    It's used to test the dynamic version.
-    """
-    # Fetch function metadata
-    sig = inspect.signature(func)
-    parameters = sig.parameters
-
-    # Start building the JSON schema
-    schema = {
-        'title': func.__name__,
-        'type': 'object',
-        'properties': {},
-        'required': [],
-    }
-
-    if doc := inspect.getdoc(func):
-        schema['description'] = doc
-
-    # Build the schema for each parameter
-    for name, param in parameters.items():
-        if param.annotation is int:
-            field = {'type': 'integer'}
-        elif param.annotation is float:
-            field = {'type': 'number'}
-        elif param.annotation is bool:
-            field = {'type': 'boolean'}
-        else:
-            field = {'type': 'string'}
-
-        # If there's a default value, add it to the schema
-        if param.default is not inspect.Parameter.empty:
-            field['default'] = param.default
-        else:
-            schema['required'].append(name)
-
-        # Add the field to the schema
-        schema['properties'][name] = field
-
-    return schema
+test_schema_gen(
+    func_to_schema_to_test,
+    expected={
+        mercury: modified_mercury_schema,
+        venus: venus_schema,
+        earth: earth_schema,
+    },
+)
