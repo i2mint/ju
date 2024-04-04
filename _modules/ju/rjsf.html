@@ -93,7 +93,6 @@
     <span class="n">function_to_json_schema</span><span class="p">,</span>
     <span class="n">DFLT_PARAM_TO_TYPE</span><span class="p">,</span>
     <span class="n">DFLT_FUNC_TITLE</span><span class="p">,</span>
-    <span class="n">name_of_obj</span><span class="p">,</span>
     <span class="n">merge_with_defaults</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span> <span class="nn">ju.util</span> <span class="kn">import</span> <span class="n">asis</span>
@@ -259,7 +258,12 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">schema</span> <span class="o">=</span> <span class="n">function_to_json_schema</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="n">function_to_json_schema</span><span class="p">(</span>
+        <span class="n">func</span><span class="p">,</span>
+        <span class="n">doc</span><span class="o">=</span><span class="n">doc</span><span class="p">,</span>
+        <span class="n">pyname_to_title</span><span class="o">=</span><span class="n">pyname_to_title</span><span class="p">,</span>
+        <span class="n">param_to_prop_type</span><span class="o">=</span><span class="n">param_to_prop_type</span><span class="p">,</span>
+    <span class="p">)</span>
 
     <span class="n">ui_schema</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">base_rjsf_spec</span><span class="p">[</span><span class="s1">&#39;uiSchema&#39;</span><span class="p">])</span>
 
