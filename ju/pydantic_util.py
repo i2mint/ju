@@ -1,6 +1,8 @@
 """Tools for working with Pydantic models."""
 
-from typing import Any, Dict, Iterable, Optional, Callable
+import json
+
+from typing import Any, Dict, Iterable, Optional, Callable, Union
 from pydantic import BaseModel, ValidationError, create_model
 
 
@@ -72,50 +74,12 @@ def infer_json_friendly_type(value):
         return type(value)
 
 
-def create_pydantic_model(
-    name: str, data: Dict[str, Any], *, defaults: Optional[Dict[str, Any]] = None
-):
-    """
-    Generate a dynamic model without default values.
-
-    >>> json_data = {
-    ...     "name": "John", "age": 30, "address": {"city": "New York", "zipcode": "10001"}
-    ... }
-    >>> defaults = {"age": 18}
-    >>>
-    >>> DynamicModel = create_pydantic_model('DynamicModel', json_data, defaults=defaults)
-    >>>
-    >>> model_instance_custom = DynamicModel(
-    ... name="John", age=25, address={"city": "Mountain View", "zipcode": "94043"}
-    ... )
-    >>> model_instance_custom.model_dump()
-    {'name': 'John', 'age': 25, 'address': {'city': 'Mountain View', 'zipcode': '94043'}}
-    >>> model_instance_with_defaults = DynamicModel(
-    ...     name="Jane", address={"city": "Los Angeles", "zipcode": "90001"}
-    ... )
-    >>> model_instance_with_defaults.model_dump()
-    {'name': 'Jane', 'age': 18, 'address': {'city': 'Los Angeles', 'zipcode': '90001'}}
-    """
-    defaults = defaults or {}
-
-    def fields():
-        for key, value in data.items():
-            field_type = infer_json_friendly_type(value)
-            if key in defaults:
-                # If the key is in defaults, use the provided default value
-                yield key, (field_type, defaults[key])
-            else:
-                # Otherwise, mark the field as required
-                yield key, (field_type, ...)
-
-    return create_model(name, **dict(fields()))
-
-
-
-def create_pydantic_model(
-    name: str, 
-    data: Dict[str, Any], 
-    *, 
+# TODO: Extend to something more robust
+#   Perhaps based on datamodel-code-generator (see https://jsontopydantic.com/)?
+def data_to_pydantic_model(
+    data: Dict[str, Any],
+    name: Union[str, Callable[[dict], str]] = "DataBasedModel",
+    *,
     defaults: Optional[Dict[str, Any]] = None,
     create_nested_models: bool = True,
     mk_nested_name: Optional[Callable[[str], str]] = None,
@@ -127,7 +91,7 @@ def create_pydantic_model(
     :param data: A dictionary representing the structure of the model.
     :param defaults: A dictionary specifying default values for certain fields.
     :param create_nested_models: If True, create nested models for nested dictionaries.
-    
+
     :return: A dynamically created Pydantic model, with nested models if applicable.
 
     >>> json_data = {
@@ -135,7 +99,7 @@ def create_pydantic_model(
     ... }
     >>> defaults = {"age": 18}
     >>>
-    >>> M = create_pydantic_model('M', json_data, defaults=defaults)
+    >>> M = data_to_pydantic_model(json_data, "M", defaults=defaults)
     >>>
     >>> model_instance_custom = M(
     ... name="John", age=25, address={"city": "Mountain View", "zipcode": "94043"}
@@ -149,7 +113,7 @@ def create_pydantic_model(
     {'name': 'Jane', 'age': 18, 'address': {'city': 'Los Angeles', 'zipcode': '90001'}}
 
     And note that the nested model is also created:
-    
+
     >>> M.Address(city="New York", zipcode="10001")
     Address(city='New York', zipcode='10001')
 
@@ -159,21 +123,21 @@ def create_pydantic_model(
 
     if mk_nested_name is None:
         mk_nested_name = lambda key: f"{key.capitalize()}"
-        
+
     def fields():
         # TODO: Need to handle nested keys as paths to enable more control
         for key, value in data.items():
             if isinstance(value, dict) and create_nested_models:
                 # Create a nested model for this dictionary
                 nested_model_name = mk_nested_name(key)
-                nested_model = create_pydantic_model(
-                    nested_model_name, value, defaults=defaults.get(key, {})
+                nested_model = data_to_pydantic_model(
+                    value, nested_model_name, defaults=defaults.get(key, {})
                 )
                 nested_models[nested_model_name] = nested_model
                 field_type = nested_model
             else:
                 field_type = infer_json_friendly_type(value)
-            
+
             if key in defaults:
                 yield key, (field_type, defaults[key])
             else:
@@ -182,5 +146,99 @@ def create_pydantic_model(
     model = create_model(name, **dict(fields()))
     for nested_model_name, nested_model in nested_models.items():
         setattr(model, nested_model_name, nested_model)
-    
+
     return model
+
+
+ModelSource = Union[str, dict, BaseModel]
+
+
+def pydantic_model_to_code(
+    source: ModelSource, **extra_json_schema_parser_kwargs
+) -> str:
+    """
+    Convert a model source (json string, dict, or pydantic model) to pydantic code.
+
+    Requires having datamodel-code-generator installed (pip install datamodel-code-generator)
+
+    Code was based on: https://koxudaxi.github.io/datamodel-code-generator/using_as_module/
+
+    See also this free online converter: https://jsontopydantic.com/
+
+    >>> json_schema: str = '''{
+    ...     "type": "object",
+    ...     "properties": {
+    ...         "number": {"type": "number"},
+    ...         "street_name": {"type": "string"},
+    ...         "street_type": {"type": "string",
+    ...                         "enum": ["Street", "Avenue", "Boulevard"]
+    ...                         }
+    ...     }
+    ... }'''
+    >>> print(pydantic_model_to_code(json_schema))
+    from __future__ import annotations
+    <BLANKLINE>
+    from enum import Enum
+    from typing import Optional
+    <BLANKLINE>
+    from pydantic import BaseModel
+    <BLANKLINE>
+    <BLANKLINE>
+    class StreetType(Enum):
+        Street = 'Street'
+        Avenue = 'Avenue'
+        Boulevard = 'Boulevard'
+    <BLANKLINE>
+    <BLANKLINE>
+    class Model(BaseModel):
+        number: Optional[float] = None
+        street_name: Optional[str] = None
+        street_type: Optional[StreetType] = None
+    <BLANKLINE>
+
+    This means you can get some model code from an example data dict,
+    using pydantic_model_to_code
+
+    >>> M = data_to_pydantic_model({"name": "John", "age": 30}, "Simple")
+    >>> print(pydantic_model_to_code(M))
+    from __future__ import annotations
+    <BLANKLINE>
+    from pydantic import BaseModel, Field
+    <BLANKLINE>
+    <BLANKLINE>
+    class Simple(BaseModel):
+        name: str = Field(..., title='Name')
+        age: int = Field(..., title='Age')
+    <BLANKLINE>
+
+    """
+    # pylint: disable=import-outside-toplevel
+    from datamodel_code_generator import (
+        DataModelType,
+        PythonVersion,
+    )  # pip install datamodel-code-generator
+    from datamodel_code_generator.model import get_data_model_types
+    from datamodel_code_generator.parser.jsonschema import JsonSchemaParser
+
+    # isinstance(x, BaseModel) doesn't work (e.g. dynamic models), so defining:
+    is_pydantic_model = lambda source: hasattr(source, 'model_json_schema')
+    is_json_schema_dict = lambda source: isinstance(source, dict) and 'type' in source
+
+    if is_pydantic_model(source):
+        source = source.model_json_schema()
+    if is_json_schema_dict(source):
+        source = json.dumps(source)
+
+    data_model_types = get_data_model_types(
+        DataModelType.PydanticV2BaseModel, target_python_version=PythonVersion.PY_311
+    )
+    parser = JsonSchemaParser(
+        source,
+        data_model_type=data_model_types.data_model,
+        data_model_root_type=data_model_types.root_model,
+        data_model_field_type=data_model_types.field_model,
+        data_type_manager_type=data_model_types.data_type_manager,
+        dump_resolve_reference_action=data_model_types.dump_resolve_reference_action,
+        **extra_json_schema_parser_kwargs,
+    )
+    return parser.parse()
