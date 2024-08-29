@@ -194,18 +194,18 @@
 <span class="sd">    {&#39;name&#39;: &#39;Jane&#39;, &#39;age&#39;: 18, &#39;address&#39;: {&#39;city&#39;: &#39;Los Angeles&#39;, &#39;zipcode&#39;: &#39;90001&#39;}}</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">defaults</span> <span class="o">=</span> <span class="n">defaults</span> <span class="ow">or</span> <span class="p">{}</span>
-    <span class="n">fields</span> <span class="o">=</span> <span class="p">{}</span>
 
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">field_type</span> <span class="o">=</span> <span class="n">infer_json_friendly_type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">defaults</span><span class="p">:</span>
-            <span class="c1"># If the key is in defaults, use the provided default value</span>
-            <span class="n">fields</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">field_type</span><span class="p">,</span> <span class="n">defaults</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># Otherwise, mark the field as required</span>
-            <span class="n">fields</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">field_type</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">fields</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">field_type</span> <span class="o">=</span> <span class="n">infer_json_friendly_type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">defaults</span><span class="p">:</span>
+                <span class="c1"># If the key is in defaults, use the provided default value</span>
+                <span class="k">yield</span> <span class="n">key</span><span class="p">,</span> <span class="p">(</span><span class="n">field_type</span><span class="p">,</span> <span class="n">defaults</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Otherwise, mark the field as required</span>
+                <span class="k">yield</span> <span class="n">key</span><span class="p">,</span> <span class="p">(</span><span class="n">field_type</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">create_model</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">fields</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">create_model</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">fields</span><span class="p">()))</span></div>
 
 </pre></div>
 
