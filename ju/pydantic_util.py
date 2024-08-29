@@ -97,15 +97,15 @@ def create_pydantic_model(
     {'name': 'Jane', 'age': 18, 'address': {'city': 'Los Angeles', 'zipcode': '90001'}}
     """
     defaults = defaults or {}
-    fields = {}
 
-    for key, value in data.items():
-        field_type = infer_json_friendly_type(value)
-        if key in defaults:
-            # If the key is in defaults, use the provided default value
-            fields[key] = (field_type, defaults[key])
-        else:
-            # Otherwise, mark the field as required
-            fields[key] = (field_type, ...)
+    def fields():
+        for key, value in data.items():
+            field_type = infer_json_friendly_type(value)
+            if key in defaults:
+                # If the key is in defaults, use the provided default value
+                yield key, (field_type, defaults[key])
+            else:
+                # Otherwise, mark the field as required
+                yield key, (field_type, ...)
 
-    return create_model(name, **fields)
+    return create_model(name, **dict(fields()))
