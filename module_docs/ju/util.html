@@ -8,7 +8,7 @@
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
 
   
   <!--[if lt IE 9]>
@@ -18,7 +18,7 @@
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="../../_static/documentation_options.js?v=fd825880"></script>
-        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
         <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
         <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -53,6 +53,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../ju.html">ju</a></li>
 <li class="toctree-l1"><a class="reference internal" href="json_schema.html">ju.json_schema</a></li>
 <li class="toctree-l1"><a class="reference internal" href="oas.html">ju.oas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pydantic_util.html">ju.pydantic_util</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rjsf.html">ju.rjsf</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tests.html">ju.tests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tests/oas_test.html">ju.tests.oas_test</a></li>
@@ -68,6 +69,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#ju.util.feature_switch"><code class="docutils literal notranslate"><span class="pre">feature_switch()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#ju.util.is_type"><code class="docutils literal notranslate"><span class="pre">is_type()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#ju.util.switch_case"><code class="docutils literal notranslate"><span class="pre">switch_case()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ju.util.truncate_dict_values"><code class="docutils literal notranslate"><span class="pre">truncate_dict_values()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -247,6 +249,36 @@ True</p>
 <dt class="sig sig-object py" id="ju.util.switch_case">
 <span class="sig-prename descclassname"><span class="pre">ju.util.</span></span><span class="sig-name descname"><span class="pre">switch_case</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ju/util.html#switch_case"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.util.switch_case" title="Link to this definition"></a></dt>
 <dd><p>Returns a function that switches between cases based on a feature</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ju.util.truncate_dict_values">
+<span class="sig-prename descclassname"><span class="pre">ju.util.</span></span><span class="sig-name descname"><span class="pre">truncate_dict_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_list_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_string_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">66</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">middle_marker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'...'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../../_modules/ju/util.html#truncate_dict_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.util.truncate_dict_values" title="Link to this definition"></a></dt>
+<dd><p>Returns a new dictionary with the same nested keys structure, where:
+- List values are reduced to a maximum size of max_list_size.
+- String values longer than max_string_size are truncated in the middle.</p>
+<p>Parameters:
+d (dict): The input dictionary.
+max_list_size (int, optional): Maximum size for lists. Defaults to 2.
+max_string_size (int, optional): Maximum length for strings. Defaults to None (no truncation).
+middle_marker (str, optional): String to insert in the middle of truncated strings. Defaults to ‘…’.</p>
+<p>Returns:
+dict: A new dictionary with truncated lists and strings.</p>
+<p>This can be useful when you have a large dictionary that you want to investigate,
+but printing/logging it takes too much space.</p>
+<p>Example:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">large_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="s1">&#39;b&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;c&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span> <span class="s1">&#39;d&#39;</span><span class="p">:</span> <span class="s1">&#39;A string like this that is too long&#39;</span><span class="p">},</span> <span class="s1">&#39;e&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">truncate_dict_values</span><span class="p">(</span><span class="n">large_dict</span><span class="p">,</span> <span class="n">max_list_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">max_string_size</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="go">{&#39;a&#39;: [1, 2, 3], &#39;b&#39;: {&#39;c&#39;: [6, 7, 8], &#39;d&#39;: &#39;A string...too long&#39;}, &#39;e&#39;: [10, 11]}</span>
+</pre></div>
+</div>
+<p>You can use <cite>None</cite> to indicate “no max”:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="p">(</span>
+<span class="gp">... </span>    <span class="n">truncate_dict_values</span><span class="p">(</span><span class="n">large_dict</span><span class="p">,</span> <span class="n">max_list_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_string_size</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="o">==</span> <span class="n">large_dict</span>
+<span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </section>

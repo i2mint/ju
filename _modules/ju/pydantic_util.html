@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ju.pydantic_util &mdash; ju 0.1.4 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=fd825880"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            ju
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju.html">ju</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/json_schema.html">ju.json_schema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/oas.html">ju.oas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/pydantic_util.html">ju.pydantic_util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/rjsf.html">ju.rjsf</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/tests.html">ju.tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/tests/oas_test.html">ju.tests.oas_test</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/tests/rjsf_test.html">ju.tests.rjsf_test</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/util.html">ju.util</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ju</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">ju.pydantic_util</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ju.pydantic_util</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Tools for working with Pydantic models.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">ValidationError</span><span class="p">,</span> <span class="n">create_model</span>
+
+
+<div class="viewcode-block" id="is_valid_wrt_model">
+<a class="viewcode-back" href="../../module_docs/ju/pydantic_util.html#ju.pydantic_util.is_valid_wrt_model">[docs]</a>
+<span class="k">def</span> <span class="nf">is_valid_wrt_model</span><span class="p">(</span><span class="n">json_obj</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check if a json object is valid wrt to a pydantic model.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">model</span><span class="p">(</span><span class="o">**</span><span class="n">json_obj</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+
+<div class="viewcode-block" id="valid_models">
+<a class="viewcode-back" href="../../module_docs/ju/pydantic_util.html#ju.pydantic_util.valid_models">[docs]</a>
+<span class="k">def</span> <span class="nf">valid_models</span><span class="p">(</span><span class="n">json_obj</span><span class="p">,</span> <span class="n">models</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A generator that yields the models that json_obj is valid wrt to.</span>
+
+<span class="sd">    &gt;&gt;&gt; from pydantic import BaseModel</span>
+<span class="sd">    &gt;&gt;&gt; class User(BaseModel):</span>
+<span class="sd">    ...     name: str</span>
+<span class="sd">    ...     code: int</span>
+<span class="sd">    ...</span>
+<span class="sd">    &gt;&gt;&gt; class Admin(User):</span>
+<span class="sd">    ...     pwd: str</span>
+<span class="sd">    ...</span>
+<span class="sd">    &gt;&gt;&gt; json_obj = {&quot;name&quot;: &quot;John&quot;, &quot;code&quot;: 30}</span>
+<span class="sd">    &gt;&gt;&gt; models = [User, Admin]</span>
+<span class="sd">    &gt;&gt;&gt; [x.__name__ for x in valid_models(json_obj, models)]</span>
+<span class="sd">    [&#39;User&#39;]</span>
+<span class="sd">    &gt;&gt;&gt; json_obj = {&quot;name&quot;: &quot;Thor&quot;, &quot;code&quot;: 3, &quot;pwd&quot;: &quot;1234&quot;}</span>
+<span class="sd">    &gt;&gt;&gt; [x.__name__ for x in valid_models(json_obj, models)]</span>
+<span class="sd">    [&#39;User&#39;, &#39;Admin&#39;]</span>
+
+<span class="sd">    Note that valid_models is a generator, it doesn&#39;t return a list.</span>
+
+<span class="sd">    Tip, to get the first model that is valid, or None if no model is valid:</span>
+
+<span class="sd">    &gt;&gt;&gt; get_name = lambda o: getattr(o, &#39;__name__&#39;, &#39;None&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; first_valid_model_name = (</span>
+<span class="sd">    ...     lambda o, models: get_name(next(valid_models(o, models), None))</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; first_valid_model_name({&quot;name&quot;: &quot;John&quot;, &quot;code&quot;: 30}, models)</span>
+<span class="sd">    &#39;User&#39;</span>
+<span class="sd">    &gt;&gt;&gt; first_valid_model_name({&quot;something&quot;: &quot;else&quot;}, models)</span>
+<span class="sd">    &#39;None&#39;</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">model</span> <span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">models</span> <span class="k">if</span> <span class="n">is_valid_wrt_model</span><span class="p">(</span><span class="n">json_obj</span><span class="p">,</span> <span class="n">model</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="infer_json_friendly_type">
+<a class="viewcode-back" href="../../module_docs/ju/pydantic_util.html#ju.pydantic_util.infer_json_friendly_type">[docs]</a>
+<span class="k">def</span> <span class="nf">infer_json_friendly_type</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Infers the type of the value for Pydantic model field.</span>
+
+<span class="sd">    &gt;&gt;&gt; infer_json_friendly_type(42)</span>
+<span class="sd">    &lt;class &#39;int&#39;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; infer_json_friendly_type(&quot;Hello, World!&quot;)</span>
+<span class="sd">    &lt;class &#39;str&#39;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; infer_json_friendly_type({&quot;key&quot;: &quot;value&quot;})</span>
+<span class="sd">    &lt;class &#39;dict&#39;&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">dict</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">list</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="create_pydantic_model">
+<a class="viewcode-back" href="../../module_docs/ju/pydantic_util.html#ju.pydantic_util.create_pydantic_model">[docs]</a>
+<span class="k">def</span> <span class="nf">create_pydantic_model</span><span class="p">(</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">defaults</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate a dynamic model without default values.</span>
+
+<span class="sd">    &gt;&gt;&gt; json_data = {</span>
+<span class="sd">    ...     &quot;name&quot;: &quot;John&quot;, &quot;age&quot;: 30, &quot;address&quot;: {&quot;city&quot;: &quot;New York&quot;, &quot;zipcode&quot;: &quot;10001&quot;}</span>
+<span class="sd">    ... }</span>
+<span class="sd">    &gt;&gt;&gt; defaults = {&quot;age&quot;: 18}</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; DynamicModel = create_pydantic_model(&#39;DynamicModel&#39;, json_data, defaults=defaults)</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; model_instance_custom = DynamicModel(</span>
+<span class="sd">    ... name=&quot;John&quot;, age=25, address={&quot;city&quot;: &quot;Mountain View&quot;, &quot;zipcode&quot;: &quot;94043&quot;}</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; model_instance_custom.model_dump()</span>
+<span class="sd">    {&#39;name&#39;: &#39;John&#39;, &#39;age&#39;: 25, &#39;address&#39;: {&#39;city&#39;: &#39;Mountain View&#39;, &#39;zipcode&#39;: &#39;94043&#39;}}</span>
+<span class="sd">    &gt;&gt;&gt; model_instance_with_defaults = DynamicModel(</span>
+<span class="sd">    ...     name=&quot;Jane&quot;, address={&quot;city&quot;: &quot;Los Angeles&quot;, &quot;zipcode&quot;: &quot;90001&quot;}</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; model_instance_with_defaults.model_dump()</span>
+<span class="sd">    {&#39;name&#39;: &#39;Jane&#39;, &#39;age&#39;: 18, &#39;address&#39;: {&#39;city&#39;: &#39;Los Angeles&#39;, &#39;zipcode&#39;: &#39;90001&#39;}}</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">defaults</span> <span class="o">=</span> <span class="n">defaults</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">fields</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">field_type</span> <span class="o">=</span> <span class="n">infer_json_friendly_type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">defaults</span><span class="p">:</span>
+            <span class="c1"># If the key is in defaults, use the provided default value</span>
+            <span class="n">fields</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">field_type</span><span class="p">,</span> <span class="n">defaults</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Otherwise, mark the field as required</span>
+            <span class="n">fields</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">field_type</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">create_model</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="n">fields</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright NO COPYRIGHT.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
