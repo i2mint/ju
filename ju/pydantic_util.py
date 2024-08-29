@@ -1,6 +1,6 @@
 """Tools for working with Pydantic models."""
 
-from typing import Any, Dict, Iterable, Optional
+from typing import Any, Dict, Iterable, Optional, Callable
 from pydantic import BaseModel, ValidationError, create_model
 
 
@@ -109,3 +109,78 @@ def create_pydantic_model(
                 yield key, (field_type, ...)
 
     return create_model(name, **dict(fields()))
+
+
+
+def create_pydantic_model(
+    name: str, 
+    data: Dict[str, Any], 
+    *, 
+    defaults: Optional[Dict[str, Any]] = None,
+    create_nested_models: bool = True,
+    mk_nested_name: Optional[Callable[[str], str]] = None,
+):
+    """
+    Generate a dynamic Pydantic model, optionally creating nested models for nested dictionaries.
+
+    :param name: Name of the Pydantic model to create.
+    :param data: A dictionary representing the structure of the model.
+    :param defaults: A dictionary specifying default values for certain fields.
+    :param create_nested_models: If True, create nested models for nested dictionaries.
+    
+    :return: A dynamically created Pydantic model, with nested models if applicable.
+
+    >>> json_data = {
+    ...     "name": "John", "age": 30, "address": {"city": "New York", "zipcode": "10001"}
+    ... }
+    >>> defaults = {"age": 18}
+    >>>
+    >>> M = create_pydantic_model('M', json_data, defaults=defaults)
+    >>>
+    >>> model_instance_custom = M(
+    ... name="John", age=25, address={"city": "Mountain View", "zipcode": "94043"}
+    ... )
+    >>> model_instance_custom.model_dump()
+    {'name': 'John', 'age': 25, 'address': {'city': 'Mountain View', 'zipcode': '94043'}}
+    >>> model_instance_with_defaults = M(
+    ...     name="Jane", address={"city": "Los Angeles", "zipcode": "90001"}
+    ... )
+    >>> model_instance_with_defaults.model_dump()
+    {'name': 'Jane', 'age': 18, 'address': {'city': 'Los Angeles', 'zipcode': '90001'}}
+
+    And note that the nested model is also created:
+    
+    >>> M.Address(city="New York", zipcode="10001")
+    Address(city='New York', zipcode='10001')
+
+    """
+    defaults = defaults or {}
+    nested_models = {}
+
+    if mk_nested_name is None:
+        mk_nested_name = lambda key: f"{key.capitalize()}"
+        
+    def fields():
+        # TODO: Need to handle nested keys as paths to enable more control
+        for key, value in data.items():
+            if isinstance(value, dict) and create_nested_models:
+                # Create a nested model for this dictionary
+                nested_model_name = mk_nested_name(key)
+                nested_model = create_pydantic_model(
+                    nested_model_name, value, defaults=defaults.get(key, {})
+                )
+                nested_models[nested_model_name] = nested_model
+                field_type = nested_model
+            else:
+                field_type = infer_json_friendly_type(value)
+            
+            if key in defaults:
+                yield key, (field_type, defaults[key])
+            else:
+                yield key, (field_type, ...)
+
+    model = create_model(name, **dict(fields()))
+    for nested_model_name, nested_model in nested_models.items():
+        setattr(model, nested_model_name, nested_model)
+    
+    return model
