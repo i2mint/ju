@@ -86,7 +86,7 @@
   <h1>Source code for ju.pydantic_util</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Tools for working with Pydantic models.&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span>
 <span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">ValidationError</span><span class="p">,</span> <span class="n">create_model</span>
 
 
@@ -167,8 +167,6 @@
 
 
 
-<div class="viewcode-block" id="create_pydantic_model">
-<a class="viewcode-back" href="../../module_docs/ju/pydantic_util.html#ju.pydantic_util.create_pydantic_model">[docs]</a>
 <span class="k">def</span> <span class="nf">create_pydantic_model</span><span class="p">(</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">defaults</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">):</span>
@@ -205,7 +203,84 @@
                 <span class="c1"># Otherwise, mark the field as required</span>
                 <span class="k">yield</span> <span class="n">key</span><span class="p">,</span> <span class="p">(</span><span class="n">field_type</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">create_model</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">fields</span><span class="p">()))</span></div>
+    <span class="k">return</span> <span class="n">create_model</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">fields</span><span class="p">()))</span>
+
+
+
+<div class="viewcode-block" id="create_pydantic_model">
+<a class="viewcode-back" href="../../module_docs/ju/pydantic_util.html#ju.pydantic_util.create_pydantic_model">[docs]</a>
+<span class="k">def</span> <span class="nf">create_pydantic_model</span><span class="p">(</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> 
+    <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> 
+    <span class="o">*</span><span class="p">,</span> 
+    <span class="n">defaults</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">create_nested_models</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">mk_nested_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate a dynamic Pydantic model, optionally creating nested models for nested dictionaries.</span>
+
+<span class="sd">    :param name: Name of the Pydantic model to create.</span>
+<span class="sd">    :param data: A dictionary representing the structure of the model.</span>
+<span class="sd">    :param defaults: A dictionary specifying default values for certain fields.</span>
+<span class="sd">    :param create_nested_models: If True, create nested models for nested dictionaries.</span>
+<span class="sd">    </span>
+<span class="sd">    :return: A dynamically created Pydantic model, with nested models if applicable.</span>
+
+<span class="sd">    &gt;&gt;&gt; json_data = {</span>
+<span class="sd">    ...     &quot;name&quot;: &quot;John&quot;, &quot;age&quot;: 30, &quot;address&quot;: {&quot;city&quot;: &quot;New York&quot;, &quot;zipcode&quot;: &quot;10001&quot;}</span>
+<span class="sd">    ... }</span>
+<span class="sd">    &gt;&gt;&gt; defaults = {&quot;age&quot;: 18}</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; M = create_pydantic_model(&#39;M&#39;, json_data, defaults=defaults)</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &gt;&gt;&gt; model_instance_custom = M(</span>
+<span class="sd">    ... name=&quot;John&quot;, age=25, address={&quot;city&quot;: &quot;Mountain View&quot;, &quot;zipcode&quot;: &quot;94043&quot;}</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; model_instance_custom.model_dump()</span>
+<span class="sd">    {&#39;name&#39;: &#39;John&#39;, &#39;age&#39;: 25, &#39;address&#39;: {&#39;city&#39;: &#39;Mountain View&#39;, &#39;zipcode&#39;: &#39;94043&#39;}}</span>
+<span class="sd">    &gt;&gt;&gt; model_instance_with_defaults = M(</span>
+<span class="sd">    ...     name=&quot;Jane&quot;, address={&quot;city&quot;: &quot;Los Angeles&quot;, &quot;zipcode&quot;: &quot;90001&quot;}</span>
+<span class="sd">    ... )</span>
+<span class="sd">    &gt;&gt;&gt; model_instance_with_defaults.model_dump()</span>
+<span class="sd">    {&#39;name&#39;: &#39;Jane&#39;, &#39;age&#39;: 18, &#39;address&#39;: {&#39;city&#39;: &#39;Los Angeles&#39;, &#39;zipcode&#39;: &#39;90001&#39;}}</span>
+
+<span class="sd">    And note that the nested model is also created:</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; M.Address(city=&quot;New York&quot;, zipcode=&quot;10001&quot;)</span>
+<span class="sd">    Address(city=&#39;New York&#39;, zipcode=&#39;10001&#39;)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">defaults</span> <span class="o">=</span> <span class="n">defaults</span> <span class="ow">or</span> <span class="p">{}</span>
+    <span class="n">nested_models</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">if</span> <span class="n">mk_nested_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">mk_nested_name</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">key</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+        
+    <span class="k">def</span> <span class="nf">fields</span><span class="p">():</span>
+        <span class="c1"># TODO: Need to handle nested keys as paths to enable more control</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="n">create_nested_models</span><span class="p">:</span>
+                <span class="c1"># Create a nested model for this dictionary</span>
+                <span class="n">nested_model_name</span> <span class="o">=</span> <span class="n">mk_nested_name</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                <span class="n">nested_model</span> <span class="o">=</span> <span class="n">create_pydantic_model</span><span class="p">(</span>
+                    <span class="n">nested_model_name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">defaults</span><span class="o">=</span><span class="n">defaults</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="p">{})</span>
+                <span class="p">)</span>
+                <span class="n">nested_models</span><span class="p">[</span><span class="n">nested_model_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">nested_model</span>
+                <span class="n">field_type</span> <span class="o">=</span> <span class="n">nested_model</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">field_type</span> <span class="o">=</span> <span class="n">infer_json_friendly_type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">defaults</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">key</span><span class="p">,</span> <span class="p">(</span><span class="n">field_type</span><span class="p">,</span> <span class="n">defaults</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">key</span><span class="p">,</span> <span class="p">(</span><span class="n">field_type</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="o">**</span><span class="nb">dict</span><span class="p">(</span><span class="n">fields</span><span class="p">()))</span>
+    <span class="k">for</span> <span class="n">nested_model_name</span><span class="p">,</span> <span class="n">nested_model</span> <span class="ow">in</span> <span class="n">nested_models</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">nested_model_name</span><span class="p">,</span> <span class="n">nested_model</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">model</span></div>
 
 </pre></div>
 
