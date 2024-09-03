@@ -11,7 +11,7 @@ def is_valid_wrt_model(json_obj, model):
     Check if a json object is valid wrt to a pydantic model.
     """
     try:
-        model(**json_obj)
+        model.model_validate(json_obj)
         return True
     except ValidationError as e:
         return False

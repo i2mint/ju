@@ -10,3 +10,4 @@ from ju.pydantic_util import (
     data_to_pydantic_model,
     pydantic_model_to_code,
 )
+from ju.viz import model_digraph
