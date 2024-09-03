@@ -7,7 +7,8 @@ from ju.util import truncate_dict_values
 from ju.pydantic_util import (
     is_valid_wrt_model,
     valid_models,
-    data_to_pydantic_model,
-    pydantic_model_to_code,
+    data_to_pydantic_model,  # data to pydantic model
+    pydantic_model_to_code,  # pydantic model to code
+    field_paths_and_annotations,  # flattened field paths & annotations from model
 )
-from ju.viz import model_digraph
+from ju.viz import model_digraph  # visualize pydantic models

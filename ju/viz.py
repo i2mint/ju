@@ -51,6 +51,8 @@ def model_digraph(
 
     >>> dot.render(f"User_model_graph", format="png", cleanup=True)  # doctest: +SKIP
     'User_model_graph.png'
+
+    See also the online tool: https://navneethg.github.io/jsonschemaviewer/
     """
 
     # pylint: disable=import-outside-toplevel
