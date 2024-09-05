@@ -1,20 +1,151 @@
 """Tools for working with Pydantic models."""
 
 import json
+from functools import partial
 
 from typing import Any, Dict, Iterable, Optional, Callable, Union
 from pydantic import BaseModel, ValidationError, create_model
+from i2 import ObjectClassifier
 
 
-def is_valid_wrt_model(json_obj, model):
+# -------------------------------------------------------------------------------------
+# Type hint classification
+
+
+# Example use: Define a type classification instance
+def is_pydantic_model(obj: Any) -> bool:
+    """Returns True if the object is a Pydantic model (subclass of BaseModel)."""
+    from pydantic import BaseModel
+
+    return isinstance(obj, type) and issubclass(obj, BaseModel)
+
+
+def is_typing_type(obj: Any) -> bool:
+    """Returns True if the object is a typing type (e.g., List, Literal, etc.)."""
+    from typing import get_origin
+
+    return get_origin(obj) is not None
+
+
+# Create an instance for type hint classification
+type_hint_classifier = ObjectClassifier(
+    {"pydantic_model": is_pydantic_model, "typing_type": is_typing_type}
+)
+
+
+def is_type_hint(obj: Any) -> bool:
+    """Returns True if the object is a Pydantic model or a typing type."""
+    return type_hint_classifier.matches(obj)
+
+
+# -------------------------------------------------------------------------------------
+# Construct and validate Pydantic models
+
+from pydantic import BaseModel, ValidationError
+from typing import Callable, Type, TypeVar
+
+Data = TypeVar('Data', bound=Any)
+ModelType = Type[BaseModel]
+ModelFactory = Callable[[ModelType, Data], BaseModel]
+
+
+def _raise_error(e: Exception, model: ModelType, data: Data, factory: ModelFactory):
+    raise e
+
+
+def _return_false_on_error(
+    e: Exception, model: ModelType, data: Data, factory: ModelFactory
+):
+    return False
+
+
+def _model_validate(model: ModelType, data: Data) -> BaseModel:
+    return model.model_validate(data)
+
+
+def _call_and_return_true(
+    model: ModelType, data: Data, factory=_model_validate
+) -> bool:
+    factory(model, data)
+    return True
+
+
+def mk_pydantic_model(
+    data: Data,
+    model: ModelType,
+    *,
+    factory: Callable[[ModelType, Data], BaseModel] = _model_validate,
+    error_callback: Callable = _raise_error,
+) -> BaseModel:
+    """
+    Make a Pydantic model instance from data, parametrizing constructor and error handling.
+
+    By default, it uses the `model.model_validate` method, but you can pass a custom
+    constructor function and error handling callback.
+
+    :param data: A dictionary representing the data to be validated.
+    :param model: A Pydantic model class.
+    :param factory: A callable used to construct the model instance.
+                    Defaults to `model.model_validate`.
+    :param error_callback: A callback to handle validation errors.
+
+    :return: A Pydantic model instance.
+
+    Example:
+
+    >>> from pydantic import BaseModel
+    >>> class User(BaseModel):
+    ...     name: str
+    ...     code: int
+    ...
+    >>> data = {"name": "John", "code": 30}
+    >>> user = mk_pydantic_model(data, User)
+    >>> user
+    User(name='John', code=30)
+
+    Example with custom constructor:
+
+    >>> user = mk_pydantic_model(data, User, factory=lambda model, data: model.model_construct(**data))
+    >>> user
+    User(name='John', code=30)
+    """
+    try:
+        return factory(model, data)
+    except ValidationError as e:
+        error_callback(e, model, data, factory)
+
+
+def mk_pydantic_models(
+    data: Data,
+    models: Iterable[ModelType],
+    *,
+    factory: Callable[[ModelType, Data], BaseModel] = _model_validate,
+    error_callback: Callable = _raise_error,
+) -> Iterable[BaseModel]:
+    """
+    The iterable-of-models version of `mk_pydantic_model`.
+    """
+    return (
+        mk_pydantic_model(data, m, factory=factory, error_callback=error_callback)
+        for m in models
+    )
+
+
+def is_valid_wrt_model(
+    data: Data,
+    model: ModelType,
+    *,
+    factory: Callable[[ModelType, Data], BaseModel] = _model_validate,
+):
     """
     Check if a json object is valid wrt to a pydantic model.
     """
-    try:
-        model.model_validate(json_obj)
-        return True
-    except ValidationError as e:
-        return False
+    return mk_pydantic_model(
+        data,
+        model,
+        factory=partial(_call_and_return_true, factory=factory),
+        error_callback=_return_false_on_error,
+    )
 
 
 def valid_models(json_obj, models: Iterable[BaseModel]):
@@ -49,7 +180,6 @@ def valid_models(json_obj, models: Iterable[BaseModel]):
     'User'
     >>> first_valid_model_name({"something": "else"}, models)
     'None'
-
 
     """
     return (model for model in models if is_valid_wrt_model(json_obj, model))
