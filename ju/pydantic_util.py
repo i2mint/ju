@@ -568,68 +568,71 @@ from typing import Mapping, Iterable, Union, Callable, Type
 from dataclasses import dataclass, KW_ONLY
 
 from i2 import ObjectClassifier, name_of_obj
-from dol import PathMappedData
+from dol import KeysReader
 from glom import glom  # TODO: Use dol.path_get once "*" is supported
 from pydantic import BaseModel
 
 
 @dataclass
-class PathExtractors:
+class ModelExtractor:
     """
     Extracts key paths and corresponding values from data based on matching Pydantic models.
 
-    `PathExtractors` takes a collection of models and extracts all valid key paths from 
-    their (nested) schemas. When called on data, it identifies the first model that 
-    matches the structure of the data and returns a mapping of key paths to the 
-    corresponding values in the data.
+    `ModelExtractor` takes a collection of models and extracts all valid key paths from
+    their (nested) schemas. When called on data, it identifies the first model that
+    matches the structure of the data and returns a `KeysReader`, which is a mapping
+    of key paths to the corresponding values in the data.
 
-    A "path-extractor" is a mapping that links paths (i.e., field names or nested 
-    paths in the model) to the extracted values from the data.
+    A `KeysReader` instance is a mapping that gives you lazy-evaluated access to values.
+    With such an instance, you can list the keys (paths) that are valid according to
+    the schema of the matched model, and extract the corresponding values from the data
+    at the moment you need them.
 
     Args:
         models (Union[Mapping[str, BaseModel], Iterable[BaseModel]]):
-            A dictionary mapping model names to models, or an iterable of models. 
-            If an iterable is provided, it will be converted to a dictionary using 
+            A dictionary mapping model names to models, or an iterable of models.
+            If an iterable is provided, it will be converted to a dictionary using
             the model names.
-        getter (Callable): 
-            A function used to extract values from the data based on the identified 
+        getter (Callable):
+            A function used to extract values from the data based on the identified
             paths. Defaults to `glom.glom`, a tool for nested data extraction.
 
     Raises:
-        ValueError: 
-            If the provided models do not have unique names, either as an iterable or 
+        ValueError:
+            If the provided models do not have unique names, either as an iterable or
             in the dictionary keys.
 
     Example:
 
-        >>> from typing import List
-        >>> from pydantic import BaseModel
-        >>>
-        >>> class Item(BaseModel):
-        ...     ref: int
-        >>> class Playlist(BaseModel):
-        ...     name: str
-        ...     items: List[Item]
-        >>> class User(BaseModel):
-        ...     name: str
-        ...     age: int
-        >>>
-        >>> models = [Playlist, User]
-        >>> extractors = PathExtractors(models)
-        >>> data = {"name": "Digital Reveries", "items": [{"ref": 6}, {"ref": 42}]}
-        >>> d = extractors(data)
-        >>> list(d)
-        ['name', 'items.*.ref']
-        >>> d['name']
-        'Digital Reveries'
-        >>> d['items.*.ref']
-        [6, 42]
+    >>> from typing import List
+    >>> from pydantic import BaseModel
+    >>>
+    >>> class Item(BaseModel):
+    ...     ref: int
+    >>> class Playlist(BaseModel):
+    ...     name: str
+    ...     items: List[Item]
+    >>> class User(BaseModel):
+    ...     name: str
+    ...     age: int
+    >>>
+    >>> models = [Playlist, User]
+    >>> extractors = ModelExtractor(models)
+    >>> data = {"name": "Digital Reveries", "items": [{"ref": 6}, {"ref": 42}]}
+    >>> d = extractors(data)
+    >>> list(d)
+    ['name', 'items.*.ref']
+    >>> d['name']
+    'Digital Reveries'
+    >>> d['items.*.ref']
+    [6, 42]
 
-    The example shows how the `PathExtractors` class automatically detects the model 
-    (in this case, `Playlist`), retrieves the paths defined by the model schema 
+    The example shows how the `ModelExtractor` class automatically detects the model
+    (in this case, `Playlist`), retrieves the paths defined by the model schema
     (e.g., 'name' and 'items.*.ref'), and extracts the corresponding values from the data.
 
     """
+
     models: Union[Mapping[str, BaseModel], Iterable[BaseModel]]
     _: KW_ONLY
     getter: Callable = glom
@@ -663,7 +666,7 @@ class PathExtractors:
         # model
         self.model_classifier = ObjectClassifier(verifiers)
 
-    def __call__(self, data, *, assert_unique: bool = True) -> PathMappedData:
+    def __call__(self, data, *, assert_unique: bool = True) -> KeysReader:
         # find the model that matches the data
         model_key = self.model_classifier.matching_kind(
             data, assert_unique=assert_unique
@@ -671,4 +674,4 @@ class PathExtractors:
         # get the paths for that model
         paths = list(self.model_paths[model_key])
         # return a mapping that lists the paths and extracts the corresponding values from the data
-        return PathMappedData(data, paths, getter=self.getter)
+        return KeysReader(data, paths, getter=self.getter)
