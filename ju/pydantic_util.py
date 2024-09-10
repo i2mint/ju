@@ -573,6 +573,9 @@ from glom import glom  # TODO: Use dol.path_get once "*" is supported
 from pydantic import BaseModel
 
 
+# TODO: Not sure the use of ObjectClassifier and is_valid_wrt_model is a good thing
+#   here. We could just directly implement the logic of it to be more explicit and
+#   self-contained. We would then not need verifiers and model_classifier.
 @dataclass
 class ModelExtractor:
     """
