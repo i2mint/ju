@@ -148,7 +148,12 @@ def is_valid_wrt_model(
     )
 
 
-def valid_models(json_obj, models: Iterable[BaseModel]):
+def valid_models(
+    json_obj,
+    models: Iterable[BaseModel],
+    *,
+    factory: Callable[[ModelType, Data], BaseModel] = _model_validate,
+):
     """
     A generator that yields the models that json_obj is valid wrt to.
 
@@ -182,7 +187,11 @@ def valid_models(json_obj, models: Iterable[BaseModel]):
     'None'
 
     """
-    return (model for model in models if is_valid_wrt_model(json_obj, model))
+    return (
+        model
+        for model in models
+        if is_valid_wrt_model(json_obj, model, factory=factory)
+    )
 
 
 def infer_json_friendly_type(value):
@@ -495,7 +504,7 @@ def field_paths_and_annotations(
     >>> assert paths == expected_paths, f"Expected: {expected_paths}, but got: {paths}"
 
     See that it works with generics:
-    
+
     >>> from typing import TypeVar, List, Generic
     >>> T = TypeVar('T')
     >>> class A_with_Generic(BaseModel, Generic[T]):
@@ -550,3 +559,116 @@ def field_paths_and_annotations(
         return paths
 
     return recurse_model(data_model)
+
+
+# -------------------------------------------------------------------------------------
+# ModelBasedDataExtractors
+
+from typing import Mapping, Iterable, Union, Callable, Type
+from dataclasses import dataclass, KW_ONLY
+
+from i2 import ObjectClassifier, name_of_obj
+from dol import PathMappedData
+from glom import glom  # TODO: Use dol.path_get once "*" is supported
+from pydantic import BaseModel
+
+
+@dataclass
+class PathExtractors:
+    """
+    Extracts key paths and corresponding values from data based on matching Pydantic models.
+
+    `PathExtractors` takes a collection of models and extracts all valid key paths from 
+    their (nested) schemas. When called on data, it identifies the first model that 
+    matches the structure of the data and returns a mapping of key paths to the 
+    corresponding values in the data.
+
+    A "path-extractor" is a mapping that links paths (i.e., field names or nested 
+    paths in the model) to the extracted values from the data.
+
+    Args:
+        models (Union[Mapping[str, BaseModel], Iterable[BaseModel]]):
+            A dictionary mapping model names to models, or an iterable of models. 
+            If an iterable is provided, it will be converted to a dictionary using 
+            the model names.
+        getter (Callable): 
+            A function used to extract values from the data based on the identified 
+            paths. Defaults to `glom.glom`, a tool for nested data extraction.
+
+    Raises:
+        ValueError: 
+            If the provided models do not have unique names, either as an iterable or 
+            in the dictionary keys.
+
+    Example:
+
+        >>> from typing import List
+        >>> from pydantic import BaseModel
+        >>>
+        >>> class Item(BaseModel):
+        ...     ref: int
+        >>> class Playlist(BaseModel):
+        ...     name: str
+        ...     items: List[Item]
+        >>> class User(BaseModel):
+        ...     name: str
+        ...     age: int
+        >>>
+        >>> models = [Playlist, User]
+        >>> extractors = PathExtractors(models)
+        >>> data = {"name": "Digital Reveries", "items": [{"ref": 6}, {"ref": 42}]}
+        >>> d = extractors(data)
+        >>> list(d)
+        ['name', 'items.*.ref']
+        >>> d['name']
+        'Digital Reveries'
+        >>> d['items.*.ref']
+        [6, 42]
+
+    The example shows how the `PathExtractors` class automatically detects the model 
+    (in this case, `Playlist`), retrieves the paths defined by the model schema 
+    (e.g., 'name' and 'items.*.ref'), and extracts the corresponding values from the data.
+
+    """
+    models: Union[Mapping[str, BaseModel], Iterable[BaseModel]]
+    _: KW_ONLY
+    getter: Callable = glom
+
+    def __post_init__(self):
+        # If models is not a Mapping, make it so. We want a dict whose values are
+        # the models, and whose keys are the names of the models.
+        if not isinstance(self.models, Mapping):
+            list_of_models = list(self.models)
+            self.models = {name_of_obj(m): m for m in self.models}
+            if len(self.models) != len(list_of_models):
+                raise ValueError(
+                    "Models must have unique names. "
+                    "You can specify a dict of models with your own names as keys "
+                    "if you want."
+                )
+
+        # Get the paths for each model
+        self.model_paths = {
+            name: field_paths_and_annotations(model)
+            for name, model in self.models.items()
+        }
+
+        # Create a verifier for each model. A verifier will return True
+        # if, and only if, the data matches the model.
+        verifiers = {
+            name: partial(is_valid_wrt_model, model=model)
+            for name, model in self.models.items()
+        }
+        # Use these verifiers to create a classifier that will return the name of the
+        # model
+        self.model_classifier = ObjectClassifier(verifiers)
+
+    def __call__(self, data, *, assert_unique: bool = True) -> PathMappedData:
+        # find the model that matches the data
+        model_key = self.model_classifier.matching_kind(
+            data, assert_unique=assert_unique
+        )
+        # get the paths for that model
+        paths = list(self.model_paths[model_key])
+        # return a mapping that lists the paths and extracts the corresponding values from the data
+        return PathMappedData(data, paths, getter=self.getter)
