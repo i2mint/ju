@@ -1,7 +1,5 @@
-
 import json
 from ju.pydantic_util import ModelSource, pydantic_model_to_code, data_to_pydantic_model
-
 
 
 def test_pydantic_model_to_code() -> str:

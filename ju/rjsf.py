@@ -16,30 +16,30 @@ from ju.util import asis
 DFLT_PYNAME_TO_TITLE = asis
 
 base_schema = {
-    'title': DFLT_FUNC_TITLE,
-    'type': 'object',
-    'properties': {},
-    'required': [],
+    "title": DFLT_FUNC_TITLE,
+    "type": "object",
+    "properties": {},
+    "required": [],
 }
 
 base_ui_schema = {
-    'ui:submitButtonOptions': {
-        'submitText': 'Run',
+    "ui:submitButtonOptions": {
+        "submitText": "Run",
     }
 }
 
 BASE_RJSF_SPEC = {
-    'schema': base_schema,
-    'uiSchema': base_ui_schema,
-    'liveValidate': False,
-    'disabled': False,
-    'readonly': False,
-    'omitExtraData': False,
-    'liveOmit': False,
-    'noValidate': False,
-    'noHtml5Validate': False,
-    'focusOnFirstError': False,
-    'showErrorList': 'top',
+    "schema": base_schema,
+    "uiSchema": base_ui_schema,
+    "liveValidate": False,
+    "disabled": False,
+    "readonly": False,
+    "omitExtraData": False,
+    "liveOmit": False,
+    "noValidate": False,
+    "noHtml5Validate": False,
+    "focusOnFirstError": False,
+    "showErrorList": "top",
 }
 
 
@@ -48,7 +48,7 @@ def func_to_form_spec(
     *,
     doc: Optional[Union[str, bool]] = True,
     param_to_prop_type: Callable = DFLT_PARAM_TO_TYPE,
-    nest_under_field: Optional[str] = 'rjsf',
+    nest_under_field: Optional[str] = "rjsf",
     base_rjsf_spec: dict = BASE_RJSF_SPEC,
     pyname_to_title: Callable[[str], str] = DFLT_PYNAME_TO_TITLE,
 ):
@@ -112,8 +112,8 @@ def func_to_form_spec(
 
     # merge these with the base spec
     spec = deepcopy(base_rjsf_spec)
-    spec['schema'] = schema
-    spec['uiSchema'] = ui_schema
+    spec["schema"] = schema
+    spec["uiSchema"] = ui_schema
 
     if nest_under_field:
         return {nest_under_field: spec}
@@ -177,7 +177,7 @@ def _func_to_rjsf_schemas(
         param_to_prop_type=param_to_prop_type,
     )
 
-    ui_schema = deepcopy(base_rjsf_spec['uiSchema'])
+    ui_schema = deepcopy(base_rjsf_spec["uiSchema"])
 
     # Add autofocus to the first field
     sig = inspect.signature(func)
@@ -185,7 +185,7 @@ def _func_to_rjsf_schemas(
 
     if len(parameters) > 0:
         first_param_name = next(iter(parameters))
-        ui_schema[first_param_name] = {'ui:autofocus': True}
+        ui_schema[first_param_name] = {"ui:autofocus": True}
 
     # Return the schemas
     return schema, ui_schema

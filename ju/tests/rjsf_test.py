@@ -20,38 +20,38 @@ def venus():
 
 def earth(north: str, south: bool, east: int = 1, west: float = 2.0):
     """Earth docs"""
-    return f'{north=}, {south=}, {east=}, {west=}'
+    return f"{north=}, {south=}, {east=}, {west=}"
 
 
 mercury_schema = {
-    'title': 'mercury',
-    'type': 'object',
-    'properties': {
-        'sweet': {'type': 'number'},
-        'sour': {'type': 'boolean', 'default': True},
+    "title": "mercury",
+    "type": "object",
+    "properties": {
+        "sweet": {"type": "number"},
+        "sour": {"type": "boolean", "default": True},
     },
-    'required': ['sweet'],
+    "required": ["sweet"],
 }
 
 venus_schema = {
-    'title': 'venus',
-    'type': 'object',
-    'properties': {},
-    'required': [],
-    'description': 'Nothing from nothing',
+    "title": "venus",
+    "type": "object",
+    "properties": {},
+    "required": [],
+    "description": "Nothing from nothing",
 }
 
 earth_schema = {
-    'description': 'Earth docs',
-    'title': 'earth',
-    'type': 'object',
-    'properties': {
-        'north': {'type': 'string'},
-        'south': {'type': 'boolean'},
-        'east': {'type': 'integer', 'default': 1},
-        'west': {'type': 'number', 'default': 2.0},
+    "description": "Earth docs",
+    "title": "earth",
+    "type": "object",
+    "properties": {
+        "north": {"type": "string"},
+        "south": {"type": "boolean"},
+        "east": {"type": "integer", "default": 1},
+        "west": {"type": "number", "default": 2.0},
     },
-    'required': ['north', 'south'],
+    "required": ["north", "south"],
 }
 
 expected = {mercury: mercury_schema, venus: venus_schema, earth: earth_schema}
@@ -61,21 +61,21 @@ expected = {mercury: mercury_schema, venus: venus_schema, earth: earth_schema}
 def test_schema_gen(func_to_schema=function_to_json_schema, expected=expected):
     for func, schema in expected.items():
         assert func_to_schema(func) == schema, (
-            f'{func=}, \n' f'{func_to_schema(func)=}, \n' f'{schema=}\n'
+            f"{func=}, \n" f"{func_to_schema(func)=}, \n" f"{schema=}\n"
         )
 
 
 feature_to_output_mapping_to_test = {
-    bool: 'boolean',  # note that bool is a subclass of int, so needs to be before
-    int: 'integer',
-    float: 'number',
-    str: 'string',
+    bool: "boolean",  # note that bool is a subclass of int, so needs to be before
+    int: "integer",
+    float: "number",
+    str: "string",
 }
 
 type_feature_switch_to_test = FeatureSwitch(
-    featurizer=attrgetter('annotation'),
+    featurizer=attrgetter("annotation"),
     feature_to_output_mapping=feature_to_output_mapping_to_test,
-    default='string',
+    default="string",
 )
 
 func_to_schema_to_test = partial(
@@ -88,7 +88,7 @@ func_to_schema_to_test = partial(
 from copy import deepcopy
 
 modified_mercury_schema = deepcopy(mercury_schema)
-modified_mercury_schema['properties']['sour']['type'] = 'string'
+modified_mercury_schema["properties"]["sour"]["type"] = "string"
 
 test_schema_gen(
     func_to_schema_to_test,

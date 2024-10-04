@@ -5,7 +5,7 @@ from functools import cached_property, partial
 from dol import KvReader, cached_keys, path_get as _path_get
 from dataclasses import dataclass, field
 
-http_methods = {'get', 'post', 'put', 'delete', 'patch', 'options', 'head'}
+http_methods = {"get", "post", "put", "delete", "patch", "options", "head"}
 
 from dol import path_get
 from functools import partial
@@ -28,7 +28,7 @@ def get_routes(d: Dict[str, Any], include_methods=tuple(http_methods)) -> Iterab
     """
     if isinstance(include_methods, str):
         include_methods = {include_methods}
-    for endpoint in (paths := d.get('paths', {})):
+    for endpoint in (paths := d.get("paths", {})):
         for method in paths[endpoint]:
             if method in include_methods:
                 yield method, endpoint
@@ -36,12 +36,12 @@ def get_routes(d: Dict[str, Any], include_methods=tuple(http_methods)) -> Iterab
 
 dflt_type_mapping = tuple(
     {
-        'array': list,
-        'integer': int,
-        'object': dict,
-        'string': str,
-        'boolean': bool,
-        'number': float,
+        "array": list,
+        "integer": int,
+        "object": dict,
+        "string": str,
+        "boolean": bool,
+        "number": float,
     }.items()
 )
 
@@ -86,7 +86,7 @@ class Routes(KvReader):
     def __init__(self, spec: dict, *, type_mapping: dict = dflt_type_mapping) -> None:
         self.spec = spec
         self._mk_route = partial(Route, spec=spec, type_mapping=type_mapping)
-        self._title = spec.get('info', {}).get('title', 'OpenAPI spec')
+        self._title = spec.get("info", {}).get("title", "OpenAPI spec")
 
     @classmethod
     def from_yaml(cls, yaml_str: str):
@@ -96,7 +96,7 @@ class Routes(KvReader):
 
     @property
     def _paths(self):
-        self.spec['paths']
+        self.spec["paths"]
 
     def __iter__(self):
         return get_routes(self.spec)
@@ -117,11 +117,11 @@ class ArrayOf(dict):
 def properties_of_schema(schema: dict) -> dict:
     """Returns the properties of the given schema, encapsulating in ArrayOf to indicate
     that the schema is for an array of objects, and not just a single object."""
-    if 'items' in schema:
+    if "items" in schema:
         # the schema is for an array
-        return ArrayOf(path_get(schema, 'items.properties'))
+        return ArrayOf(path_get(schema, "items.properties"))
     else:
-        return path_get(schema, 'properties')
+        return path_get(schema, "properties")
 
 
 @dataclass
@@ -176,7 +176,7 @@ class Route:
     @cached_property
     def method_data(self):
         method, endpoint = self.method, self.endpoint
-        method_data = self.spec.get('paths', {}).get(endpoint, {}).get(method, None)
+        method_data = self.spec.get("paths", {}).get(endpoint, {}).get(method, None)
         if method_data is None:
             raise KeyError(f"Endpoint '{endpoint}' has no method '{method}'")
         return resolve_refs(self.spec, method_data)
@@ -184,13 +184,13 @@ class Route:
     @cached_property
     def input_specs(self):
         return {
-            'parameters': self.method_data.get('parameters', []),
-            'requestBody': self.method_data.get('requestBody', {}),
+            "parameters": self.method_data.get("parameters", []),
+            "requestBody": self.method_data.get("requestBody", {}),
         }
 
     @cached_property
     def output_specs(self):
-        return self.method_data.get('responses', {})
+        return self.method_data.get("responses", {})
 
     @cached_property
     def params(self):
@@ -198,27 +198,27 @@ class Route:
         (it should usually just be one or the other, not both).
         We're calling this 'params' because that's what FastAPI calls it.
         """
-        schema = {'type': 'object', 'properties': {}, 'required': []}
+        schema = {"type": "object", "properties": {}, "required": []}
 
         # Process query and path parameters
-        for param in self.method_data.get('parameters', []):
+        for param in self.method_data.get("parameters", []):
             # Add each parameter to the properties
-            schema['properties'][param['name']] = param.get('schema', {})
+            schema["properties"][param["name"]] = param.get("schema", {})
 
             # Mark as required if specified
-            if param.get('required', False):
-                schema['required'].append(param['name'])
+            if param.get("required", False):
+                schema["required"].append(param["name"])
         # list(t['content']['application/json']['schema']['items']['properties'])
         # Process requestBody
-        request_body = self.method_data.get('requestBody', {})
-        content = path_get(request_body, 'content.application/json')
-        if 'schema' in content:
+        request_body = self.method_data.get("requestBody", {})
+        content = path_get(request_body, "content.application/json")
+        if "schema" in content:
             # Merge the requestBody schema with the existing properties
-            body_schema = content['schema']
-            schema['properties'].update(properties_of_schema(body_schema))
+            body_schema = content["schema"]
+            schema["properties"].update(properties_of_schema(body_schema))
             # Add required properties from requestBody
-            if 'required' in body_schema:
-                schema['required'].extend(body_schema['required'])
+            if "required" in body_schema:
+                schema["required"].extend(body_schema["required"])
 
         return schema
 
@@ -229,7 +229,6 @@ class Route:
             self.output_specs, f"{status_code}.content.application/json.schema"
         )
         return properties_of_schema(schema)
-    
 
 
 # def resolve_ref(oas, ref):
@@ -250,9 +249,9 @@ def resolve_refs(open_api_spec: dict, d: dict) -> dict:
     :return: The dictionary with all references resolved.
     """
     if isinstance(d, dict):
-        if '$ref' in d:
+        if "$ref" in d:
             # Extract the path from the reference and resolve it
-            ref_path = d['$ref'].split('/')[1:]
+            ref_path = d["$ref"].split("/")[1:]
             ref_value = open_api_spec
             for key in ref_path:
                 ref_value = ref_value.get(key, {})

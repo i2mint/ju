@@ -34,7 +34,7 @@ except AttributeError:
 
     _files = importlib_resources.files
 
-ju_files = _files('ju')
+ju_files = _files("ju")
 
 
 def is_jsonable(x):
@@ -89,7 +89,7 @@ def is_type(param: Parameter, type_: SomeType):
         return True
     if isinstance(type_, type):
         return isinstance(param.default, type_)
-    if hasattr(type_, '__origin__'):
+    if hasattr(type_, "__origin__"):
         origin = get_origin(type_)
         if origin is Union:
             args = get_args(type_)
@@ -180,7 +180,7 @@ Mapper = Union[PairsMapper, MappingMapper, CallableMapper]
 Mapper.__doc__ = "A Mapper is a specification of (key, value) pairs"
 
 Exceptions = Sequence[BaseException]
-NotSpecified = mk_sentinel('NotSpecified')
+NotSpecified = mk_sentinel("NotSpecified")
 
 
 def _return_this(_obj):
@@ -270,7 +270,7 @@ def _handle_default(obj, default=NotSpecified):
             handle_exceptions=(KeyError,),
         )
     else:
-        raise TypeError(f'Cannot add defaulting handling to this type of object: {obj}')
+        raise TypeError(f"Cannot add defaulting handling to this type of object: {obj}")
 
 
 def ensure_mapping_mapper(mapper: Mapper, *, default=NotSpecified) -> MappingMapper:
@@ -426,4 +426,3 @@ def feature_similarity_search(
 from i2 import FuncFactory
 
 FeatureSwitch = FuncFactory(feature_switch)
-

@@ -5,8 +5,8 @@ import pytest
 from ju.util import ju_files
 from ju.oas import get_routes, Routes
 
-test_data_path = ju_files / 'tests' / 'test_data'
-simple_openapi_spec_path = test_data_path / 'simple_openapi_spec.yaml'
+test_data_path = ju_files / "tests" / "test_data"
+simple_openapi_spec_path = test_data_path / "simple_openapi_spec.yaml"
 
 
 def _openapi_spec():
@@ -20,57 +20,57 @@ def openapi_spec():
 
 def test_get_routes(openapi_spec):
     result = list(get_routes(openapi_spec))
-    assert result == [('get', '/items'), ('post', '/items')]
+    assert result == [("get", "/items"), ("post", "/items")]
 
-    result = list(get_routes(openapi_spec, include_methods='get'))
-    assert result == [('get', '/items')]
+    result = list(get_routes(openapi_spec, include_methods="get"))
+    assert result == [("get", "/items")]
 
-    result = list(get_routes(openapi_spec, include_methods='post'))
-    assert result == [('post', '/items')]
+    result = list(get_routes(openapi_spec, include_methods="post"))
+    assert result == [("post", "/items")]
 
-    result = list(get_routes(openapi_spec, include_methods='put'))
+    result = list(get_routes(openapi_spec, include_methods="put"))
     assert result == []
 
 
 def test_routes(openapi_spec):
     routes = Routes(openapi_spec)
-    assert list(routes) == [('get', '/items'), ('post', '/items')]
+    assert list(routes) == [("get", "/items"), ("post", "/items")]
 
-    get_route = routes['get', '/items']
+    get_route = routes["get", "/items"]
 
     assert get_route.input_specs == {
-        'parameters': [
+        "parameters": [
             {
-                'in': 'query',
-                'name': 'type',
-                'schema': {'type': 'string'},
-                'required': True,
-                'description': 'Type of items to list',
+                "in": "query",
+                "name": "type",
+                "schema": {"type": "string"},
+                "required": True,
+                "description": "Type of items to list",
             },
             {
-                'in': 'query',
-                'name': 'limit',
-                'schema': {'type': 'integer', 'default': 10},
-                'required': False,
-                'description': 'Maximum number of items to return',
+                "in": "query",
+                "name": "limit",
+                "schema": {"type": "integer", "default": 10},
+                "required": False,
+                "description": "Maximum number of items to return",
             },
         ],
-        'requestBody': {},
+        "requestBody": {},
     }
 
     assert get_route.output_specs == {
-        '200': {
-            'description': 'An array of items',
-            'content': {
-                'application/json': {
-                    'schema': {
-                        'type': 'array',
-                        'items': {
-                            'type': 'object',
-                            'properties': {
-                                'id': {'type': 'integer'},
-                                'name': {'type': 'string'},
-                                'active': {'type': 'boolean'},
+        "200": {
+            "description": "An array of items",
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {"type": "integer"},
+                                "name": {"type": "string"},
+                                "active": {"type": "boolean"},
                             },
                         },
                     }
@@ -80,27 +80,27 @@ def test_routes(openapi_spec):
     }
 
     assert get_route.params == {
-        'type': 'object',
-        'properties': {
-            'type': {'type': 'string'},
-            'limit': {'type': 'integer', 'default': 10},
+        "type": "object",
+        "properties": {
+            "type": {"type": "string"},
+            "limit": {"type": "integer", "default": 10},
         },
-        'required': ['type'],
+        "required": ["type"],
     }
 
-    post_route = routes['post', '/items']
+    post_route = routes["post", "/items"]
 
     assert post_route.input_specs == {
-        'parameters': [],
-        'requestBody': {
-            'required': True,
-            'content': {
-                'application/json': {
-                    'schema': {
-                        'type': 'object',
-                        'properties': {
-                            'name': {'type': 'string'},
-                            'age': {'type': 'integer', 'default': 42},
+        "parameters": [],
+        "requestBody": {
+            "required": True,
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "name": {"type": "string"},
+                            "age": {"type": "integer", "default": 42},
                         },
                     }
                 }
@@ -109,16 +109,16 @@ def test_routes(openapi_spec):
     }
 
     assert post_route.output_specs == {
-        '201': {
-            'description': 'Item created',
-            'content': {
-                'application/json': {
-                    'schema': {
-                        'type': 'object',
-                        'properties': {
-                            'id': {
-                                'type': 'integer',
-                                'description': 'Unique identifier of the created item',
+        "201": {
+            "description": "Item created",
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "description": "Unique identifier of the created item",
                             }
                         },
                     }
@@ -128,10 +128,10 @@ def test_routes(openapi_spec):
     }
 
     assert post_route.params == {
-        'type': 'object',
-        'properties': {
-            'name': {'type': 'string'},
-            'age': {'type': 'integer', 'default': 42},
+        "type": "object",
+        "properties": {
+            "name": {"type": "string"},
+            "age": {"type": "integer", "default": 42},
         },
-        'required': [],
+        "required": [],
     }

@@ -44,7 +44,7 @@ def is_type_hint(obj: Any) -> bool:
 from pydantic import BaseModel, ValidationError
 from typing import Callable, Type, TypeVar
 
-Data = TypeVar('Data', bound=Any)
+Data = TypeVar("Data", bound=Any)
 ModelType = Type[BaseModel]
 ModelFactory = Callable[[ModelType, Data], BaseModel]
 
@@ -360,8 +360,8 @@ def pydantic_model_to_code(
     from datamodel_code_generator.parser.jsonschema import JsonSchemaParser
 
     # isinstance(x, BaseModel) doesn't work (e.g. dynamic models), so defining:
-    is_pydantic_model = lambda source: hasattr(source, 'model_json_schema')
-    is_json_schema_dict = lambda source: isinstance(source, dict) and 'type' in source
+    is_pydantic_model = lambda source: hasattr(source, "model_json_schema")
+    is_json_schema_dict = lambda source: isinstance(source, dict) and "type" in source
 
     if is_pydantic_model(source):
         source = source.model_json_schema()
@@ -395,7 +395,7 @@ def _get_type_parameters(origin: Type[BaseModel]):
     so we do it anyway, but encapsulated in a function, to encapsulate and locate the
     risk.
     """
-    return getattr(origin, '__parameters__', ())
+    return getattr(origin, "__parameters__", ())
 
 
 def match_typevars_to_args(generic_model: Type[BaseModel]) -> Dict[TypeVar, Type[Any]]:
@@ -536,7 +536,7 @@ def field_paths_and_annotations(
 
         return field_type
 
-    def recurse_model(model: Type[BaseModel], prefix: str = '') -> Dict[str, Type[Any]]:
+    def recurse_model(model: Type[BaseModel], prefix: str = "") -> Dict[str, Type[Any]]:
         paths = {}
         for field_name, field_info in model.model_fields.items():
             field_type = get_field_type(field_info.annotation, model)

@@ -59,7 +59,7 @@ def model_digraph(
     from graphviz import Digraph  # pip install graphviz
 
     if dot is None:
-        dot = Digraph(comment='Pydantic Model Diagram')
+        dot = Digraph(comment="Pydantic Model Diagram")
 
     # Check if model is an Iterable (like a list or set) of models
     if isinstance(model, Iterable) and not isinstance(model, (str, BaseModel)):
@@ -70,7 +70,7 @@ def model_digraph(
 
     # Create a node for the model itself
     model_name = model.__name__
-    dot.node(model_name, model_name, shape='rectangle')
+    dot.node(model_name, model_name, shape="rectangle")
 
     # Add nodes and edges for each field
     for field_name, field in model.model_fields.items():
@@ -79,7 +79,7 @@ def model_digraph(
             if hasattr(field.annotation, "__name__")
             else str(field.annotation)
         )
-        dot.node(field_name, label=f"{field_name}: {field_type}", shape='ellipse')
+        dot.node(field_name, label=f"{field_name}: {field_type}", shape="ellipse")
         dot.edge(model_name, field_name)
 
         # Handle nested models
@@ -92,7 +92,7 @@ def model_digraph(
             nested_model = get_args(field.annotation)[0]
             if isinstance(nested_model, type) and issubclass(nested_model, BaseModel):
                 nested_model_name = nested_model.__name__
-                dot.node(nested_model_name, nested_model_name, shape='rectangle')
+                dot.node(nested_model_name, nested_model_name, shape="rectangle")
                 dot.edge(field_name, nested_model_name)
                 model_digraph(nested_model, dot=dot, parent=field_name)
         elif isinstance(field.annotation, type) and issubclass(

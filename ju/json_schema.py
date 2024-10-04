@@ -34,7 +34,7 @@ from i2 import name_of_obj as _name_of_obj
 
 from ju.util import is_type
 
-DFLT_FUNC_TITLE = ''
+DFLT_FUNC_TITLE = ""
 
 name_of_obj = partial(_name_of_obj, default_factory=lambda: DFLT_FUNC_TITLE)
 
@@ -50,11 +50,11 @@ class _BasicPythonTypes(BaseModel):
 
 def pydantic_model_to_type_mapping(pydantic_model: BaseModel) -> dict:
     fields = pydantic_model.model_fields
-    properties = pydantic_model.model_json_schema().get('properties')
+    properties = pydantic_model.model_json_schema().get("properties")
 
     def gen():
         for k in fields:
-            yield fields[k].annotation, properties[k]['type']
+            yield fields[k].annotation, properties[k]["type"]
 
     return dict(gen())
 
@@ -75,14 +75,14 @@ _DFLT_TYPE_MAPPING = pydantic_model_to_type_mapping(_BasicPythonTypes)
 DFLT_PY_JSON_TYPE_PAIRS = tuple(_DFLT_TYPE_MAPPING.items())
 DFLT_JSON_PY_TYPE_PAIRS = tuple((v, k) for k, v in _DFLT_TYPE_MAPPING.items())
 assert dict(DFLT_JSON_PY_TYPE_PAIRS) != len(DFLT_JSON_PY_TYPE_PAIRS), (
-    f'{DFLT_JSON_PY_TYPE_PAIRS=}, {len(DFLT_JSON_PY_TYPE_PAIRS)=}'
-    ' The mapping is not bijective. The ju devs will need to chose a unique python '
-    'type for each json type.'
+    f"{DFLT_JSON_PY_TYPE_PAIRS=}, {len(DFLT_JSON_PY_TYPE_PAIRS)=}"
+    " The mapping is not bijective. The ju devs will need to chose a unique python "
+    "type for each json type."
 )
 DFLT_TYPE_MAPPING = DFLT_PY_JSON_TYPE_PAIRS  # less verbose alias
 
 
-DFLT_JSON_TYPE = 'string'  # TODO: 'string' or 'object'?
+DFLT_JSON_TYPE = "string"  # TODO: 'string' or 'object'?
 
 
 def parametrized_param_to_type(
@@ -114,19 +114,19 @@ def print_dict(d):
 
 
 def print_schema(func_key, store):
-    print_dict(store[func_key]['rjsf']['schema'])
-    print_dict(store[func_key]['rjsf']['schema'])
+    print_dict(store[func_key]["rjsf"]["schema"])
+    print_dict(store[func_key]["rjsf"]["schema"])
 
 
 form_specs = None
 
 
-def print_schema(func_key='olab.objects.dpp.accuracy', store=form_specs):
-    print_dict(store[func_key]['rjsf']['schema'])
+def print_schema(func_key="olab.objects.dpp.accuracy", store=form_specs):
+    print_dict(store[func_key]["rjsf"]["schema"])
 
 
 def wrap_schema_in_opus_spec(schema: dict):
-    return {'rjsf': {'schema': schema}}
+    return {"rjsf": {"schema": schema}}
 
 
 def merge_with_defaults(defaults: Mapping, overwrites: Mapping) -> dict:
@@ -171,8 +171,8 @@ def pyname_to_title(pyname: str) -> str:
 
     """
     # split camel case
-    pyname = re.sub('([a-z0-9])([A-Z])', r'\1 \2', pyname)
-    return pyname.replace('_', ' ').title()
+    pyname = re.sub("([a-z0-9])([A-Z])", r"\1 \2", pyname)
+    return pyname.replace("_", " ").title()
 
 
 # TODO: Replace asis with pyname_to_title when time to update tests
@@ -206,18 +206,18 @@ def title_to_pyname(title: str) -> str:
     # if title begins with a digit, prepend an underscore
     original_title = title
     if title[0].isdigit():
-        title = '_' + title
+        title = "_" + title
     # split camel case
-    title = re.sub('([a-z0-9])([A-Z])', r'\1 \2', title)
+    title = re.sub("([a-z0-9])([A-Z])", r"\1 \2", title)
     # remove non-alphanumeric characters, replacing them with a single space
-    title = re.sub(r'\W+', ' ', title)
+    title = re.sub(r"\W+", " ", title)
     # replace any sequence of spaces with a single underscore
-    title = re.sub(r'\s+', '_', title)
+    title = re.sub(r"\s+", "_", title)
     pyname = title.lower()
     # assert pyname is a valid Python identifier
     assert (
         pyname.isidentifier()
-    ), f'Invalid Python identifier: {pyname}, computed from title: {original_title}'
+    ), f"Invalid Python identifier: {pyname}, computed from title: {original_title}"
     return pyname
 
 
@@ -239,21 +239,21 @@ from ju.util import FeatureSwitch, Mapper, ensure_callable_mapper
 # }
 
 dflt_json_types = {
-    py_type: {'type': json_type} for py_type, json_type in DFLT_PY_JSON_TYPE_PAIRS
+    py_type: {"type": json_type} for py_type, json_type in DFLT_PY_JSON_TYPE_PAIRS
 }
 
 
 type_feature_switch = FeatureSwitch(
-    featurizer=attrgetter('annotation'),
+    featurizer=attrgetter("annotation"),
     feature_to_output_mapping=dflt_json_types,
-    default={'type': 'string'},
+    default={"type": "string"},
 )
 
 BASE_SCHEMA = {
-    'title': DFLT_FUNC_TITLE,
-    'type': 'object',
-    'properties': {},
-    'required': [],
+    "title": DFLT_FUNC_TITLE,
+    "type": "object",
+    "properties": {},
+    "required": [],
 }
 
 
@@ -294,12 +294,12 @@ def function_to_json_schema(
     parameters = sig.parameters
 
     schema = deepcopy(BASE_SCHEMA)
-    schema['title'] = pyname_to_title(name_of_obj(func))
+    schema["title"] = pyname_to_title(name_of_obj(func))
 
-    schema['properties'] = get_properties(
+    schema["properties"] = get_properties(
         parameters, param_to_prop_type=param_to_prop_type
     )
-    schema['required'] = get_required(schema['properties'])
+    schema["required"] = get_required(schema["properties"])
 
     if doc is True:
         # if doc is True, use the function docstring
@@ -307,7 +307,7 @@ def function_to_json_schema(
 
     if doc:
         assert isinstance(doc, str), f"doc must be a string, was: {doc}"
-        schema['description'] = doc
+        schema["description"] = doc
 
     # # Build the schema for each parameter
     # for name, param in parameters.items():
@@ -332,7 +332,7 @@ def json_schema_to_signature(
     default_default=Parameter.empty,
     title_to_pyname: Callable[[str], str] = title_to_pyname,
     default_annotation=Parameter.empty,
-    default_description: str = '',
+    default_description: str = "",
 ):
     """
     Transforms a JSON schema to a Python function signature.
@@ -360,11 +360,11 @@ def json_schema_to_signature(
 
     """
     type_mapper = ensure_callable_mapper(type_mapper, default=default_annotation)
-    properties = json_schema['properties']
+    properties = json_schema["properties"]
 
     def _params():
         for name, field in properties.items():
-            if (json_type := field.get('type', None)) is not None:
+            if (json_type := field.get("type", None)) is not None:
                 if not isinstance(json_type, list):
                     py_type = type_mapper(json_type)
                 else:
@@ -373,7 +373,7 @@ def json_schema_to_signature(
                     py_type = Union[tuple(json_types)]
             else:
                 py_type = Parameter.empty
-            default = field.get('default', default_default)
+            default = field.get("default", default_default)
             yield Parameter(
                 name=name,
                 annotation=py_type,
@@ -382,9 +382,9 @@ def json_schema_to_signature(
             )
 
     sig = Sig(sort_params(_params()))
-    if title := json_schema.get('title'):
+    if title := json_schema.get("title"):
         sig.name = title_to_pyname(title)
-    sig.docs = json_schema.get('description', default_description)
+    sig.docs = json_schema.get("description", default_description)
 
     return sig
 
@@ -426,11 +426,11 @@ def get_properties(parameters, *, param_to_prop_type: Callable = DFLT_PARAM_TO_T
     for i, item in enumerate(parameters.items()):
         name, param = item
         field = {}
-        field['type'] = param_to_prop_type(param)
+        field["type"] = param_to_prop_type(param)
 
         # If there's a default value, add it
         if param.default is not inspect.Parameter.empty:
-            field['default'] = param.default
+            field["default"] = param.default
 
         # Add the field to the schema
         properties[name] = field
@@ -439,4 +439,4 @@ def get_properties(parameters, *, param_to_prop_type: Callable = DFLT_PARAM_TO_T
 
 
 def get_required(properties: dict):
-    return [name for name in properties if 'default' not in properties[name]]
+    return [name for name in properties if "default" not in properties[name]]
