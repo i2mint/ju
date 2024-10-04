@@ -1,0 +1,4 @@
+ju.viz
+======
+.. automodule:: ju.viz
+   :members:

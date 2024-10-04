@@ -55,8 +55,10 @@
 <li class="toctree-l1"><a class="reference internal" href="module_docs/ju/rjsf.html">ju.rjsf</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/ju/tests.html">ju.tests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/ju/tests/oas_test.html">ju.tests.oas_test</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/ju/tests/pydantic_util_test.html">ju.tests.pydantic_util_test</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/ju/tests/rjsf_test.html">ju.tests.rjsf_test</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/ju/util.html">ju.util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/ju/viz.html">ju.viz</a></li>
 </ul>
 
         </div>
@@ -87,7 +89,7 @@
 
 <div class="genindex-jumpbox">
  <a href="#A"><strong>A</strong></a>
- | <a href="#C"><strong>C</strong></a>
+ | <a href="#D"><strong>D</strong></a>
  | <a href="#E"><strong>E</strong></a>
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
@@ -115,10 +117,10 @@
   </ul></td>
 </tr></table>
 
-<h2 id="C">C</h2>
+<h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/ju/pydantic_util.html#ju.pydantic_util.create_pydantic_model">create_pydantic_model() (in module ju.pydantic_util)</a>
+      <li><a href="module_docs/ju/pydantic_util.html#ju.pydantic_util.data_to_pydantic_model">data_to_pydantic_model() (in module ju.pydantic_util)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -144,9 +146,11 @@
 </li>
       <li><a href="module_docs/ju/util.html#ju.util.feature_similarity_search">feature_similarity_search() (in module ju.util)</a>
 </li>
+      <li><a href="module_docs/ju/util.html#ju.util.feature_switch">feature_switch() (in module ju.util)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/ju/util.html#ju.util.feature_switch">feature_switch() (in module ju.util)</a>
+      <li><a href="module_docs/ju/pydantic_util.html#ju.pydantic_util.field_paths_and_annotations">field_paths_and_annotations() (in module ju.pydantic_util)</a>
 </li>
       <li><a href="module_docs/ju/rjsf.html#ju.rjsf.func_to_form_spec">func_to_form_spec() (in module ju.rjsf)</a>
 </li>
@@ -166,6 +170,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/ju/util.html#ju.util.Gettable">Gettable (class in ju.util)</a>
 </li>
+      <li><a href="module_docs/ju/pydantic_util.html#ju.pydantic_util.ModelExtractor.getter">getter() (ju.pydantic_util.ModelExtractor method)</a>
+</li>
       <li><a href="module_docs/ju/util.html#ju.util.GetWithCaller">GetWithCaller (class in ju.util)</a>
 </li>
   </ul></td>
@@ -176,9 +182,17 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/ju/pydantic_util.html#ju.pydantic_util.infer_json_friendly_type">infer_json_friendly_type() (in module ju.pydantic_util)</a>
 </li>
+      <li><a href="module_docs/ju/pydantic_util.html#ju.pydantic_util.is_a_basemodel">is_a_basemodel() (in module ju.pydantic_util)</a>
+</li>
+      <li><a href="module_docs/ju/pydantic_util.html#ju.pydantic_util.is_pydantic_model">is_pydantic_model() (in module ju.pydantic_util)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/ju/util.html#ju.util.is_type">is_type() (in module ju.util)</a>
+</li>
+      <li><a href="module_docs/ju/pydantic_util.html#ju.pydantic_util.is_type_hint">is_type_hint() (in module ju.pydantic_util)</a>
+</li>
+      <li><a href="module_docs/ju/pydantic_util.html#ju.pydantic_util.is_typing_type">is_typing_type() (in module ju.pydantic_util)</a>
 </li>
       <li><a href="module_docs/ju/pydantic_util.html#ju.pydantic_util.is_valid_wrt_model">is_valid_wrt_model() (in module ju.pydantic_util)</a>
 </li>
@@ -218,8 +232,6 @@
         <li><a href="module_docs/ju/pydantic_util.html#module-ju.pydantic_util">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     ju.rjsf
 
@@ -227,11 +239,20 @@
         <li><a href="module_docs/ju/rjsf.html#module-ju.rjsf">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     ju.tests
 
       <ul>
         <li><a href="module_docs/ju/tests.html#module-ju.tests">module</a>
+</li>
+      </ul></li>
+      <li>
+    ju.tests.pydantic_util_test
+
+      <ul>
+        <li><a href="module_docs/ju/tests/pydantic_util_test.html#module-ju.tests.pydantic_util_test">module</a>
 </li>
       </ul></li>
       <li>
@@ -248,13 +269,30 @@
         <li><a href="module_docs/ju/util.html#module-ju.util">module</a>
 </li>
       </ul></li>
+      <li>
+    ju.viz
+
+      <ul>
+        <li><a href="module_docs/ju/viz.html#module-ju.viz">module</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/ju/pydantic_util.html#ju.pydantic_util.match_typevars_to_args">match_typevars_to_args() (in module ju.pydantic_util)</a>
+</li>
       <li><a href="module_docs/ju/json_schema.html#ju.json_schema.merge_with_defaults">merge_with_defaults() (in module ju.json_schema)</a>
+</li>
+      <li><a href="module_docs/ju/pydantic_util.html#ju.pydantic_util.mk_pydantic_model">mk_pydantic_model() (in module ju.pydantic_util)</a>
+</li>
+      <li><a href="module_docs/ju/pydantic_util.html#ju.pydantic_util.mk_pydantic_models">mk_pydantic_models() (in module ju.pydantic_util)</a>
+</li>
+      <li><a href="module_docs/ju/viz.html#ju.viz.model_digraph">model_digraph() (in module ju.viz)</a>
+</li>
+      <li><a href="module_docs/ju/pydantic_util.html#ju.pydantic_util.ModelExtractor">ModelExtractor (class in ju.pydantic_util)</a>
 </li>
       <li>
     module
@@ -272,9 +310,13 @@
 </li>
         <li><a href="module_docs/ju/tests.html#module-ju.tests">ju.tests</a>
 </li>
+        <li><a href="module_docs/ju/tests/pydantic_util_test.html#module-ju.tests.pydantic_util_test">ju.tests.pydantic_util_test</a>
+</li>
         <li><a href="module_docs/ju/tests/rjsf_test.html#module-ju.tests.rjsf_test">ju.tests.rjsf_test</a>
 </li>
         <li><a href="module_docs/ju/util.html#module-ju.util">ju.util</a>
+</li>
+        <li><a href="module_docs/ju/viz.html#module-ju.viz">ju.viz</a>
 </li>
       </ul></li>
   </ul></td>
@@ -293,9 +335,11 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/ju/oas.html#ju.oas.Route.params">params (ju.oas.Route property)</a>
 </li>
+      <li><a href="module_docs/ju/oas.html#ju.oas.properties_of_schema">properties_of_schema() (in module ju.oas)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/ju/oas.html#ju.oas.properties_of_schema">properties_of_schema() (in module ju.oas)</a>
+      <li><a href="module_docs/ju/pydantic_util.html#ju.pydantic_util.pydantic_model_to_code">pydantic_model_to_code() (in module ju.pydantic_util)</a>
 </li>
       <li><a href="module_docs/ju/json_schema.html#ju.json_schema.pyname_to_title">pyname_to_title() (in module ju.json_schema)</a>
 </li>
@@ -327,10 +371,12 @@
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/ju/json_schema.html#ju.json_schema.title_to_pyname">title_to_pyname() (in module ju.json_schema)</a>
+      <li><a href="module_docs/ju/tests/pydantic_util_test.html#ju.tests.pydantic_util_test.test_pydantic_model_to_code">test_pydantic_model_to_code() (in module ju.tests.pydantic_util_test)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/ju/json_schema.html#ju.json_schema.title_to_pyname">title_to_pyname() (in module ju.json_schema)</a>
+</li>
       <li><a href="module_docs/ju/util.html#ju.util.truncate_dict_values">truncate_dict_values() (in module ju.util)</a>
 </li>
   </ul></td>

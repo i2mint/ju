@@ -55,8 +55,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/rjsf.html">ju.rjsf</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/tests.html">ju.tests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/tests/oas_test.html">ju.tests.oas_test</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/tests/pydantic_util_test.html">ju.tests.pydantic_util_test</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/tests/rjsf_test.html">ju.tests.rjsf_test</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/util.html">ju.util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/viz.html">ju.viz</a></li>
 </ul>
 
         </div>
@@ -102,30 +104,30 @@
 <span class="n">DFLT_PYNAME_TO_TITLE</span> <span class="o">=</span> <span class="n">asis</span>
 
 <span class="n">base_schema</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="n">DFLT_FUNC_TITLE</span><span class="p">,</span>
-    <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{},</span>
-    <span class="s1">&#39;required&#39;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">DFLT_FUNC_TITLE</span><span class="p">,</span>
+    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{},</span>
+    <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="p">[],</span>
 <span class="p">}</span>
 
 <span class="n">base_ui_schema</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;ui:submitButtonOptions&#39;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;submitText&#39;</span><span class="p">:</span> <span class="s1">&#39;Run&#39;</span><span class="p">,</span>
+    <span class="s2">&quot;ui:submitButtonOptions&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;submitText&quot;</span><span class="p">:</span> <span class="s2">&quot;Run&quot;</span><span class="p">,</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
 <span class="n">BASE_RJSF_SPEC</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;schema&#39;</span><span class="p">:</span> <span class="n">base_schema</span><span class="p">,</span>
-    <span class="s1">&#39;uiSchema&#39;</span><span class="p">:</span> <span class="n">base_ui_schema</span><span class="p">,</span>
-    <span class="s1">&#39;liveValidate&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="s1">&#39;disabled&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="s1">&#39;readonly&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="s1">&#39;omitExtraData&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="s1">&#39;liveOmit&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="s1">&#39;noValidate&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="s1">&#39;noHtml5Validate&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="s1">&#39;focusOnFirstError&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="s1">&#39;showErrorList&#39;</span><span class="p">:</span> <span class="s1">&#39;top&#39;</span><span class="p">,</span>
+    <span class="s2">&quot;schema&quot;</span><span class="p">:</span> <span class="n">base_schema</span><span class="p">,</span>
+    <span class="s2">&quot;uiSchema&quot;</span><span class="p">:</span> <span class="n">base_ui_schema</span><span class="p">,</span>
+    <span class="s2">&quot;liveValidate&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s2">&quot;disabled&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s2">&quot;readonly&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s2">&quot;omitExtraData&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s2">&quot;liveOmit&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s2">&quot;noValidate&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s2">&quot;noHtml5Validate&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s2">&quot;focusOnFirstError&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s2">&quot;showErrorList&quot;</span><span class="p">:</span> <span class="s2">&quot;top&quot;</span><span class="p">,</span>
 <span class="p">}</span>
 
 
@@ -136,7 +138,7 @@
     <span class="o">*</span><span class="p">,</span>
     <span class="n">doc</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">param_to_prop_type</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">DFLT_PARAM_TO_TYPE</span><span class="p">,</span>
-    <span class="n">nest_under_field</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;rjsf&#39;</span><span class="p">,</span>
+    <span class="n">nest_under_field</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;rjsf&quot;</span><span class="p">,</span>
     <span class="n">base_rjsf_spec</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">BASE_RJSF_SPEC</span><span class="p">,</span>
     <span class="n">pyname_to_title</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">DFLT_PYNAME_TO_TITLE</span><span class="p">,</span>
 <span class="p">):</span>
@@ -200,8 +202,8 @@
 
     <span class="c1"># merge these with the base spec</span>
     <span class="n">spec</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">base_rjsf_spec</span><span class="p">)</span>
-    <span class="n">spec</span><span class="p">[</span><span class="s1">&#39;schema&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">schema</span>
-    <span class="n">spec</span><span class="p">[</span><span class="s1">&#39;uiSchema&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ui_schema</span>
+    <span class="n">spec</span><span class="p">[</span><span class="s2">&quot;schema&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">schema</span>
+    <span class="n">spec</span><span class="p">[</span><span class="s2">&quot;uiSchema&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ui_schema</span>
 
     <span class="k">if</span> <span class="n">nest_under_field</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">{</span><span class="n">nest_under_field</span><span class="p">:</span> <span class="n">spec</span><span class="p">}</span>
@@ -266,7 +268,7 @@
         <span class="n">param_to_prop_type</span><span class="o">=</span><span class="n">param_to_prop_type</span><span class="p">,</span>
     <span class="p">)</span>
 
-    <span class="n">ui_schema</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">base_rjsf_spec</span><span class="p">[</span><span class="s1">&#39;uiSchema&#39;</span><span class="p">])</span>
+    <span class="n">ui_schema</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">base_rjsf_spec</span><span class="p">[</span><span class="s2">&quot;uiSchema&quot;</span><span class="p">])</span>
 
     <span class="c1"># Add autofocus to the first field</span>
     <span class="n">sig</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
@@ -274,7 +276,7 @@
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">first_param_name</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">parameters</span><span class="p">))</span>
-        <span class="n">ui_schema</span><span class="p">[</span><span class="n">first_param_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;ui:autofocus&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+        <span class="n">ui_schema</span><span class="p">[</span><span class="n">first_param_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;ui:autofocus&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
 
     <span class="c1"># Return the schemas</span>
     <span class="k">return</span> <span class="n">schema</span><span class="p">,</span> <span class="n">ui_schema</span>

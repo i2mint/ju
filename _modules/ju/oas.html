@@ -55,8 +55,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/rjsf.html">ju.rjsf</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/tests.html">ju.tests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/tests/oas_test.html">ju.tests.oas_test</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/tests/pydantic_util_test.html">ju.tests.pydantic_util_test</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/tests/rjsf_test.html">ju.tests.rjsf_test</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/util.html">ju.util</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/viz.html">ju.viz</a></li>
 </ul>
 
         </div>
@@ -91,7 +93,7 @@
 <span class="kn">from</span> <span class="nn">dol</span> <span class="kn">import</span> <span class="n">KvReader</span><span class="p">,</span> <span class="n">cached_keys</span><span class="p">,</span> <span class="n">path_get</span> <span class="k">as</span> <span class="n">_path_get</span>
 <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
 
-<span class="n">http_methods</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;get&#39;</span><span class="p">,</span> <span class="s1">&#39;post&#39;</span><span class="p">,</span> <span class="s1">&#39;put&#39;</span><span class="p">,</span> <span class="s1">&#39;delete&#39;</span><span class="p">,</span> <span class="s1">&#39;patch&#39;</span><span class="p">,</span> <span class="s1">&#39;options&#39;</span><span class="p">,</span> <span class="s1">&#39;head&#39;</span><span class="p">}</span>
+<span class="n">http_methods</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="s2">&quot;put&quot;</span><span class="p">,</span> <span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="s2">&quot;patch&quot;</span><span class="p">,</span> <span class="s2">&quot;options&quot;</span><span class="p">,</span> <span class="s2">&quot;head&quot;</span><span class="p">}</span>
 
 <span class="kn">from</span> <span class="nn">dol</span> <span class="kn">import</span> <span class="n">path_get</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
@@ -116,7 +118,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">include_methods</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">include_methods</span> <span class="o">=</span> <span class="p">{</span><span class="n">include_methods</span><span class="p">}</span>
-    <span class="k">for</span> <span class="n">endpoint</span> <span class="ow">in</span> <span class="p">(</span><span class="n">paths</span> <span class="o">:=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="p">{})):</span>
+    <span class="k">for</span> <span class="n">endpoint</span> <span class="ow">in</span> <span class="p">(</span><span class="n">paths</span> <span class="o">:=</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;paths&quot;</span><span class="p">,</span> <span class="p">{})):</span>
         <span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">paths</span><span class="p">[</span><span class="n">endpoint</span><span class="p">]:</span>
             <span class="k">if</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">include_methods</span><span class="p">:</span>
                 <span class="k">yield</span> <span class="n">method</span><span class="p">,</span> <span class="n">endpoint</span></div>
@@ -125,12 +127,12 @@
 
 <span class="n">dflt_type_mapping</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
     <span class="p">{</span>
-        <span class="s1">&#39;array&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
-        <span class="s1">&#39;integer&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="s1">&#39;object&#39;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
-        <span class="s1">&#39;string&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="s1">&#39;boolean&#39;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
-        <span class="s1">&#39;number&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="s2">&quot;array&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+        <span class="s2">&quot;integer&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="s2">&quot;object&quot;</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+        <span class="s2">&quot;string&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="s2">&quot;boolean&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="s2">&quot;number&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="p">}</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
 <span class="p">)</span>
 
@@ -177,7 +179,7 @@
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">type_mapping</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">dflt_type_mapping</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">spec</span> <span class="o">=</span> <span class="n">spec</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_mk_route</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">Route</span><span class="p">,</span> <span class="n">spec</span><span class="o">=</span><span class="n">spec</span><span class="p">,</span> <span class="n">type_mapping</span><span class="o">=</span><span class="n">type_mapping</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_title</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;info&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;OpenAPI spec&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_title</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;info&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;OpenAPI spec&quot;</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_yaml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">yaml_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
@@ -187,7 +189,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="p">[</span><span class="s1">&#39;paths&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="p">[</span><span class="s2">&quot;paths&quot;</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">get_routes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="p">)</span>
@@ -214,11 +216,11 @@
 <span class="k">def</span> <span class="nf">properties_of_schema</span><span class="p">(</span><span class="n">schema</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the properties of the given schema, encapsulating in ArrayOf to indicate</span>
 <span class="sd">    that the schema is for an array of objects, and not just a single object.&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="s1">&#39;items&#39;</span> <span class="ow">in</span> <span class="n">schema</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s2">&quot;items&quot;</span> <span class="ow">in</span> <span class="n">schema</span><span class="p">:</span>
         <span class="c1"># the schema is for an array</span>
-        <span class="k">return</span> <span class="n">ArrayOf</span><span class="p">(</span><span class="n">path_get</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="s1">&#39;items.properties&#39;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">ArrayOf</span><span class="p">(</span><span class="n">path_get</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="s2">&quot;items.properties&quot;</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">path_get</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="s1">&#39;properties&#39;</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">path_get</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="s2">&quot;properties&quot;</span><span class="p">)</span></div>
 
 
 
@@ -276,7 +278,7 @@
     <span class="nd">@cached_property</span>
     <span class="k">def</span> <span class="nf">method_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">method</span><span class="p">,</span> <span class="n">endpoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">endpoint</span>
-        <span class="n">method_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;paths&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">method_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;paths&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">method_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Endpoint &#39;</span><span class="si">{</span><span class="n">endpoint</span><span class="si">}</span><span class="s2">&#39; has no method &#39;</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">resolve_refs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="p">,</span> <span class="n">method_data</span><span class="p">)</span>
@@ -284,13 +286,13 @@
     <span class="nd">@cached_property</span>
     <span class="k">def</span> <span class="nf">input_specs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s1">&#39;parameters&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parameters&#39;</span><span class="p">,</span> <span class="p">[]),</span>
-            <span class="s1">&#39;requestBody&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;requestBody&#39;</span><span class="p">,</span> <span class="p">{}),</span>
+            <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;parameters&quot;</span><span class="p">,</span> <span class="p">[]),</span>
+            <span class="s2">&quot;requestBody&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;requestBody&quot;</span><span class="p">,</span> <span class="p">{}),</span>
         <span class="p">}</span>
 
     <span class="nd">@cached_property</span>
     <span class="k">def</span> <span class="nf">output_specs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;responses&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;responses&quot;</span><span class="p">,</span> <span class="p">{})</span>
 
     <span class="nd">@cached_property</span>
     <span class="k">def</span> <span class="nf">params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -298,27 +300,27 @@
 <span class="sd">        (it should usually just be one or the other, not both).</span>
 <span class="sd">        We&#39;re calling this &#39;params&#39; because that&#39;s what FastAPI calls it.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">schema</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span> <span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{},</span> <span class="s1">&#39;required&#39;</span><span class="p">:</span> <span class="p">[]}</span>
+        <span class="n">schema</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span> <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{},</span> <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="p">[]}</span>
 
         <span class="c1"># Process query and path parameters</span>
-        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parameters&#39;</span><span class="p">,</span> <span class="p">[]):</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;parameters&quot;</span><span class="p">,</span> <span class="p">[]):</span>
             <span class="c1"># Add each parameter to the properties</span>
-            <span class="n">schema</span><span class="p">[</span><span class="s1">&#39;properties&#39;</span><span class="p">][</span><span class="n">param</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;schema&#39;</span><span class="p">,</span> <span class="p">{})</span>
+            <span class="n">schema</span><span class="p">[</span><span class="s2">&quot;properties&quot;</span><span class="p">][</span><span class="n">param</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;schema&quot;</span><span class="p">,</span> <span class="p">{})</span>
 
             <span class="c1"># Mark as required if specified</span>
-            <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;required&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
-                <span class="n">schema</span><span class="p">[</span><span class="s1">&#39;required&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;required&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+                <span class="n">schema</span><span class="p">[</span><span class="s2">&quot;required&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">])</span>
         <span class="c1"># list(t[&#39;content&#39;][&#39;application/json&#39;][&#39;schema&#39;][&#39;items&#39;][&#39;properties&#39;])</span>
         <span class="c1"># Process requestBody</span>
-        <span class="n">request_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;requestBody&#39;</span><span class="p">,</span> <span class="p">{})</span>
-        <span class="n">content</span> <span class="o">=</span> <span class="n">path_get</span><span class="p">(</span><span class="n">request_body</span><span class="p">,</span> <span class="s1">&#39;content.application/json&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s1">&#39;schema&#39;</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
+        <span class="n">request_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;requestBody&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">path_get</span><span class="p">(</span><span class="n">request_body</span><span class="p">,</span> <span class="s2">&quot;content.application/json&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;schema&quot;</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
             <span class="c1"># Merge the requestBody schema with the existing properties</span>
-            <span class="n">body_schema</span> <span class="o">=</span> <span class="n">content</span><span class="p">[</span><span class="s1">&#39;schema&#39;</span><span class="p">]</span>
-            <span class="n">schema</span><span class="p">[</span><span class="s1">&#39;properties&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">properties_of_schema</span><span class="p">(</span><span class="n">body_schema</span><span class="p">))</span>
+            <span class="n">body_schema</span> <span class="o">=</span> <span class="n">content</span><span class="p">[</span><span class="s2">&quot;schema&quot;</span><span class="p">]</span>
+            <span class="n">schema</span><span class="p">[</span><span class="s2">&quot;properties&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">properties_of_schema</span><span class="p">(</span><span class="n">body_schema</span><span class="p">))</span>
             <span class="c1"># Add required properties from requestBody</span>
-            <span class="k">if</span> <span class="s1">&#39;required&#39;</span> <span class="ow">in</span> <span class="n">body_schema</span><span class="p">:</span>
-                <span class="n">schema</span><span class="p">[</span><span class="s1">&#39;required&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">body_schema</span><span class="p">[</span><span class="s1">&#39;required&#39;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="s2">&quot;required&quot;</span> <span class="ow">in</span> <span class="n">body_schema</span><span class="p">:</span>
+                <span class="n">schema</span><span class="p">[</span><span class="s2">&quot;required&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">body_schema</span><span class="p">[</span><span class="s2">&quot;required&quot;</span><span class="p">])</span>
 
         <span class="k">return</span> <span class="n">schema</span>
 
@@ -330,7 +332,6 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">properties_of_schema</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span></div>
 
-    
 
 
 <span class="c1"># def resolve_ref(oas, ref):</span>
@@ -353,9 +354,9 @@
 <span class="sd">    :return: The dictionary with all references resolved.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="k">if</span> <span class="s1">&#39;$ref&#39;</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;$ref&quot;</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>
             <span class="c1"># Extract the path from the reference and resolve it</span>
-            <span class="n">ref_path</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;$ref&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="n">ref_path</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;$ref&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span>
             <span class="n">ref_value</span> <span class="o">=</span> <span class="n">open_api_spec</span>
             <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">ref_path</span><span class="p">:</span>
                 <span class="n">ref_value</span> <span class="o">=</span> <span class="n">ref_value</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="p">{})</span>
