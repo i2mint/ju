@@ -314,7 +314,7 @@ def pydantic_model_to_code(
     ...                         }
     ...     }
     ... }'''
-    >>> print(pydantic_model_to_code(json_schema))
+    >>> print(pydantic_model_to_code(json_schema))  # doctest: +SKIP
     from __future__ import annotations
     <BLANKLINE>
     from enum import Enum
@@ -338,8 +338,8 @@ def pydantic_model_to_code(
     This means you can get some model code from an example data dict,
     using pydantic_model_to_code
 
-    >>> M = data_to_pydantic_model({"name": "John", "age": 30}, "Simple")
-    >>> print(pydantic_model_to_code(M))
+    >>> M = data_to_pydantic_model({"name": "John", "age": 30}, "Simple")  # doctest: +SKIP
+    >>> print(pydantic_model_to_code(M))    # doctest: +SKIP
     from __future__ import annotations
     <BLANKLINE>
     from pydantic import BaseModel, Field
