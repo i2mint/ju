@@ -33,8 +33,8 @@ jobs:
         uses: i2mint/isee/actions/pylint-validation@master
         with:
           root-dir: ${{ env.PROJECT_NAME }}
-          enable: C0114
-          ignore: tests,docs,setup.py
+          enable: missing-module-docstring
+          ignore: tests,examples,scrap
 
       - name: Pytest Validation
         uses: i2mint/isee/actions/pytest-validation@master
