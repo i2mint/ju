@@ -26,8 +26,8 @@ jobs:
           dependency-files: setup.cfg
           # ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}  # Uncomment this if you need to install private dependencies from source
 
-      - name: Format Source Code
-        uses: i2mint/isee/actions/format-source-code@master
+      # - name: Format Source Code
+      #   uses: i2mint/isee/actions/format-source-code@master
 
       - name: Pylint Validation
         uses: i2mint/isee/actions/pylint-validation@master
