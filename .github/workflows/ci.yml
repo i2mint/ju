@@ -34,6 +34,7 @@ jobs:
         with:
           root-dir: ${{ env.PROJECT_NAME }}
           enable: C0114
+          ignore: tests,docs,setup.py
 
       - name: Pytest Validation
         uses: i2mint/isee/actions/pytest-validation@master
