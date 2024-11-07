@@ -674,6 +674,8 @@ class ModelExtractor:
         model_key = self.model_classifier.matching_kind(
             data, assert_unique=assert_unique
         )
+        if model_key is None:
+            raise ValueError("No model matched the data.")
         # get the paths for that model
         paths = list(self.model_paths[model_key])
         # return a mapping that lists the paths and extracts the corresponding values from the data
