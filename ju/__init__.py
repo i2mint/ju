@@ -11,5 +11,6 @@ from ju.pydantic_util import (
     data_to_pydantic_model,  # data to pydantic model
     pydantic_model_to_code,  # pydantic model to code
     field_paths_and_annotations,  # flattened field paths & annotations from model
+    model_field_descriptions,  # Extracts a dictionary of field paths & their descriptions from model.
 )
 from ju.viz import model_digraph  # visualize pydantic models

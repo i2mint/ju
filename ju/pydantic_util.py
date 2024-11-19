@@ -39,6 +39,63 @@ def is_type_hint(obj: Any) -> bool:
 
 
 # -------------------------------------------------------------------------------------
+# Get information from Pydantic models (cast/extract)
+
+from typing import Type, Dict, get_origin
+
+
+def model_field_descriptions(
+    model: Type[BaseModel],
+    default_description: str = "No description provided",
+    *,
+    prefix: str = "",
+) -> Dict[str, str]:
+    """
+    Extracts a dictionary of field paths and their descriptions from a Pydantic model,
+    including nested models.
+
+    Args:
+        model (Type[BaseModel]): A Pydantic model class.
+        prefix (str): A prefix for nested fields (used internally during recursion).
+
+    Returns:
+        Dict[str, str]: A dictionary of field paths and descriptions.
+
+    Example:
+
+    >>> from pydantic import BaseModel, Field
+    >>> class Address(BaseModel):
+    ...     city: str = Field(..., description="City name")
+    ...     zipcode: str = Field(..., description="ZIP code")
+    >>> class User(BaseModel):
+    ...     name: str = Field(..., description="The name of the user")
+    ...     address: Address
+    >>> model_field_descriptions(User)  # doctest: +NORMALIZE_WHITESPACE
+    {'name': 'The name of the user',
+     'address.city': 'City name',
+     'address.zipcode': 'ZIP code'}
+    """
+    descriptions = {}
+
+    for field_name, field_info in model.model_fields.items():
+        field_type = field_info.annotation
+        current_path = f"{prefix}.{field_name}" if prefix else field_name
+
+        if is_a_basemodel(field_type):
+            # Recurse for nested models
+            nested_descriptions = model_field_descriptions(
+                field_type, prefix=current_path, default_description=default_description
+            )
+            descriptions.update(nested_descriptions)
+        else:
+            # Access description directly
+            description = field_info.description or default_description
+            descriptions[current_path] = description
+
+    return descriptions
+
+
+# -------------------------------------------------------------------------------------
 # Construct and validate Pydantic models
 
 from pydantic import BaseModel, ValidationError
