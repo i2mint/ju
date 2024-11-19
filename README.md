@@ -1,9 +1,10 @@
-
 # ju
+
 JSON schema Utils
 
-
 To install:	```pip install ju```
+
+[Documentation](https://i2mint.github.io/ju/)
 
 
 # Examples
