@@ -412,6 +412,7 @@ def pydantic_model_to_code(
     from datamodel_code_generator import (
         DataModelType,
         PythonVersion,
+        DatetimeClassType,
     )  # pip install datamodel-code-generator
     from datamodel_code_generator.model import get_data_model_types
     from datamodel_code_generator.parser.jsonschema import JsonSchemaParser
@@ -426,7 +427,9 @@ def pydantic_model_to_code(
         source = json.dumps(source)
 
     data_model_types = get_data_model_types(
-        DataModelType.PydanticV2BaseModel, target_python_version=PythonVersion.PY_311
+        DataModelType.PydanticV2BaseModel,
+        target_python_version=PythonVersion.PY_311,
+        target_datetime_class=DatetimeClassType.Datetime,
     )
     parser = JsonSchemaParser(
         source,
