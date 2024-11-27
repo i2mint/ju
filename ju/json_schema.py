@@ -1,7 +1,7 @@
 """
 This module provides tools to transform Python functions to JSON schemas.
 
-The main function in this module is `function_to_json_schema`, which takes a 
+The main function in this module is `signature_to_json_schema`, which takes a 
 Python function as input and returns a JSON schema that can be used to generate 
 a form in a React application.
 
@@ -11,7 +11,7 @@ Example usage:
 ...     '''Near the sun'''
 ...     return sweet * sour
 >>>
->>> assert function_to_json_schema(mercury) == {
+>>> assert signature_to_json_schema(mercury) == {
 ...         'title': 'mercury', 
 ...         'type': 'object', 
 ...         'properties': {
@@ -222,12 +222,13 @@ def title_to_pyname(title: str) -> str:
 
 
 # -------------------------------------------------------------------------------------
-# The function_to_json_schema function
+# The signature_to_json_schema function
 
 from typing import Mapping, Sequence
 import inspect
 from operator import attrgetter
 from i2 import Sig, sort_params
+from i2.signatures import ParamsAble
 
 from ju.util import FeatureSwitch, Mapper, ensure_callable_mapper
 
@@ -258,11 +259,11 @@ BASE_SCHEMA = {
 
 
 # TODO: See rjsf _func_to_rjsf_schemas and merge with it
-def function_to_json_schema(
-    func: Callable,
+def signature_to_json_schema(
+    func: ParamsAble,
     *,
     doc: Optional[Union[str, bool]] = True,
-    name_of_obj: Callable[[Any], str] = name_of_obj,
+    name_of_obj: Union[str, Callable[[Any], str]] = name_of_obj,
     pyname_to_title: Callable[[str], str] = DFLT_PYNAME_TO_TITLE,
     param_to_prop_type: Callable = DFLT_PARAM_TO_TYPE,
 ) -> dict:
@@ -276,7 +277,7 @@ def function_to_json_schema(
     ...     '''Near the sun'''
     ...     return sweet * sour
     >>>
-    >>> assert function_to_json_schema(mercury) == {
+    >>> assert signature_to_json_schema(mercury) == {
     ...         'title': 'mercury',
     ...         'type': 'object',
     ...         'properties': {
@@ -290,11 +291,17 @@ def function_to_json_schema(
 
     """
     # Fetch function metadata
-    sig = inspect.signature(func)
+    sig = Sig(func)
+
+    if isinstance(name_of_obj, str):
+        func_name = name_of_obj
+    else:
+        func_name = name_of_obj(func)
+
     parameters = sig.parameters
 
     schema = deepcopy(BASE_SCHEMA)
-    schema["title"] = pyname_to_title(name_of_obj(func))
+    schema["title"] = pyname_to_title(func_name)
 
     schema["properties"] = get_properties(
         parameters, param_to_prop_type=param_to_prop_type
@@ -323,6 +330,9 @@ def function_to_json_schema(
     #     schema['properties'][name] = field
 
     return schema
+
+
+function_to_json_schema = signature_to_json_schema  # backwards compatibility
 
 
 def json_schema_to_signature(

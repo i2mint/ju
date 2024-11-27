@@ -15,14 +15,14 @@ You have tools to extract JSON schema information from python objects, as well a
 to create python objects from them.
 
 
-    >>> from ju import function_to_json_schema, json_schema_to_signature
+    >>> from ju import signature_to_json_schema, json_schema_to_signature
     >>>
     >>>
     >>> def earth(north: str, south: bool, east: int = 1, west: float = 2.0):
     ...     """Earth docs"""
     ...     return f'{north=}, {south=}, {east=}, {west=}'
     ...
-    >>> schema = function_to_json_schema(earth)
+    >>> schema = signature_to_json_schema(earth)
     >>> assert schema == {
     ...     'description': 'Earth docs',
     ...     'title': 'earth',

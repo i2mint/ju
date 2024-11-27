@@ -6,7 +6,7 @@ from functools import partial
 from typing import Callable
 import inspect
 from operator import attrgetter
-from ju.json_schema import function_to_json_schema
+from ju.json_schema import signature_to_json_schema
 from ju.util import FeatureSwitch
 
 
@@ -58,7 +58,7 @@ expected = {mercury: mercury_schema, venus: venus_schema, earth: earth_schema}
 
 
 # test
-def test_schema_gen(func_to_schema=function_to_json_schema, expected=expected):
+def test_schema_gen(func_to_schema=signature_to_json_schema, expected=expected):
     for func, schema in expected.items():
         assert func_to_schema(func) == schema, (
             f"{func=}, \n" f"{func_to_schema(func)=}, \n" f"{schema=}\n"
@@ -79,7 +79,7 @@ type_feature_switch_to_test = FeatureSwitch(
 )
 
 func_to_schema_to_test = partial(
-    function_to_json_schema, param_to_prop_type=type_feature_switch_to_test
+    signature_to_json_schema, param_to_prop_type=type_feature_switch_to_test
 )
 
 # since type_feature_switch_to_test only switches on the annotation

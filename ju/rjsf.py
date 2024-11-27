@@ -5,7 +5,7 @@ import inspect
 from copy import deepcopy
 
 from ju.json_schema import (
-    function_to_json_schema,
+    signature_to_json_schema,
     DFLT_PARAM_TO_TYPE,
     DFLT_FUNC_TITLE,
     merge_with_defaults,
@@ -170,7 +170,7 @@ def _func_to_rjsf_schemas(
 
     """
 
-    schema = function_to_json_schema(
+    schema = signature_to_json_schema(
         func,
         doc=doc,
         pyname_to_title=pyname_to_title,
