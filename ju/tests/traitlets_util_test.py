@@ -47,8 +47,9 @@ def test_trait_to_py():
                 traitlets.Enum,
                 traitlets.CaselessStrEnum,
                 traitlets.FuzzyEnum,
+                traitlets.ObserveHandler,
             ]:
-                trait_instance = traitlet_type(values=['a', 'b', 'c'])
+                trait_instance = traitlet_type(['a', 'b', 'c'])
             elif traitlet_type in {traitlets.List, traitlets.Set}:
                 trait_instance = traitlet_type(one_traitlet_type)
             elif traitlet_type is traitlets.Tuple:

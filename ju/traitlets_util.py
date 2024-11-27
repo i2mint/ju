@@ -3,10 +3,13 @@
 import traitlets
 from traitlets import TraitType
 import typing
-from typing import Union, Type
+from typing import Union, Type, Any, Callable, Dict
+
 import enum
 import re
 import collections.abc
+
+ObserveHandlerPyType = Callable[[Dict[str, Any]], Any]
 
 # Mapping from traitlets types to Python types (as defined previously)
 py_type_for_traitlet_type = {
@@ -45,6 +48,7 @@ py_type_for_traitlet_type = {
     traitlets.ClassBasedTraitType: type,
     # Other types
     traitlets.Callable: collections.abc.Callable,
+    traitlets.ObserveHandler: ObserveHandlerPyType,
     traitlets.UseEnum: enum.Enum,
     traitlets.Union: typing.Union,
     traitlets.Any: object,

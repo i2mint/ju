@@ -14,3 +14,4 @@ from ju.pydantic_util import (
     model_field_descriptions,  # Extracts a dictionary of field paths & their descriptions from model.
 )
 from ju.viz import model_digraph  # visualize pydantic models
+from ju.traitlets_util import trait_to_py
