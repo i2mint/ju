@@ -11,5 +11,7 @@
    module_docs/ju/tests/oas_test
    module_docs/ju/tests/pydantic_util_test
    module_docs/ju/tests/rjsf_test
+   module_docs/ju/tests/traitlets_util_test
+   module_docs/ju/traitlets_util
    module_docs/ju/util
    module_docs/ju/viz
