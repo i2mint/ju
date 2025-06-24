@@ -283,7 +283,7 @@ class RJSFViewer:
             on_submit_names = set(self._on_submit_sig.names)
             on_submit_required_names = set(self._on_submit_sig.required_names)
             rjsf_names = set(
-                rjsf_spec.get('rjsf', {}).get('schema', {}).get('properties', {}).keys()
+                rjsf_spec.get("rjsf", {}).get("schema", {}).get("properties", {}).keys()
             )
             unpack_form_data = rjsf_names.issubset(
                 on_submit_names
@@ -294,9 +294,9 @@ class RJSFViewer:
         if name is None:
             # set the name to the name of the rjsf_spec if it has one
             name = (
-                self.rjsf_spec.get('rjsf', {})
-                .get('schema', {})
-                .get('title', self._on_submit_sig.name or 'RJSF Form')
+                self.rjsf_spec.get("rjsf", {})
+                .get("schema", {})
+                .get("title", self._on_submit_sig.name or "RJSF Form")
             )
         self.name = name
 
@@ -322,9 +322,9 @@ class RJSFViewer:
         Returns:
             Tuple of (schema, ui_schema)
         """
-        rjsf_data = self.rjsf_spec.get('rjsf', {})
-        schema = rjsf_data.get('schema', {})
-        ui_schema = rjsf_data.get('uiSchema', {})
+        rjsf_data = self.rjsf_spec.get("rjsf", {})
+        schema = rjsf_data.get("schema", {})
+        ui_schema = rjsf_data.get("uiSchema", {})
         return schema, ui_schema
 
     def _create_widget_for_property(
@@ -340,37 +340,37 @@ class RJSFViewer:
         Returns:
             Configured widget instance
         """
-        prop_type = prop_schema.get('type', 'string')
-        default_value = prop_schema.get('default', '')
+        prop_type = prop_schema.get("type", "string")
+        default_value = prop_schema.get("default", "")
 
         widget_kwargs = {
-            'description': prop_name.replace('_', ' ').title() + ':',
-            'style': {'description_width': 'initial'},
-            'layout': widgets.Layout(width='100%'),
+            "description": prop_name.replace("_", " ").title() + ":",
+            "style": {"description_width": "initial"},
+            "layout": widgets.Layout(width="100%"),
         }
 
-        if prop_type == 'string':
+        if prop_type == "string":
             widget = widgets.Text(
                 value=str(default_value),
                 placeholder=f"Enter {prop_name}...",
                 **widget_kwargs,
             )
-        elif prop_type == 'number':
+        elif prop_type == "number":
             widget = widgets.FloatText(
                 value=float(default_value) if default_value else 0.0, **widget_kwargs
             )
-        elif prop_type == 'integer':
+        elif prop_type == "integer":
             widget = widgets.IntText(
                 value=int(default_value) if default_value else 0, **widget_kwargs
             )
-        elif prop_type == 'boolean':
+        elif prop_type == "boolean":
             widget = widgets.Checkbox(value=bool(default_value), **widget_kwargs)
         else:
             # Fallback to text input
             widget = widgets.Text(value=str(default_value), **widget_kwargs)
 
         # Apply autofocus if specified
-        if ui_config.get('ui:autofocus'):
+        if ui_config.get("ui:autofocus"):
             # Note: ipywidgets doesn't have direct autofocus,
             # but we can store this info for later use
             widget._autofocus = True
@@ -381,10 +381,10 @@ class RJSFViewer:
         """Build the complete form widget structure."""
         schema, ui_schema = self._extract_schema_info()
 
-        title = schema.get('title', 'Form')
-        description = schema.get('description', '')
-        properties = schema.get('properties', {})
-        required_fields = set(schema.get('required', []))
+        title = schema.get("title", "Form")
+        description = schema.get("description", "")
+        properties = schema.get("properties", {})
+        required_fields = set(schema.get("required", []))
 
         # Create title widget
         title_widget = widgets.HTML(f"<h3>{title}</h3>")
@@ -408,13 +408,13 @@ class RJSFViewer:
             widgets_list.append(widget)
 
         # Create submit button
-        submit_options = ui_schema.get('ui:submitButtonOptions', {})
-        submit_text = submit_options.get('submitText', self.config.submit_text)
+        submit_options = ui_schema.get("ui:submitButtonOptions", {})
+        submit_text = submit_options.get("submitText", self.config.submit_text)
 
         submit_button = widgets.Button(
             description=submit_text,
-            button_style='primary',
-            layout=widgets.Layout(width='auto', margin='10px 0 0 0'),
+            button_style="primary",
+            layout=widgets.Layout(width="auto", margin="10px 0 0 0"),
         )
         submit_button.on_click(self._handle_submit)
 
@@ -425,9 +425,9 @@ class RJSFViewer:
             widgets_list,
             layout=widgets.Layout(
                 width=self.config.layout_width,
-                padding='10px',
-                border='1px solid #ddd',
-                border_radius='5px',
+                padding="10px",
+                border="1px solid #ddd",
+                border_radius="5px",
             ),
         )
 

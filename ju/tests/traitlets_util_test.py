@@ -49,17 +49,17 @@ def test_trait_to_py():
                 traitlets.FuzzyEnum,
                 traitlets.ObserveHandler,
             ]:
-                trait_instance = traitlet_type(['a', 'b', 'c'])
+                trait_instance = traitlet_type(["a", "b", "c"])
             elif traitlet_type in {traitlets.List, traitlets.Set}:
                 trait_instance = traitlet_type(one_traitlet_type)
             elif traitlet_type is traitlets.Tuple:
                 trait_instance = traitlet_type(*two_traitlet_types)
             elif traitlet_type is traitlets.Dict:
                 trait_instance = traitlet_type(
-                    **dict(zip(['key_trait', 'value_trait'], two_traitlet_types))
+                    **dict(zip(["key_trait", "value_trait"], two_traitlet_types))
                 )
             elif traitlet_type is traitlets.ForwardDeclaredInstance:
-                trait_instance = traitlet_type('DummyClass')
+                trait_instance = traitlet_type("DummyClass")
             elif traitlet_type in {traitlets.TCPAddress, traitlets.CRegExp}:
                 trait_instance = traitlet_type()
             elif traitlet_type is traitlets.Union:
