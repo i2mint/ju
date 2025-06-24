@@ -478,6 +478,7 @@ def create_rjsf_viewer(
     name: str = None,
     unpack_form_data: bool = None,
     config: Optional[FormConfig] = None,
+    display: bool = False,
 ) -> RJSFViewer:
     """Factory function to create and display an RJSF viewer.
 
@@ -496,10 +497,13 @@ def create_rjsf_viewer(
     >>> viewer = create_rjsf_viewer(rjsf_dict, on_submit=handle_data)  # doctest: +SKIP
     >>> viewer.display()  # doctest: +SKIP
     """
-    return RJSFViewer(
+    viewer = RJSFViewer(
         rjsf_spec,
         on_submit=on_submit,
         name=name,
         unpack_form_data=unpack_form_data,
         config=config,
     )
+    if display:
+        viewer.display()
+    return viewer
