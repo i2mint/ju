@@ -189,3 +189,248 @@ def _func_to_rjsf_schemas(
 
     # Return the schemas
     return schema, ui_schema
+
+
+# --------------------------------------------------------------------------------------
+# RJSF jupyter notebook viewer
+
+
+from typing import Dict, Any, Optional, Callable, Union
+from dataclasses import dataclass, field
+
+# TODO: Make this import conditional
+import ipywidgets as widgets
+
+
+@dataclass
+class FormConfig:
+    """Configuration for form rendering behavior."""
+
+    submit_text: str = "Submit"
+    show_labels: bool = True
+    layout_width: str = "400px"
+    autofocus_first: bool = True
+
+
+class RJSFViewer:
+    """Renders RJSF specifications as Jupyter widgets.
+
+    Provides a bridge between RJSF form specifications and ipywidgets,
+    allowing interactive form viewing and data collection in notebooks.
+
+    Example:
+        >>> rjsf_dict = {'rjsf': {'schema': {...}, 'uiSchema': {...}}}
+        >>> viewer = RJSFViewer(rjsf_dict)
+        >>> viewer.display()  # doctest: +SKIP
+    """
+
+    def __init__(
+        self,
+        rjsf_spec: Dict[str, Any],
+        *,
+        on_submit: Optional[Callable[[Dict[str, Any]], None]] = None,
+        config: Optional[FormConfig] = None,
+    ):
+        """Initialize the RJSF viewer.
+
+        Args:
+            rjsf_spec: The RJSF specification dictionary
+            on_submit: Optional callback for form submission
+            config: Optional form configuration
+        """
+        self.rjsf_spec = rjsf_spec
+        self.on_submit = on_submit or self._default_submit_handler
+        self.config = config or FormConfig()
+
+        self._widgets = {}
+        self._form_widget = None
+        self._build_form()
+
+    def _default_submit_handler(self, form_data: Dict[str, Any]) -> None:
+        """Default handler that prints submitted data.
+
+        Args:
+            form_data: The collected form data
+        """
+        print("Form submitted with data:")
+        for key, value in form_data.items():
+            print(f"  {key}: {value}")
+
+    def _extract_schema_info(self) -> tuple[Dict[str, Any], Dict[str, Any]]:
+        """Extract schema and UI schema from RJSF specification.
+
+        Returns:
+            Tuple of (schema, ui_schema)
+        """
+        rjsf_data = self.rjsf_spec.get('rjsf', {})
+        schema = rjsf_data.get('schema', {})
+        ui_schema = rjsf_data.get('uiSchema', {})
+        return schema, ui_schema
+
+    def _create_widget_for_property(
+        self, prop_name: str, prop_schema: Dict[str, Any], ui_config: Dict[str, Any]
+    ) -> widgets.Widget:
+        """Create appropriate widget for a schema property.
+
+        Args:
+            prop_name: Property name
+            prop_schema: Property schema definition
+            ui_config: UI configuration for this property
+
+        Returns:
+            Configured widget instance
+        """
+        prop_type = prop_schema.get('type', 'string')
+        default_value = prop_schema.get('default', '')
+
+        widget_kwargs = {
+            'description': prop_name.replace('_', ' ').title() + ':',
+            'style': {'description_width': 'initial'},
+            'layout': widgets.Layout(width='100%'),
+        }
+
+        if prop_type == 'string':
+            widget = widgets.Text(
+                value=str(default_value),
+                placeholder=f"Enter {prop_name}...",
+                **widget_kwargs,
+            )
+        elif prop_type == 'number':
+            widget = widgets.FloatText(
+                value=float(default_value) if default_value else 0.0, **widget_kwargs
+            )
+        elif prop_type == 'integer':
+            widget = widgets.IntText(
+                value=int(default_value) if default_value else 0, **widget_kwargs
+            )
+        elif prop_type == 'boolean':
+            widget = widgets.Checkbox(value=bool(default_value), **widget_kwargs)
+        else:
+            # Fallback to text input
+            widget = widgets.Text(value=str(default_value), **widget_kwargs)
+
+        # Apply autofocus if specified
+        if ui_config.get('ui:autofocus'):
+            # Note: ipywidgets doesn't have direct autofocus,
+            # but we can store this info for later use
+            widget._autofocus = True
+
+        return widget
+
+    def _build_form(self) -> None:
+        """Build the complete form widget structure."""
+        schema, ui_schema = self._extract_schema_info()
+
+        title = schema.get('title', 'Form')
+        description = schema.get('description', '')
+        properties = schema.get('properties', {})
+        required_fields = set(schema.get('required', []))
+
+        # Create title widget
+        title_widget = widgets.HTML(f"<h3>{title}</h3>")
+
+        # Create description widget if present
+        widgets_list = [title_widget]
+        if description:
+            desc_widget = widgets.HTML(f"<p><em>{description}</em></p>")
+            widgets_list.append(desc_widget)
+
+        # Create input widgets for each property
+        for prop_name, prop_schema in properties.items():
+            ui_config = ui_schema.get(prop_name, {})
+            widget = self._create_widget_for_property(prop_name, prop_schema, ui_config)
+
+            # Mark required fields
+            if prop_name in required_fields:
+                widget.description = widget.description + " *"
+
+            self._widgets[prop_name] = widget
+            widgets_list.append(widget)
+
+        # Create submit button
+        submit_options = ui_schema.get('ui:submitButtonOptions', {})
+        submit_text = submit_options.get('submitText', self.config.submit_text)
+
+        submit_button = widgets.Button(
+            description=submit_text,
+            button_style='primary',
+            layout=widgets.Layout(width='auto', margin='10px 0 0 0'),
+        )
+        submit_button.on_click(self._handle_submit)
+
+        widgets_list.append(submit_button)
+
+        # Create the main form container
+        self._form_widget = widgets.VBox(
+            widgets_list,
+            layout=widgets.Layout(
+                width=self.config.layout_width,
+                padding='10px',
+                border='1px solid #ddd',
+                border_radius='5px',
+            ),
+        )
+
+    def _handle_submit(self, button: widgets.Button) -> None:
+        """Handle form submission.
+
+        Args:
+            button: The submit button widget
+        """
+        form_data = self.get_form_data()
+        self.on_submit(form_data)
+
+    def get_form_data(self) -> Dict[str, Any]:
+        """Extract current form data from widgets.
+
+        Returns:
+            Dictionary of form field values
+        """
+        return {name: widget.value for name, widget in self._widgets.items()}
+
+    def set_form_data(self, data: Dict[str, Any]) -> None:
+        """Set form data programmatically.
+
+        Args:
+            data: Dictionary of field values to set
+        """
+        for name, value in data.items():
+            if name in self._widgets:
+                self._widgets[name].value = value
+
+    def display(self) -> None:
+        """Display the form in the notebook."""
+        from IPython.display import display
+
+        if self._form_widget:
+            display(self._form_widget)
+
+    @property
+    def widget(self) -> widgets.Widget:
+        """Access the underlying widget for custom layouts."""
+        return self._form_widget
+
+
+def create_rjsf_viewer(
+    rjsf_spec: Dict[str, Any],
+    *,
+    on_submit: Optional[Callable[[Dict[str, Any]], None]] = None,
+    config: Optional[FormConfig] = None,
+) -> RJSFViewer:
+    """Factory function to create and display an RJSF viewer.
+
+    Args:
+        rjsf_spec: The RJSF specification
+        on_submit: Optional submission callback
+        config: Optional form configuration
+
+    Returns:
+        Configured RJSFViewer instance
+
+    Example:
+        >>> def handle_data(data):
+        ...     print(f"Received: {data}")
+        >>> viewer = create_rjsf_viewer(rjsf_dict, on_submit=handle_data)
+        >>> viewer.display()  # doctest: +SKIP
+    """
+    return RJSFViewer(rjsf_spec, on_submit=on_submit, config=config)
