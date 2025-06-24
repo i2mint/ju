@@ -1,8 +1,8 @@
 """
 This module provides tools to transform Python functions to JSON schemas.
 
-The main function in this module is `signature_to_json_schema`, which takes a 
-Python function as input and returns a JSON schema that can be used to generate 
+The main function in this module is `signature_to_json_schema`, which takes a
+Python function as input and returns a JSON schema that can be used to generate
 a form in a React application.
 
 Example usage:
@@ -12,12 +12,12 @@ Example usage:
 ...     return sweet * sour
 >>>
 >>> assert signature_to_json_schema(mercury) == {
-...         'title': 'mercury', 
-...         'type': 'object', 
+...         'title': 'mercury',
+...         'type': 'object',
 ...         'properties': {
-...             'sweet': {'type': 'number'}, 
-...             'sour': {'type': 'boolean', 'default': True}}, 
-...          'required': ['sweet'], 
+...             'sweet': {'type': 'number'},
+...             'sour': {'type': 'boolean', 'default': True}},
+...          'required': ['sweet'],
 ...          'description': 'Near the sun'
 ... }
 
