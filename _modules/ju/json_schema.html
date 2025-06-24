@@ -6,16 +6,16 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ju.json_schema &mdash; ju 0.1.4 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../_static/documentation_options.js?v=fd825880"></script>
-      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -111,23 +111,23 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span>
-<span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">Parameter</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">inspect</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parameter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">deepcopy</span>
 
-<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
-<span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">name_of_obj</span> <span class="k">as</span> <span class="n">_name_of_obj</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">i2</span><span class="w"> </span><span class="kn">import</span> <span class="n">name_of_obj</span> <span class="k">as</span> <span class="n">_name_of_obj</span>
 
-<span class="kn">from</span> <span class="nn">ju.util</span> <span class="kn">import</span> <span class="n">is_type</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ju.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_type</span>
 
 <span class="n">DFLT_FUNC_TITLE</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
 <span class="n">name_of_obj</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">_name_of_obj</span><span class="p">,</span> <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">DFLT_FUNC_TITLE</span><span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">_BasicPythonTypes</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">_BasicPythonTypes</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">a_string</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">a_boolean</span><span class="p">:</span> <span class="nb">bool</span>  <span class="c1"># isinstance(True, int) so bool needs to be before int</span>
     <span class="n">an_integer</span><span class="p">:</span> <span class="nb">int</span>
@@ -136,11 +136,11 @@
     <span class="n">a_sequence</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 
 
-<span class="k">def</span> <span class="nf">pydantic_model_to_type_mapping</span><span class="p">(</span><span class="n">pydantic_model</span><span class="p">:</span> <span class="n">BaseModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pydantic_model_to_type_mapping</span><span class="p">(</span><span class="n">pydantic_model</span><span class="p">:</span> <span class="n">BaseModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="n">fields</span> <span class="o">=</span> <span class="n">pydantic_model</span><span class="o">.</span><span class="n">model_fields</span>
     <span class="n">properties</span> <span class="o">=</span> <span class="n">pydantic_model</span><span class="o">.</span><span class="n">model_json_schema</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;properties&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">gen</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">gen</span><span class="p">():</span>
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
             <span class="k">yield</span> <span class="n">fields</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">annotation</span><span class="p">,</span> <span class="n">properties</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
 
@@ -173,7 +173,7 @@
 <span class="n">DFLT_JSON_TYPE</span> <span class="o">=</span> <span class="s2">&quot;string&quot;</span>  <span class="c1"># TODO: &#39;string&#39; or &#39;object&#39;?</span>
 
 
-<span class="k">def</span> <span class="nf">parametrized_param_to_type</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">parametrized_param_to_type</span><span class="p">(</span>
     <span class="n">param</span><span class="p">:</span> <span class="n">Parameter</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">type_mapping</span><span class="o">=</span><span class="n">DFLT_PY_JSON_TYPE_PAIRS</span><span class="p">,</span>
@@ -194,14 +194,14 @@
 <span class="c1"># -------------------------------------------------------------------------------------</span>
 <span class="c1"># util</span>
 
-<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 
 
-<span class="k">def</span> <span class="nf">print_dict</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">print_dict</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
 
 
-<span class="k">def</span> <span class="nf">print_schema</span><span class="p">(</span><span class="n">func_key</span><span class="p">,</span> <span class="n">store</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">print_schema</span><span class="p">(</span><span class="n">func_key</span><span class="p">,</span> <span class="n">store</span><span class="p">):</span>
     <span class="n">print_dict</span><span class="p">(</span><span class="n">store</span><span class="p">[</span><span class="n">func_key</span><span class="p">][</span><span class="s2">&quot;rjsf&quot;</span><span class="p">][</span><span class="s2">&quot;schema&quot;</span><span class="p">])</span>
     <span class="n">print_dict</span><span class="p">(</span><span class="n">store</span><span class="p">[</span><span class="n">func_key</span><span class="p">][</span><span class="s2">&quot;rjsf&quot;</span><span class="p">][</span><span class="s2">&quot;schema&quot;</span><span class="p">])</span>
 
@@ -209,17 +209,17 @@
 <span class="n">form_specs</span> <span class="o">=</span> <span class="kc">None</span>
 
 
-<span class="k">def</span> <span class="nf">print_schema</span><span class="p">(</span><span class="n">func_key</span><span class="o">=</span><span class="s2">&quot;olab.objects.dpp.accuracy&quot;</span><span class="p">,</span> <span class="n">store</span><span class="o">=</span><span class="n">form_specs</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">print_schema</span><span class="p">(</span><span class="n">func_key</span><span class="o">=</span><span class="s2">&quot;olab.objects.dpp.accuracy&quot;</span><span class="p">,</span> <span class="n">store</span><span class="o">=</span><span class="n">form_specs</span><span class="p">):</span>
     <span class="n">print_dict</span><span class="p">(</span><span class="n">store</span><span class="p">[</span><span class="n">func_key</span><span class="p">][</span><span class="s2">&quot;rjsf&quot;</span><span class="p">][</span><span class="s2">&quot;schema&quot;</span><span class="p">])</span>
 
 
-<span class="k">def</span> <span class="nf">wrap_schema_in_opus_spec</span><span class="p">(</span><span class="n">schema</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">wrap_schema_in_opus_spec</span><span class="p">(</span><span class="n">schema</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
     <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;rjsf&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;schema&quot;</span><span class="p">:</span> <span class="n">schema</span><span class="p">}}</span>
 
 
 <div class="viewcode-block" id="merge_with_defaults">
 <a class="viewcode-back" href="../../module_docs/ju/json_schema.html#ju.json_schema.merge_with_defaults">[docs]</a>
-<span class="k">def</span> <span class="nf">merge_with_defaults</span><span class="p">(</span><span class="n">defaults</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">overwrites</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">merge_with_defaults</span><span class="p">(</span><span class="n">defaults</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">overwrites</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns a new dictionary that combines two dictionaries by using the keys</span>
 <span class="sd">    and order from the first dictionary (defaults) and overwriting its values</span>
@@ -246,7 +246,7 @@
 
 <div class="viewcode-block" id="pyname_to_title">
 <a class="viewcode-back" href="../../module_docs/ju/json_schema.html#ju.json_schema.pyname_to_title">[docs]</a>
-<span class="k">def</span> <span class="nf">pyname_to_title</span><span class="p">(</span><span class="n">pyname</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pyname_to_title</span><span class="p">(</span><span class="n">pyname</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Converts a Python name to a title.</span>
 
@@ -271,14 +271,14 @@
 
 <span class="c1"># TODO: Replace asis with pyname_to_title when time to update tests</span>
 <span class="c1"># DFLT_PYNAME_TO_TITLE = pyname_to_title</span>
-<span class="kn">from</span> <span class="nn">ju.util</span> <span class="kn">import</span> <span class="n">asis</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ju.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">asis</span>
 
 <span class="n">DFLT_PYNAME_TO_TITLE</span> <span class="o">=</span> <span class="n">asis</span>
 
 
 <div class="viewcode-block" id="title_to_pyname">
 <a class="viewcode-back" href="../../module_docs/ju/json_schema.html#ju.json_schema.title_to_pyname">[docs]</a>
-<span class="k">def</span> <span class="nf">title_to_pyname</span><span class="p">(</span><span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">title_to_pyname</span><span class="p">(</span><span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Converts a title to a Python name.</span>
 
@@ -321,13 +321,13 @@
 <span class="c1"># -------------------------------------------------------------------------------------</span>
 <span class="c1"># The signature_to_json_schema function</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Sequence</span>
-<span class="kn">import</span> <span class="nn">inspect</span>
-<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">attrgetter</span>
-<span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">Sig</span><span class="p">,</span> <span class="n">sort_params</span>
-<span class="kn">from</span> <span class="nn">i2.signatures</span> <span class="kn">import</span> <span class="n">ParamsAble</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">operator</span><span class="w"> </span><span class="kn">import</span> <span class="n">attrgetter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">i2</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sig</span><span class="p">,</span> <span class="n">sort_params</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">i2.signatures</span><span class="w"> </span><span class="kn">import</span> <span class="n">ParamsAble</span>
 
-<span class="kn">from</span> <span class="nn">ju.util</span> <span class="kn">import</span> <span class="n">FeatureSwitch</span><span class="p">,</span> <span class="n">Mapper</span><span class="p">,</span> <span class="n">ensure_callable_mapper</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ju.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">FeatureSwitch</span><span class="p">,</span> <span class="n">Mapper</span><span class="p">,</span> <span class="n">ensure_callable_mapper</span>
 
 <span class="c1"># dflt_type_mapping = {</span>
 <span class="c1">#     int: {&#39;type&#39;: &#39;integer&#39;},</span>
@@ -358,7 +358,7 @@
 <span class="c1"># TODO: See rjsf _func_to_rjsf_schemas and merge with it</span>
 <div class="viewcode-block" id="signature_to_json_schema">
 <a class="viewcode-back" href="../../module_docs/ju/json_schema.html#ju.json_schema.signature_to_json_schema">[docs]</a>
-<span class="k">def</span> <span class="nf">signature_to_json_schema</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">signature_to_json_schema</span><span class="p">(</span>
     <span class="n">func</span><span class="p">:</span> <span class="n">ParamsAble</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">doc</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -437,7 +437,7 @@
 
 <div class="viewcode-block" id="json_schema_to_signature">
 <a class="viewcode-back" href="../../module_docs/ju/json_schema.html#ju.json_schema.json_schema_to_signature">[docs]</a>
-<span class="k">def</span> <span class="nf">json_schema_to_signature</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">json_schema_to_signature</span><span class="p">(</span>
     <span class="n">json_schema</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">type_mapper</span><span class="p">:</span> <span class="n">Mapper</span> <span class="o">=</span> <span class="n">DFLT_JSON_PY_TYPE_PAIRS</span><span class="p">,</span>
@@ -474,7 +474,7 @@
     <span class="n">type_mapper</span> <span class="o">=</span> <span class="n">ensure_callable_mapper</span><span class="p">(</span><span class="n">type_mapper</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">default_annotation</span><span class="p">)</span>
     <span class="n">properties</span> <span class="o">=</span> <span class="n">json_schema</span><span class="p">[</span><span class="s2">&quot;properties&quot;</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_params</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_params</span><span class="p">():</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">properties</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">json_type</span> <span class="o">:=</span> <span class="n">field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">json_type</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
@@ -509,7 +509,7 @@
 <span class="c1"># TODO: The loop body could be factored out</span>
 <div class="viewcode-block" id="get_properties">
 <a class="viewcode-back" href="../../module_docs/ju/json_schema.html#ju.json_schema.get_properties">[docs]</a>
-<span class="k">def</span> <span class="nf">get_properties</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">param_to_prop_type</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">DFLT_PARAM_TO_TYPE</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_properties</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">param_to_prop_type</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">DFLT_PARAM_TO_TYPE</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns the properties dict for the JSON schema.</span>
 
@@ -554,7 +554,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">get_required</span><span class="p">(</span><span class="n">properties</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_required</span><span class="p">(</span><span class="n">properties</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">properties</span> <span class="k">if</span> <span class="s2">&quot;default&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">[</span><span class="n">name</span><span class="p">]]</span>
 </pre></div>
 

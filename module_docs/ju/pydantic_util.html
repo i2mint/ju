@@ -7,16 +7,16 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ju.pydantic_util &mdash; ju 0.1.4 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../_static/documentation_options.js?v=fd825880"></script>
-      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -139,15 +139,15 @@ paths. Defaults to <cite>glom.glom</cite>, a tool for nested data extraction.</p
 </dd>
 </dl>
 <p>Example:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="gp">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Item</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">Item</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">ref</span><span class="p">:</span> <span class="nb">int</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Playlist</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">Playlist</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
 <span class="gp">... </span>    <span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Item</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">User</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
 <span class="gp">... </span>    <span class="n">age</span><span class="p">:</span> <span class="nb">int</span>
 <span class="gp">&gt;&gt;&gt;</span>
@@ -309,20 +309,20 @@ from a dictionary that matches the BaseModel structure.</p>
 </dd>
 </dl>
 <p>Example:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">BItem</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">BItem</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">c</span><span class="p">:</span> <span class="nb">int</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">A</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">b</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">BItem</span><span class="p">]</span>
 <span class="gp">... </span>    <span class="n">d</span><span class="p">:</span> <span class="nb">str</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Model</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">Model</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">a</span><span class="p">:</span> <span class="n">A</span>
 </pre></div>
 </div>
@@ -332,12 +332,12 @@ from a dictionary that matches the BaseModel structure.</p>
 </pre></div>
 </div>
 <p>See that it works with generics:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Generic</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Generic</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">A_with_Generic</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">,</span> <span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">A_with_Generic</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">,</span> <span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">]):</span>
 <span class="gp">... </span>    <span class="n">b</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">T</span><span class="p">]</span>
 <span class="gp">... </span>    <span class="n">d</span><span class="p">:</span> <span class="nb">str</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Model_with_Generic</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">Model_with_Generic</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">a</span><span class="p">:</span> <span class="n">A_with_Generic</span><span class="p">[</span><span class="n">BItem</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">field_paths_and_annotations</span><span class="p">(</span><span class="n">Model_with_Generic</span><span class="p">)</span>
@@ -364,8 +364,8 @@ from a dictionary that matches the BaseModel structure.</p>
 <dt class="sig sig-object py" id="ju.pydantic_util.is_a_basemodel">
 <span class="sig-prename descclassname"><span class="pre">ju.pydantic_util.</span></span><span class="sig-name descname"><span class="pre">is_a_basemodel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../../_modules/ju/pydantic_util.html#is_a_basemodel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.pydantic_util.is_a_basemodel" title="Link to this definition"></a></dt>
 <dd><p>Check if an object is a Pydantic BaseModel.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">MyModel</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">MyModel</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="gp">... </span><span class="w">    </span><span class="sd">&#39;&#39;&#39;Some model&#39;&#39;&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">is_a_basemodel</span><span class="p">,</span> <span class="p">[</span><span class="n">BaseModel</span><span class="p">,</span> <span class="n">MyModel</span><span class="p">,</span> <span class="mf">3.14</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">MyModel</span><span class="p">]]))</span>
 <span class="go">[True, True, False, False, False]</span>
@@ -414,14 +414,14 @@ to their concrete types (e.g., int and str).</p>
 <dd class="field-odd"><p>Dict[TypeVar, Type[Any]]</p>
 </dd>
 </dl>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">List</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">List</span>
 </pre></div>
 </div>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">T</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;T&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">U</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;U&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Pair</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">U</span><span class="p">]):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">Pair</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">T</span><span class="p">,</span> <span class="n">U</span><span class="p">]):</span>
 <span class="gp">... </span>    <span class="n">first</span><span class="p">:</span> <span class="n">T</span>
 <span class="gp">... </span>    <span class="n">second</span><span class="p">:</span> <span class="n">U</span>
 </pre></div>
@@ -456,8 +456,8 @@ Defaults to <cite>model.model_validate</cite>.</p></li>
 </dd>
 </dl>
 <p>Example:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">User</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
 <span class="gp">... </span>    <span class="n">code</span><span class="p">:</span> <span class="nb">int</span>
 <span class="gp">...</span>
@@ -501,11 +501,11 @@ including nested models.</p>
 </dd>
 </dl>
 <p>Example:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Address</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">Address</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">city</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;City name&quot;</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="n">zipcode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;ZIP code&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">User</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The name of the user&quot;</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="n">address</span><span class="p">:</span> <span class="n">Address</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model_field_descriptions</span><span class="p">(</span><span class="n">User</span><span class="p">)</span>  
@@ -574,12 +574,12 @@ using pydantic_model_to_code</p>
 <dt class="sig sig-object py" id="ju.pydantic_util.valid_models">
 <span class="sig-prename descclassname"><span class="pre">ju.pydantic_util.</span></span><span class="sig-name descname"><span class="pre">valid_models</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">json_obj,</span> <span class="pre">models:</span> <span class="pre">~typing.Iterable[~pydantic.main.BaseModel],</span> <span class="pre">*,</span> <span class="pre">factory:</span> <span class="pre">~typing.Callable[[~typing.Type[~pydantic.main.BaseModel],</span> <span class="pre">~ju.pydantic_util.Data],</span> <span class="pre">~pydantic.main.BaseModel]</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">_model_validate&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ju/pydantic_util.html#valid_models"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.pydantic_util.valid_models" title="Link to this definition"></a></dt>
 <dd><p>A generator that yields the models that json_obj is valid wrt to.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">User</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
 <span class="gp">... </span>    <span class="n">code</span><span class="p">:</span> <span class="nb">int</span>
 <span class="gp">...</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span> <span class="nc">Admin</span><span class="p">(</span><span class="n">User</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">class</span><span class="w"> </span><span class="nc">Admin</span><span class="p">(</span><span class="n">User</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">pwd</span><span class="p">:</span> <span class="nb">str</span>
 <span class="gp">...</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">json_obj</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;John&quot;</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">}</span>

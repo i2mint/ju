@@ -7,16 +7,16 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ju.json_schema &mdash; ju 0.1.4 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../_static/documentation_options.js?v=fd825880"></script>
-      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -104,7 +104,7 @@
 Python function as input and returns a JSON schema that can be used to generate
 a form in a React application.</p>
 <p>Example usage:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">mercury</span><span class="p">(</span><span class="n">sweet</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">sour</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">mercury</span><span class="p">(</span><span class="n">sweet</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">sour</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="gp">... </span><span class="w">    </span><span class="sd">&#39;&#39;&#39;Near the sun&#39;&#39;&#39;</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">sweet</span> <span class="o">*</span> <span class="n">sour</span>
 <span class="gp">&gt;&gt;&gt;</span>
@@ -125,7 +125,7 @@ a form in a React application.</p>
 <dd><p>Transforms a Python function to a JSON schema.</p>
 <p>param func: The function to transform
 return: The JSON schema (as a dict) for the function</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">mercury</span><span class="p">(</span><span class="n">sweet</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">sour</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">mercury</span><span class="p">(</span><span class="n">sweet</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">sour</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="gp">... </span><span class="w">    </span><span class="sd">&#39;&#39;&#39;Near the sun&#39;&#39;&#39;</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">sweet</span> <span class="o">*</span> <span class="n">sour</span>
 <span class="gp">&gt;&gt;&gt;</span>
@@ -147,7 +147,7 @@ return: The JSON schema (as a dict) for the function</p>
 <dt class="sig sig-object py" id="ju.json_schema.get_properties">
 <span class="sig-prename descclassname"><span class="pre">ju.json_schema.</span></span><span class="sig-name descname"><span class="pre">get_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">parameters,</span> <span class="pre">*,</span> <span class="pre">param_to_prop_type:</span> <span class="pre">~typing.Callable</span> <span class="pre">=</span> <span class="pre">functools.partial(&lt;function</span> <span class="pre">parametrized_param_to_type&gt;,</span> <span class="pre">type_mapping=((&lt;class</span> <span class="pre">'str'&gt;,</span> <span class="pre">'string'),</span> <span class="pre">(&lt;class</span> <span class="pre">'bool'&gt;,</span> <span class="pre">'boolean'),</span> <span class="pre">(&lt;class</span> <span class="pre">'int'&gt;,</span> <span class="pre">'integer'),</span> <span class="pre">(&lt;class</span> <span class="pre">'float'&gt;,</span> <span class="pre">'number'),</span> <span class="pre">(typing.Mapping,</span> <span class="pre">'object'),</span> <span class="pre">(typing.Sequence[str],</span> <span class="pre">'array')))</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ju/json_schema.html#get_properties"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.json_schema.get_properties" title="Link to this definition"></a></dt>
 <dd><p>Returns the properties dict for the JSON schema.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">foo</span><span class="p">(</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span>
 <span class="gp">... </span>    <span class="n">a_bool</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">a_float</span><span class="o">=</span><span class="mf">3.14</span><span class="p">,</span>
 <span class="gp">... </span>    <span class="n">an_int</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
@@ -156,7 +156,7 @@ return: The JSON schema (as a dict) for the function</p>
 <span class="gp">... </span><span class="p">):</span>
 <span class="gp">... </span><span class="w">    </span><span class="sd">&#39;&#39;&#39;A Foo function&#39;&#39;&#39;</span>
 <span class="gp">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ju.json_schema</span> <span class="kn">import</span> <span class="n">DFLT_PARAM_TO_TYPE</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">ju.json_schema</span><span class="w"> </span><span class="kn">import</span> <span class="n">DFLT_PARAM_TO_TYPE</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">parameters</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">foo</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="p">(</span>
 <span class="gp">... </span>    <span class="n">get_properties</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">param_to_prop_type</span><span class="o">=</span><span class="n">DFLT_PARAM_TO_TYPE</span><span class="p">)</span>
@@ -240,7 +240,7 @@ If the name contains camel case, it will be split into words.</p>
 <dd><p>Transforms a Python function to a JSON schema.</p>
 <p>param func: The function to transform
 return: The JSON schema (as a dict) for the function</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">mercury</span><span class="p">(</span><span class="n">sweet</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">sour</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">mercury</span><span class="p">(</span><span class="n">sweet</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">sour</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="gp">... </span><span class="w">    </span><span class="sd">&#39;&#39;&#39;Near the sun&#39;&#39;&#39;</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">sweet</span> <span class="o">*</span> <span class="n">sour</span>
 <span class="gp">&gt;&gt;&gt;</span>

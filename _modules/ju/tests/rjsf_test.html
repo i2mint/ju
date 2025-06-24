@@ -6,16 +6,16 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ju.tests.rjsf_test &mdash; ju 0.1.4 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=fd3f3429" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../../_static/documentation_options.js?v=fd825880"></script>
-      <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -90,28 +90,28 @@
 <span class="sd">Test objects from the ju.rjsf module</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
-<span class="kn">import</span> <span class="nn">inspect</span>
-<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">attrgetter</span>
-<span class="kn">from</span> <span class="nn">ju.json_schema</span> <span class="kn">import</span> <span class="n">signature_to_json_schema</span>
-<span class="kn">from</span> <span class="nn">ju.util</span> <span class="kn">import</span> <span class="n">FeatureSwitch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">operator</span><span class="w"> </span><span class="kn">import</span> <span class="n">attrgetter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ju.json_schema</span><span class="w"> </span><span class="kn">import</span> <span class="n">signature_to_json_schema</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ju.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">FeatureSwitch</span>
 
 
-<span class="k">def</span> <span class="nf">mercury</span><span class="p">(</span><span class="n">sweet</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">sour</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mercury</span><span class="p">(</span><span class="n">sweet</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">sour</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">sweet</span> <span class="o">*</span> <span class="n">sour</span>
 
 
 <div class="viewcode-block" id="venus">
 <a class="viewcode-back" href="../../../module_docs/ju/tests/rjsf_test.html#ju.tests.rjsf_test.venus">[docs]</a>
-<span class="k">def</span> <span class="nf">venus</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">venus</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Nothing from nothing&quot;&quot;&quot;</span></div>
 
 
 
 <div class="viewcode-block" id="earth">
 <a class="viewcode-back" href="../../../module_docs/ju/tests/rjsf_test.html#ju.tests.rjsf_test.earth">[docs]</a>
-<span class="k">def</span> <span class="nf">earth</span><span class="p">(</span><span class="n">north</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">south</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">east</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">west</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">earth</span><span class="p">(</span><span class="n">north</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">south</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">east</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">west</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Earth docs&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">north</span><span class="si">=}</span><span class="s2">, </span><span class="si">{</span><span class="n">south</span><span class="si">=}</span><span class="s2">, </span><span class="si">{</span><span class="n">east</span><span class="si">=}</span><span class="s2">, </span><span class="si">{</span><span class="n">west</span><span class="si">=}</span><span class="s2">&quot;</span></div>
 
@@ -152,7 +152,7 @@
 
 
 <span class="c1"># test</span>
-<span class="k">def</span> <span class="nf">test_schema_gen</span><span class="p">(</span><span class="n">func_to_schema</span><span class="o">=</span><span class="n">signature_to_json_schema</span><span class="p">,</span> <span class="n">expected</span><span class="o">=</span><span class="n">expected</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_schema_gen</span><span class="p">(</span><span class="n">func_to_schema</span><span class="o">=</span><span class="n">signature_to_json_schema</span><span class="p">,</span> <span class="n">expected</span><span class="o">=</span><span class="n">expected</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">func</span><span class="p">,</span> <span class="n">schema</span> <span class="ow">in</span> <span class="n">expected</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">assert</span> <span class="n">func_to_schema</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="o">==</span> <span class="n">schema</span><span class="p">,</span> <span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">func</span><span class="si">=}</span><span class="s2">, </span><span class="se">\n</span><span class="s2">&quot;</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">func_to_schema</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="si">=}</span><span class="s2">, </span><span class="se">\n</span><span class="s2">&quot;</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">schema</span><span class="si">=}</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -179,7 +179,7 @@
 <span class="c1"># since type_feature_switch_to_test only switches on the annotation</span>
 <span class="c1"># and mercury has no annotation, the FeatureSwitch will default to &#39;string&#39;</span>
 <span class="c1"># so the expected schema needs to be changed for this test</span>
-<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">deepcopy</span>
 
 <span class="n">modified_mercury_schema</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">mercury_schema</span><span class="p">)</span>
 <span class="n">modified_mercury_schema</span><span class="p">[</span><span class="s2">&quot;properties&quot;</span><span class="p">][</span><span class="s2">&quot;sour&quot;</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;string&quot;</span>

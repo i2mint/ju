@@ -6,16 +6,16 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ju.rjsf &mdash; ju 0.1.4 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../_static/documentation_options.js?v=fd825880"></script>
-      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -88,17 +88,19 @@
   <h1>Source code for ju.rjsf</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Tools for React-JSONSchema-Form (RJSF)&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
-<span class="kn">import</span> <span class="nn">inspect</span>
-<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
 
-<span class="kn">from</span> <span class="nn">ju.json_schema</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">i2</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sig</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">ju.json_schema</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">signature_to_json_schema</span><span class="p">,</span>
     <span class="n">DFLT_PARAM_TO_TYPE</span><span class="p">,</span>
     <span class="n">DFLT_FUNC_TITLE</span><span class="p">,</span>
     <span class="n">merge_with_defaults</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">ju.util</span> <span class="kn">import</span> <span class="n">asis</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ju.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">asis</span>
 
 <span class="c1"># TODO: Change to ju.json_schema.pyname_to_title and redo tests</span>
 <span class="n">DFLT_PYNAME_TO_TITLE</span> <span class="o">=</span> <span class="n">asis</span>
@@ -133,7 +135,7 @@
 
 <div class="viewcode-block" id="func_to_form_spec">
 <a class="viewcode-back" href="../../module_docs/ju/rjsf.html#ju.rjsf.func_to_form_spec">[docs]</a>
-<span class="k">def</span> <span class="nf">func_to_form_spec</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">func_to_form_spec</span><span class="p">(</span>
     <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">doc</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -217,7 +219,7 @@
 
 
 <span class="c1"># TODO: This all should really use meshed instead, to be easily composable.</span>
-<span class="k">def</span> <span class="nf">_func_to_rjsf_schemas</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_func_to_rjsf_schemas</span><span class="p">(</span>
     <span class="n">func</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">doc</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
@@ -280,6 +282,334 @@
 
     <span class="c1"># Return the schemas</span>
     <span class="k">return</span> <span class="n">schema</span><span class="p">,</span> <span class="n">ui_schema</span>
+
+
+<span class="c1"># --------------------------------------------------------------------------------------</span>
+<span class="c1"># RJSF jupyter notebook viewer</span>
+
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+
+<span class="c1"># TODO: Make this import conditional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ipywidgets</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">widgets</span>
+
+
+<div class="viewcode-block" id="FormConfig">
+<a class="viewcode-back" href="../../module_docs/ju/rjsf.html#ju.rjsf.FormConfig">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FormConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configuration for form rendering behavior.&quot;&quot;&quot;</span>
+
+    <span class="n">submit_text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Submit&quot;</span>
+    <span class="n">show_labels</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">layout_width</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;400px&quot;</span>
+    <span class="n">autofocus_first</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+
+
+<div class="viewcode-block" id="display_in_notebook">
+<a class="viewcode-back" href="../../module_docs/ju/rjsf.html#ju.rjsf.display_in_notebook">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">display_in_notebook</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Display a string in a Jupyter notebook cell.&quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">display</span><span class="p">,</span> <span class="n">Markdown</span>
+
+    <span class="n">display</span><span class="p">(</span><span class="n">Markdown</span><span class="p">(</span><span class="n">string</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="display_form_data">
+<a class="viewcode-back" href="../../module_docs/ju/rjsf.html#ju.rjsf.display_form_data">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">display_form_data</span><span class="p">(</span>
+    <span class="n">form_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;**Submitted data:**</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Prints form_data in a nicely formatted way.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        form_data: The collected form data</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+
+    <span class="n">formatted</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">form_data</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="n">indent</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="n">ensure_ascii</span><span class="p">)</span>
+    <span class="n">display_in_notebook</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">```json</span><span class="se">\n</span><span class="si">{</span><span class="n">formatted</span><span class="si">}</span><span class="se">\n</span><span class="s2">```&quot;</span><span class="p">)</span></div>
+
+
+
+<span class="n">DFLT_RJSF_VIEWER_ON_SUBMIT</span> <span class="o">=</span> <span class="n">display_form_data</span>
+
+
+<div class="viewcode-block" id="RJSFViewer">
+<a class="viewcode-back" href="../../module_docs/ju/rjsf.html#ju.rjsf.RJSFViewer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RJSFViewer</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Renders RJSF specifications as Jupyter widgets.</span>
+
+<span class="sd">    Provides a bridge between RJSF form specifications and ipywidgets,</span>
+<span class="sd">    allowing interactive form viewing and data collection in notebooks.</span>
+
+<span class="sd">    Example:</span>
+
+<span class="sd">    &gt;&gt;&gt; rjsf_dict = {&#39;rjsf&#39;: {&#39;schema&#39;: {...}, &#39;uiSchema&#39;: {...}}}</span>
+<span class="sd">    &gt;&gt;&gt; viewer = RJSFViewer(rjsf_dict)  # doctest: +SKIP</span>
+<span class="sd">    &gt;&gt;&gt; viewer.display()  # doctest: +SKIP</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">rjsf_spec</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">on_submit</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">DFLT_RJSF_VIEWER_ON_SUBMIT</span><span class="p">,</span>
+        <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">unpack_form_data</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FormConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the RJSF viewer.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            rjsf_spec: The RJSF specification dictionary</span>
+<span class="sd">            on_submit: Optional callback for form submission</span>
+<span class="sd">            config: Optional form configuration</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rjsf_spec</span> <span class="o">=</span> <span class="n">rjsf_spec</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">on_submit</span> <span class="o">=</span> <span class="n">on_submit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_on_submit_sig</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span><span class="n">on_submit</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">or</span> <span class="n">FormConfig</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">unpack_form_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># if unpack_form_data not given, use the signature of on_submit</span>
+            <span class="c1"># to determine if it (might) require unpacking (if the names of the rjsf</span>
+            <span class="c1"># schema are a subset of the names of on_submit, and all required_names of</span>
+            <span class="c1"># on_submit are in the rjsf schema)</span>
+            <span class="n">on_submit_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_submit_sig</span><span class="o">.</span><span class="n">names</span><span class="p">)</span>
+            <span class="n">on_submit_required_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_submit_sig</span><span class="o">.</span><span class="n">required_names</span><span class="p">)</span>
+            <span class="n">rjsf_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
+                <span class="n">rjsf_spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rjsf&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;schema&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;properties&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+            <span class="p">)</span>
+            <span class="n">unpack_form_data</span> <span class="o">=</span> <span class="n">rjsf_names</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span>
+                <span class="n">on_submit_names</span>
+            <span class="p">)</span> <span class="ow">and</span> <span class="n">on_submit_required_names</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">rjsf_names</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">unpack_form_data</span> <span class="o">=</span> <span class="n">unpack_form_data</span>
+
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># set the name to the name of the rjsf_spec if it has one</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">rjsf_spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rjsf&#39;</span><span class="p">,</span> <span class="p">{})</span>
+                <span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;schema&#39;</span><span class="p">,</span> <span class="p">{})</span>
+                <span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_submit_sig</span><span class="o">.</span><span class="n">name</span> <span class="ow">or</span> <span class="s1">&#39;RJSF Form&#39;</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_widgets</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_form_widget</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_build_form</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_default_submit_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form_data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Default handler that prints submitted data in a nicely formatted way.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            form_data: The collected form data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">display</span><span class="p">,</span> <span class="n">Markdown</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+
+        <span class="n">formatted</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">form_data</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ensure_ascii</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">display</span><span class="p">(</span><span class="n">Markdown</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;**Submitted data:**</span><span class="se">\n\n</span><span class="s2">```json</span><span class="se">\n</span><span class="si">{</span><span class="n">formatted</span><span class="si">}</span><span class="se">\n</span><span class="s2">```&quot;</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_extract_schema_info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract schema and UI schema from RJSF specification.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple of (schema, ui_schema)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rjsf_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rjsf_spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rjsf&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">schema</span> <span class="o">=</span> <span class="n">rjsf_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;schema&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">ui_schema</span> <span class="o">=</span> <span class="n">rjsf_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;uiSchema&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="k">return</span> <span class="n">schema</span><span class="p">,</span> <span class="n">ui_schema</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_widget_for_property</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">prop_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">prop_schema</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">ui_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Widget</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create appropriate widget for a schema property.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            prop_name: Property name</span>
+<span class="sd">            prop_schema: Property schema definition</span>
+<span class="sd">            ui_config: UI configuration for this property</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Configured widget instance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">prop_type</span> <span class="o">=</span> <span class="n">prop_schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;string&#39;</span><span class="p">)</span>
+        <span class="n">default_value</span> <span class="o">=</span> <span class="n">prop_schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="n">widget_kwargs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="n">prop_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;:&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;style&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;description_width&#39;</span><span class="p">:</span> <span class="s1">&#39;initial&#39;</span><span class="p">},</span>
+            <span class="s1">&#39;layout&#39;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s1">&#39;100%&#39;</span><span class="p">),</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">prop_type</span> <span class="o">==</span> <span class="s1">&#39;string&#39;</span><span class="p">:</span>
+            <span class="n">widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span>
+                <span class="n">value</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">default_value</span><span class="p">),</span>
+                <span class="n">placeholder</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Enter </span><span class="si">{</span><span class="n">prop_name</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">widget_kwargs</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">prop_type</span> <span class="o">==</span> <span class="s1">&#39;number&#39;</span><span class="p">:</span>
+            <span class="n">widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">FloatText</span><span class="p">(</span>
+                <span class="n">value</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">default_value</span><span class="p">)</span> <span class="k">if</span> <span class="n">default_value</span> <span class="k">else</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">**</span><span class="n">widget_kwargs</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">prop_type</span> <span class="o">==</span> <span class="s1">&#39;integer&#39;</span><span class="p">:</span>
+            <span class="n">widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">IntText</span><span class="p">(</span>
+                <span class="n">value</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">default_value</span><span class="p">)</span> <span class="k">if</span> <span class="n">default_value</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">widget_kwargs</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">prop_type</span> <span class="o">==</span> <span class="s1">&#39;boolean&#39;</span><span class="p">:</span>
+            <span class="n">widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Checkbox</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="n">default_value</span><span class="p">),</span> <span class="o">**</span><span class="n">widget_kwargs</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Fallback to text input</span>
+            <span class="n">widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">default_value</span><span class="p">),</span> <span class="o">**</span><span class="n">widget_kwargs</span><span class="p">)</span>
+
+        <span class="c1"># Apply autofocus if specified</span>
+        <span class="k">if</span> <span class="n">ui_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ui:autofocus&#39;</span><span class="p">):</span>
+            <span class="c1"># Note: ipywidgets doesn&#39;t have direct autofocus,</span>
+            <span class="c1"># but we can store this info for later use</span>
+            <span class="n">widget</span><span class="o">.</span><span class="n">_autofocus</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="n">widget</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_build_form</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Build the complete form widget structure.&quot;&quot;&quot;</span>
+        <span class="n">schema</span><span class="p">,</span> <span class="n">ui_schema</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_schema_info</span><span class="p">()</span>
+
+        <span class="n">title</span> <span class="o">=</span> <span class="n">schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;Form&#39;</span><span class="p">)</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">properties</span> <span class="o">=</span> <span class="n">schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;properties&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">required_fields</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;required&#39;</span><span class="p">,</span> <span class="p">[]))</span>
+
+        <span class="c1"># Create title widget</span>
+        <span class="n">title_widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">HTML</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&lt;h3&gt;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2">&lt;/h3&gt;&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Create description widget if present</span>
+        <span class="n">widgets_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">title_widget</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">description</span><span class="p">:</span>
+            <span class="n">desc_widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">HTML</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&lt;p&gt;&lt;em&gt;</span><span class="si">{</span><span class="n">description</span><span class="si">}</span><span class="s2">&lt;/em&gt;&lt;/p&gt;&quot;</span><span class="p">)</span>
+            <span class="n">widgets_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">desc_widget</span><span class="p">)</span>
+
+        <span class="c1"># Create input widgets for each property</span>
+        <span class="k">for</span> <span class="n">prop_name</span><span class="p">,</span> <span class="n">prop_schema</span> <span class="ow">in</span> <span class="n">properties</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">ui_config</span> <span class="o">=</span> <span class="n">ui_schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">prop_name</span><span class="p">,</span> <span class="p">{})</span>
+            <span class="n">widget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_widget_for_property</span><span class="p">(</span><span class="n">prop_name</span><span class="p">,</span> <span class="n">prop_schema</span><span class="p">,</span> <span class="n">ui_config</span><span class="p">)</span>
+
+            <span class="c1"># Mark required fields</span>
+            <span class="k">if</span> <span class="n">prop_name</span> <span class="ow">in</span> <span class="n">required_fields</span><span class="p">:</span>
+                <span class="n">widget</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">widget</span><span class="o">.</span><span class="n">description</span> <span class="o">+</span> <span class="s2">&quot; *&quot;</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_widgets</span><span class="p">[</span><span class="n">prop_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">widget</span>
+            <span class="n">widgets_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">widget</span><span class="p">)</span>
+
+        <span class="c1"># Create submit button</span>
+        <span class="n">submit_options</span> <span class="o">=</span> <span class="n">ui_schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ui:submitButtonOptions&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">submit_text</span> <span class="o">=</span> <span class="n">submit_options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;submitText&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">submit_text</span><span class="p">)</span>
+
+        <span class="n">submit_button</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span>
+            <span class="n">description</span><span class="o">=</span><span class="n">submit_text</span><span class="p">,</span>
+            <span class="n">button_style</span><span class="o">=</span><span class="s1">&#39;primary&#39;</span><span class="p">,</span>
+            <span class="n">layout</span><span class="o">=</span><span class="n">widgets</span><span class="o">.</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">margin</span><span class="o">=</span><span class="s1">&#39;10px 0 0 0&#39;</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">submit_button</span><span class="o">.</span><span class="n">on_click</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle_submit</span><span class="p">)</span>
+
+        <span class="n">widgets_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">submit_button</span><span class="p">)</span>
+
+        <span class="c1"># Create the main form container</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_form_widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">(</span>
+            <span class="n">widgets_list</span><span class="p">,</span>
+            <span class="n">layout</span><span class="o">=</span><span class="n">widgets</span><span class="o">.</span><span class="n">Layout</span><span class="p">(</span>
+                <span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">layout_width</span><span class="p">,</span>
+                <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;10px&#39;</span><span class="p">,</span>
+                <span class="n">border</span><span class="o">=</span><span class="s1">&#39;1px solid #ddd&#39;</span><span class="p">,</span>
+                <span class="n">border_radius</span><span class="o">=</span><span class="s1">&#39;5px&#39;</span><span class="p">,</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_handle_submit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">button</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Button</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Handle form submission.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            button: The submit button widget</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">form_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_form_data</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">on_submit</span><span class="p">(</span><span class="n">form_data</span><span class="p">)</span>
+
+<div class="viewcode-block" id="RJSFViewer.get_form_data">
+<a class="viewcode-back" href="../../module_docs/ju/rjsf.html#ju.rjsf.RJSFViewer.get_form_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_form_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract current form data from widgets.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Dictionary of form field values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">widget</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">widget</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_widgets</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span></div>
+
+
+<div class="viewcode-block" id="RJSFViewer.set_form_data">
+<a class="viewcode-back" href="../../module_docs/ju/rjsf.html#ju.rjsf.RJSFViewer.set_form_data">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_form_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set form data programmatically.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data: Dictionary of field values to set</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_widgets</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_widgets</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span></div>
+
+
+<div class="viewcode-block" id="RJSFViewer.display">
+<a class="viewcode-back" href="../../module_docs/ju/rjsf.html#ju.rjsf.RJSFViewer.display">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">display</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Display the form in the notebook.&quot;&quot;&quot;</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">display</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_form_widget</span><span class="p">:</span>
+            <span class="n">display</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_form_widget</span><span class="p">)</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">widget</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Widget</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Access the underlying widget for custom layouts.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_form_widget</span></div>
+
+
+
+<div class="viewcode-block" id="create_rjsf_viewer">
+<a class="viewcode-back" href="../../module_docs/ju/rjsf.html#ju.rjsf.create_rjsf_viewer">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_rjsf_viewer</span><span class="p">(</span>
+    <span class="n">rjsf_spec</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">on_submit</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">DFLT_RJSF_VIEWER_ON_SUBMIT</span><span class="p">,</span>
+    <span class="n">config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FormConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RJSFViewer</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Factory function to create and display an RJSF viewer.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        rjsf_spec: The RJSF specification</span>
+<span class="sd">        on_submit: Optional submission callback</span>
+<span class="sd">        config: Optional form configuration</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Configured RJSFViewer instance</span>
+
+<span class="sd">    Example:</span>
+
+<span class="sd">    &gt;&gt;&gt; def handle_data(data):</span>
+<span class="sd">    ...     print(f&quot;Received: {data}&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; viewer = create_rjsf_viewer(rjsf_dict, on_submit=handle_data)  # doctest: +SKIP</span>
+<span class="sd">    &gt;&gt;&gt; viewer.display()  # doctest: +SKIP</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">RJSFViewer</span><span class="p">(</span><span class="n">rjsf_spec</span><span class="p">,</span> <span class="n">on_submit</span><span class="o">=</span><span class="n">on_submit</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span></div>
+
 </pre></div>
 
            </div>

@@ -6,16 +6,16 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ju.oas &mdash; ju 0.1.4 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../_static/documentation_options.js?v=fd825880"></script>
-      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -88,20 +88,20 @@
   <h1>Source code for ju.oas</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;OpenAPI specification tools.&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Iterator</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">cached_property</span><span class="p">,</span> <span class="n">partial</span>
-<span class="kn">from</span> <span class="nn">dol</span> <span class="kn">import</span> <span class="n">KvReader</span><span class="p">,</span> <span class="n">cached_keys</span><span class="p">,</span> <span class="n">path_get</span> <span class="k">as</span> <span class="n">_path_get</span>
-<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Iterator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">cached_property</span><span class="p">,</span> <span class="n">partial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dol</span><span class="w"> </span><span class="kn">import</span> <span class="n">KvReader</span><span class="p">,</span> <span class="n">cached_keys</span><span class="p">,</span> <span class="n">path_get</span> <span class="k">as</span> <span class="n">_path_get</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
 
 <span class="n">http_methods</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;get&quot;</span><span class="p">,</span> <span class="s2">&quot;post&quot;</span><span class="p">,</span> <span class="s2">&quot;put&quot;</span><span class="p">,</span> <span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="s2">&quot;patch&quot;</span><span class="p">,</span> <span class="s2">&quot;options&quot;</span><span class="p">,</span> <span class="s2">&quot;head&quot;</span><span class="p">}</span>
 
-<span class="kn">from</span> <span class="nn">dol</span> <span class="kn">import</span> <span class="n">path_get</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dol</span><span class="w"> </span><span class="kn">import</span> <span class="n">path_get</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
 
 
 <span class="c1"># Make a function that gets the value of a key in a dict, given a path to that key</span>
 <span class="c1"># but returning an empty dict if any element of the path doesn&#39;t exist</span>
-<span class="k">def</span> <span class="nf">return_empty_dict_on_error</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">return_empty_dict_on_error</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
     <span class="k">return</span> <span class="nb">dict</span><span class="p">()</span>
 
 
@@ -112,7 +112,7 @@
 
 <div class="viewcode-block" id="get_routes">
 <a class="viewcode-back" href="../../module_docs/ju/oas.html#ju.oas.get_routes">[docs]</a>
-<span class="k">def</span> <span class="nf">get_routes</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">include_methods</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">http_methods</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_routes</span><span class="p">(</span><span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">include_methods</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">http_methods</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Takes OpenAPI specification dict &#39;d&#39; and returns the key-paths to all the endpoints.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -140,7 +140,7 @@
 <div class="viewcode-block" id="Routes">
 <a class="viewcode-back" href="../../module_docs/ju/oas.html#ju.oas.Routes">[docs]</a>
 <span class="nd">@cached_keys</span>
-<span class="k">class</span> <span class="nc">Routes</span><span class="p">(</span><span class="n">KvReader</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Routes</span><span class="p">(</span><span class="n">KvReader</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Represents a collection of routes in an OpenAPI specification.</span>
 
@@ -176,35 +176,35 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">type_mapping</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">dflt_type_mapping</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">type_mapping</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">dflt_type_mapping</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">spec</span> <span class="o">=</span> <span class="n">spec</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_mk_route</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">Route</span><span class="p">,</span> <span class="n">spec</span><span class="o">=</span><span class="n">spec</span><span class="p">,</span> <span class="n">type_mapping</span><span class="o">=</span><span class="n">type_mapping</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_title</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;info&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;OpenAPI spec&quot;</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_yaml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">yaml_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="kn">import</span> <span class="nn">yaml</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_yaml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">yaml_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
 
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">yaml_str</span><span class="p">))</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="p">[</span><span class="s2">&quot;paths&quot;</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">get_routes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mk_route</span><span class="p">(</span><span class="o">*</span><span class="n">k</span><span class="p">,</span> <span class="n">spec</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_title</span><span class="si">}</span><span class="s2">&#39;)&quot;</span></div>
 
 
 
 <div class="viewcode-block" id="ArrayOf">
 <a class="viewcode-back" href="../../module_docs/ju/oas.html#ju.oas.ArrayOf">[docs]</a>
-<span class="k">class</span> <span class="nc">ArrayOf</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ArrayOf</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A class that is simply meant to mark the fact that some properties dict really</span>
 <span class="sd">    represents an array of objects, and not just a single object.</span>
 <span class="sd">    &quot;&quot;&quot;</span></div>
@@ -213,7 +213,7 @@
 
 <div class="viewcode-block" id="properties_of_schema">
 <a class="viewcode-back" href="../../module_docs/ju/oas.html#ju.oas.properties_of_schema">[docs]</a>
-<span class="k">def</span> <span class="nf">properties_of_schema</span><span class="p">(</span><span class="n">schema</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">properties_of_schema</span><span class="p">(</span><span class="n">schema</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns the properties of the given schema, encapsulating in ArrayOf to indicate</span>
 <span class="sd">    that the schema is for an array of objects, and not just a single object.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s2">&quot;items&quot;</span> <span class="ow">in</span> <span class="n">schema</span><span class="p">:</span>
@@ -227,7 +227,7 @@
 <div class="viewcode-block" id="Route">
 <a class="viewcode-back" href="../../module_docs/ju/oas.html#ju.oas.Route">[docs]</a>
 <span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">Route</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Route</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Represents a route in an OpenAPI specification.</span>
 
@@ -272,11 +272,11 @@
     <span class="c1"># TODO: When moving to 3.9+, make below keyword-only</span>
     <span class="n">type_mapping</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">dflt_type_mapping</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">type_mapping</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type_mapping</span><span class="p">)</span>
 
     <span class="nd">@cached_property</span>
-    <span class="k">def</span> <span class="nf">method_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">method_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">method</span><span class="p">,</span> <span class="n">endpoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">endpoint</span>
         <span class="n">method_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;paths&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">method_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -284,18 +284,18 @@
         <span class="k">return</span> <span class="n">resolve_refs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="p">,</span> <span class="n">method_data</span><span class="p">)</span>
 
     <span class="nd">@cached_property</span>
-    <span class="k">def</span> <span class="nf">input_specs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">input_specs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;parameters&quot;</span><span class="p">,</span> <span class="p">[]),</span>
             <span class="s2">&quot;requestBody&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;requestBody&quot;</span><span class="p">,</span> <span class="p">{}),</span>
         <span class="p">}</span>
 
     <span class="nd">@cached_property</span>
-    <span class="k">def</span> <span class="nf">output_specs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">output_specs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;responses&quot;</span><span class="p">,</span> <span class="p">{})</span>
 
     <span class="nd">@cached_property</span>
-    <span class="k">def</span> <span class="nf">params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Combined parameters from parameters and requestBody</span>
 <span class="sd">        (it should usually just be one or the other, not both).</span>
 <span class="sd">        We&#39;re calling this &#39;params&#39; because that&#39;s what FastAPI calls it.</span>
@@ -325,7 +325,7 @@
         <span class="k">return</span> <span class="n">schema</span>
 
     <span class="nd">@cached_property</span>
-    <span class="k">def</span> <span class="nf">output_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status_code</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">output_properties</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status_code</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the schema for the response with the given status code.&quot;&quot;&quot;</span>
         <span class="n">schema</span> <span class="o">=</span> <span class="n">path_get</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">output_specs</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">status_code</span><span class="si">}</span><span class="s2">.content.application/json.schema&quot;</span>
@@ -345,7 +345,7 @@
 
 <div class="viewcode-block" id="resolve_refs">
 <a class="viewcode-back" href="../../module_docs/ju/oas.html#ju.oas.resolve_refs">[docs]</a>
-<span class="k">def</span> <span class="nf">resolve_refs</span><span class="p">(</span><span class="n">open_api_spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">resolve_refs</span><span class="p">(</span><span class="n">open_api_spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Recursively resolves all references in &#39;d&#39; using &#39;open_api_spec&#39;.</span>
 

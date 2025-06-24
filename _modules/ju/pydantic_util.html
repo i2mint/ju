@@ -6,16 +6,16 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ju.pydantic_util &mdash; ju 0.1.4 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../_static/documentation_options.js?v=fd825880"></script>
-      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -88,12 +88,12 @@
   <h1>Source code for ju.pydantic_util</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Tools for working with Pydantic models.&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Union</span>
-<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">ValidationError</span><span class="p">,</span> <span class="n">create_model</span>
-<span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">ObjectClassifier</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">ValidationError</span><span class="p">,</span> <span class="n">create_model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">i2</span><span class="w"> </span><span class="kn">import</span> <span class="n">ObjectClassifier</span>
 
 
 <span class="c1"># -------------------------------------------------------------------------------------</span>
@@ -103,9 +103,9 @@
 <span class="c1"># Example use: Define a type classification instance</span>
 <div class="viewcode-block" id="is_pydantic_model">
 <a class="viewcode-back" href="../../module_docs/ju/pydantic_util.html#ju.pydantic_util.is_pydantic_model">[docs]</a>
-<span class="k">def</span> <span class="nf">is_pydantic_model</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_pydantic_model</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns True if the object is a Pydantic model (subclass of BaseModel).&quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
 
     <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">BaseModel</span><span class="p">)</span></div>
 
@@ -113,9 +113,9 @@
 
 <div class="viewcode-block" id="is_typing_type">
 <a class="viewcode-back" href="../../module_docs/ju/pydantic_util.html#ju.pydantic_util.is_typing_type">[docs]</a>
-<span class="k">def</span> <span class="nf">is_typing_type</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_typing_type</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns True if the object is a typing type (e.g., List, Literal, etc.).&quot;&quot;&quot;</span>
-    <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">get_origin</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_origin</span>
 
     <span class="k">return</span> <span class="n">get_origin</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
 
@@ -129,7 +129,7 @@
 
 <div class="viewcode-block" id="is_type_hint">
 <a class="viewcode-back" href="../../module_docs/ju/pydantic_util.html#ju.pydantic_util.is_type_hint">[docs]</a>
-<span class="k">def</span> <span class="nf">is_type_hint</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_type_hint</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns True if the object is a Pydantic model or a typing type.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">type_hint_classifier</span><span class="o">.</span><span class="n">matches</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span></div>
 
@@ -138,12 +138,12 @@
 <span class="c1"># -------------------------------------------------------------------------------------</span>
 <span class="c1"># Get information from Pydantic models (cast/extract)</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">get_origin</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">get_origin</span>
 
 
 <div class="viewcode-block" id="model_field_descriptions">
 <a class="viewcode-back" href="../../module_docs/ju/pydantic_util.html#ju.pydantic_util.model_field_descriptions">[docs]</a>
-<span class="k">def</span> <span class="nf">model_field_descriptions</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">model_field_descriptions</span><span class="p">(</span>
     <span class="n">model</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">],</span>
     <span class="n">default_description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;No description provided&quot;</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -198,29 +198,29 @@
 <span class="c1"># -------------------------------------------------------------------------------------</span>
 <span class="c1"># Construct and validate Pydantic models</span>
 
-<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">ValidationError</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">TypeVar</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">ValidationError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">TypeVar</span>
 
 <span class="n">Data</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s2">&quot;Data&quot;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="n">Any</span><span class="p">)</span>
 <span class="n">ModelType</span> <span class="o">=</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">]</span>
 <span class="n">ModelFactory</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">ModelType</span><span class="p">,</span> <span class="n">Data</span><span class="p">],</span> <span class="n">BaseModel</span><span class="p">]</span>
 
 
-<span class="k">def</span> <span class="nf">_raise_error</span><span class="p">(</span><span class="n">e</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">ModelType</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">factory</span><span class="p">:</span> <span class="n">ModelFactory</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_raise_error</span><span class="p">(</span><span class="n">e</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">ModelType</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">factory</span><span class="p">:</span> <span class="n">ModelFactory</span><span class="p">):</span>
     <span class="k">raise</span> <span class="n">e</span>
 
 
-<span class="k">def</span> <span class="nf">_return_false_on_error</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_return_false_on_error</span><span class="p">(</span>
     <span class="n">e</span><span class="p">:</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">ModelType</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">factory</span><span class="p">:</span> <span class="n">ModelFactory</span>
 <span class="p">):</span>
     <span class="k">return</span> <span class="kc">False</span>
 
 
-<span class="k">def</span> <span class="nf">_model_validate</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">ModelType</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseModel</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_model_validate</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">ModelType</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseModel</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">model_validate</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_call_and_return_true</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_call_and_return_true</span><span class="p">(</span>
     <span class="n">model</span><span class="p">:</span> <span class="n">ModelType</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span> <span class="n">factory</span><span class="o">=</span><span class="n">_model_validate</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
     <span class="n">factory</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
@@ -229,7 +229,7 @@
 
 <div class="viewcode-block" id="mk_pydantic_model">
 <a class="viewcode-back" href="../../module_docs/ju/pydantic_util.html#ju.pydantic_util.mk_pydantic_model">[docs]</a>
-<span class="k">def</span> <span class="nf">mk_pydantic_model</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mk_pydantic_model</span><span class="p">(</span>
     <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span>
     <span class="n">model</span><span class="p">:</span> <span class="n">ModelType</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -277,7 +277,7 @@
 
 <div class="viewcode-block" id="mk_pydantic_models">
 <a class="viewcode-back" href="../../module_docs/ju/pydantic_util.html#ju.pydantic_util.mk_pydantic_models">[docs]</a>
-<span class="k">def</span> <span class="nf">mk_pydantic_models</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mk_pydantic_models</span><span class="p">(</span>
     <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span>
     <span class="n">models</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">ModelType</span><span class="p">],</span>
     <span class="o">*</span><span class="p">,</span>
@@ -296,7 +296,7 @@
 
 <div class="viewcode-block" id="is_valid_wrt_model">
 <a class="viewcode-back" href="../../module_docs/ju/pydantic_util.html#ju.pydantic_util.is_valid_wrt_model">[docs]</a>
-<span class="k">def</span> <span class="nf">is_valid_wrt_model</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_valid_wrt_model</span><span class="p">(</span>
     <span class="n">data</span><span class="p">:</span> <span class="n">Data</span><span class="p">,</span>
     <span class="n">model</span><span class="p">:</span> <span class="n">ModelType</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -316,7 +316,7 @@
 
 <div class="viewcode-block" id="valid_models">
 <a class="viewcode-back" href="../../module_docs/ju/pydantic_util.html#ju.pydantic_util.valid_models">[docs]</a>
-<span class="k">def</span> <span class="nf">valid_models</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">valid_models</span><span class="p">(</span>
     <span class="n">json_obj</span><span class="p">,</span>
     <span class="n">models</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">],</span>
     <span class="o">*</span><span class="p">,</span>
@@ -365,7 +365,7 @@
 
 <div class="viewcode-block" id="infer_json_friendly_type">
 <a class="viewcode-back" href="../../module_docs/ju/pydantic_util.html#ju.pydantic_util.infer_json_friendly_type">[docs]</a>
-<span class="k">def</span> <span class="nf">infer_json_friendly_type</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">infer_json_friendly_type</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Infers the type of the value for Pydantic model field.</span>
 
@@ -389,7 +389,7 @@
 <span class="c1">#   Perhaps based on datamodel-code-generator (see https://jsontopydantic.com/)?</span>
 <div class="viewcode-block" id="data_to_pydantic_model">
 <a class="viewcode-back" href="../../module_docs/ju/pydantic_util.html#ju.pydantic_util.data_to_pydantic_model">[docs]</a>
-<span class="k">def</span> <span class="nf">data_to_pydantic_model</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">data_to_pydantic_model</span><span class="p">(</span>
     <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
     <span class="n">name</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">dict</span><span class="p">],</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="s2">&quot;DataBasedModel&quot;</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -437,7 +437,7 @@
     <span class="k">if</span> <span class="n">mk_nested_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">mk_nested_name</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">key</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
 
-    <span class="k">def</span> <span class="nf">fields</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fields</span><span class="p">():</span>
         <span class="c1"># TODO: Need to handle nested keys as paths to enable more control</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="n">create_nested_models</span><span class="p">:</span>
@@ -469,7 +469,7 @@
 
 <div class="viewcode-block" id="pydantic_model_to_code">
 <a class="viewcode-back" href="../../module_docs/ju/pydantic_util.html#ju.pydantic_util.pydantic_model_to_code">[docs]</a>
-<span class="k">def</span> <span class="nf">pydantic_model_to_code</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pydantic_model_to_code</span><span class="p">(</span>
     <span class="n">source</span><span class="p">:</span> <span class="n">ModelSource</span><span class="p">,</span> <span class="o">**</span><span class="n">extra_json_schema_parser_kwargs</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -529,13 +529,13 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># pylint: disable=import-outside-toplevel</span>
-    <span class="kn">from</span> <span class="nn">datamodel_code_generator</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">datamodel_code_generator</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
         <span class="n">DataModelType</span><span class="p">,</span>
         <span class="n">PythonVersion</span><span class="p">,</span>
         <span class="n">DatetimeClassType</span><span class="p">,</span>
     <span class="p">)</span>  <span class="c1"># pip install datamodel-code-generator</span>
-    <span class="kn">from</span> <span class="nn">datamodel_code_generator.model</span> <span class="kn">import</span> <span class="n">get_data_model_types</span>
-    <span class="kn">from</span> <span class="nn">datamodel_code_generator.parser.jsonschema</span> <span class="kn">import</span> <span class="n">JsonSchemaParser</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">datamodel_code_generator.model</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_data_model_types</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">datamodel_code_generator.parser.jsonschema</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonSchemaParser</span>
 
     <span class="c1"># isinstance(x, BaseModel) doesn&#39;t work (e.g. dynamic models), so defining:</span>
     <span class="n">is_pydantic_model</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">source</span><span class="p">:</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="s2">&quot;model_json_schema&quot;</span><span class="p">)</span>
@@ -566,10 +566,10 @@
 
 <span class="c1"># -------------------------------------------------------------------------------------</span>
 <span class="c1"># utils for extraction</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">get_args</span><span class="p">,</span> <span class="n">get_origin</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">get_args</span><span class="p">,</span> <span class="n">get_origin</span><span class="p">,</span> <span class="n">List</span>
 
 
-<span class="k">def</span> <span class="nf">_get_type_parameters</span><span class="p">(</span><span class="n">origin</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">]):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_type_parameters</span><span class="p">(</span><span class="n">origin</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function to safely retrieve the type parameters of a generic class.</span>
 
 <span class="sd">    Note: This is because it&#39;s not safe to call `__parameters__` directly on the origin,</span>
@@ -581,7 +581,7 @@
 
 <div class="viewcode-block" id="match_typevars_to_args">
 <a class="viewcode-back" href="../../module_docs/ju/pydantic_util.html#ju.pydantic_util.match_typevars_to_args">[docs]</a>
-<span class="k">def</span> <span class="nf">match_typevars_to_args</span><span class="p">(</span><span class="n">generic_model</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">TypeVar</span><span class="p">,</span> <span class="n">Type</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">match_typevars_to_args</span><span class="p">(</span><span class="n">generic_model</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">TypeVar</span><span class="p">,</span> <span class="n">Type</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given a Pydantic generic model, returns a mapping of type variables to their</span>
 <span class="sd">    concrete types.</span>
@@ -627,7 +627,7 @@
 
 <div class="viewcode-block" id="is_a_basemodel">
 <a class="viewcode-back" href="../../module_docs/ju/pydantic_util.html#ju.pydantic_util.is_a_basemodel">[docs]</a>
-<span class="k">def</span> <span class="nf">is_a_basemodel</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_a_basemodel</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Check if an object is a Pydantic BaseModel.</span>
 
@@ -650,7 +650,7 @@
 
 <div class="viewcode-block" id="field_paths_and_annotations">
 <a class="viewcode-back" href="../../module_docs/ju/pydantic_util.html#ju.pydantic_util.field_paths_and_annotations">[docs]</a>
-<span class="k">def</span> <span class="nf">field_paths_and_annotations</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">field_paths_and_annotations</span><span class="p">(</span>
     <span class="n">data_model</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Type</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -707,7 +707,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">get_field_type</span><span class="p">(</span><span class="n">field_type</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">]):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_field_type</span><span class="p">(</span><span class="n">field_type</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">]):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Resolves the actual type of a field, replacing generics with their concrete types.&quot;&quot;&quot;</span>
         <span class="n">typevar_mapping</span> <span class="o">=</span> <span class="n">match_typevars_to_args</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
@@ -725,7 +725,7 @@
 
         <span class="k">return</span> <span class="n">field_type</span>
 
-    <span class="k">def</span> <span class="nf">recurse_model</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">],</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Type</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">recurse_model</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">],</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Type</span><span class="p">[</span><span class="n">Any</span><span class="p">]]:</span>
         <span class="n">paths</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">field_info</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">model_fields</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">field_type</span> <span class="o">=</span> <span class="n">get_field_type</span><span class="p">(</span><span class="n">field_info</span><span class="o">.</span><span class="n">annotation</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
@@ -754,13 +754,13 @@
 <span class="c1"># -------------------------------------------------------------------------------------</span>
 <span class="c1"># ModelBasedDataExtractors</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Type</span>
-<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">KW_ONLY</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Type</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">KW_ONLY</span>
 
-<span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">ObjectClassifier</span><span class="p">,</span> <span class="n">name_of_obj</span>
-<span class="kn">from</span> <span class="nn">dol</span> <span class="kn">import</span> <span class="n">KeysReader</span>
-<span class="kn">from</span> <span class="nn">glom</span> <span class="kn">import</span> <span class="n">glom</span>  <span class="c1"># TODO: Use dol.path_get once &quot;*&quot; is supported</span>
-<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">i2</span><span class="w"> </span><span class="kn">import</span> <span class="n">ObjectClassifier</span><span class="p">,</span> <span class="n">name_of_obj</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dol</span><span class="w"> </span><span class="kn">import</span> <span class="n">KeysReader</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">glom</span><span class="w"> </span><span class="kn">import</span> <span class="n">glom</span>  <span class="c1"># TODO: Use dol.path_get once &quot;*&quot; is supported</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
 
 
 <span class="c1"># TODO: Not sure the use of ObjectClassifier and is_valid_wrt_model is a good thing</span>
@@ -769,7 +769,7 @@
 <div class="viewcode-block" id="ModelExtractor">
 <a class="viewcode-back" href="../../module_docs/ju/pydantic_util.html#ju.pydantic_util.ModelExtractor">[docs]</a>
 <span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">ModelExtractor</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ModelExtractor</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extracts key paths and corresponding values from data based on matching Pydantic models.</span>
 
@@ -832,7 +832,7 @@
     <span class="n">_</span><span class="p">:</span> <span class="n">KW_ONLY</span>
     <span class="n">getter</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">glom</span>
 
-    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># If models is not a Mapping, make it so. We want a dict whose values are</span>
         <span class="c1"># the models, and whose keys are the names of the models.</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">models</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
@@ -861,7 +861,7 @@
         <span class="c1"># model</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model_classifier</span> <span class="o">=</span> <span class="n">ObjectClassifier</span><span class="p">(</span><span class="n">verifiers</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">assert_unique</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KeysReader</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">assert_unique</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KeysReader</span><span class="p">:</span>
         <span class="c1"># find the model that matches the data</span>
         <span class="n">model_key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_classifier</span><span class="o">.</span><span class="n">matching_kind</span><span class="p">(</span>
             <span class="n">data</span><span class="p">,</span> <span class="n">assert_unique</span><span class="o">=</span><span class="n">assert_unique</span>

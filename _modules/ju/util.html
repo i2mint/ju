@@ -6,16 +6,16 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ju.util &mdash; ju 0.1.4 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../_static/documentation_options.js?v=fd825880"></script>
-      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -88,9 +88,9 @@
   <h1>Source code for ju.util</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Ju base utils.&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">Mapping</span><span class="p">,</span>
     <span class="n">Callable</span><span class="p">,</span>
     <span class="n">Union</span><span class="p">,</span>
@@ -106,26 +106,26 @@
     <span class="n">Type</span><span class="p">,</span>
     <span class="n">Optional</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
-<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
-<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">GenericAlias</span>
-<span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">Parameter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">types</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenericAlias</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">inspect</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parameter</span>
 
-<span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">mk_sentinel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">i2</span><span class="w"> </span><span class="kn">import</span> <span class="n">mk_sentinel</span>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">importlib.resources</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">importlib.resources</span>
 
     <span class="n">_files</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">resources</span><span class="o">.</span><span class="n">files</span>  <span class="c1"># only valid in 3.9+</span>
 <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">importlib_resources</span>  <span class="c1"># needs pip install</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">importlib_resources</span>  <span class="c1"># needs pip install</span>
 
     <span class="n">_files</span> <span class="o">=</span> <span class="n">importlib_resources</span><span class="o">.</span><span class="n">files</span>
 
 <span class="n">ju_files</span> <span class="o">=</span> <span class="n">_files</span><span class="p">(</span><span class="s2">&quot;ju&quot;</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">is_jsonable</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_jsonable</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span>
@@ -137,13 +137,13 @@
 <span class="n">SomeType</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="s2">&quot;A type or a GenericAlias, but also Any, just in case&quot;</span>
 
 
-<span class="k">def</span> <span class="nf">asis</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">asis</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">obj</span>
 
 
 <div class="viewcode-block" id="is_type">
 <a class="viewcode-back" href="../../module_docs/ju/util.html#ju.util.is_type">[docs]</a>
-<span class="k">def</span> <span class="nf">is_type</span><span class="p">(</span><span class="n">param</span><span class="p">:</span> <span class="n">Parameter</span><span class="p">,</span> <span class="n">type_</span><span class="p">:</span> <span class="n">SomeType</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">is_type</span><span class="p">(</span><span class="n">param</span><span class="p">:</span> <span class="n">Parameter</span><span class="p">,</span> <span class="n">type_</span><span class="p">:</span> <span class="n">SomeType</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Checks if the type of a parameter&#39;s default value or its annotation matches a</span>
 <span class="sd">    given type.</span>
@@ -199,7 +199,7 @@
 <span class="c1"># Note: There is a copy of truncate_dict_values in lkj</span>
 <div class="viewcode-block" id="truncate_dict_values">
 <a class="viewcode-back" href="../../module_docs/ju/util.html#ju.util.truncate_dict_values">[docs]</a>
-<span class="k">def</span> <span class="nf">truncate_dict_values</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">truncate_dict_values</span><span class="p">(</span>
     <span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">max_list_size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
@@ -238,7 +238,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">truncate_string</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">max_len</span><span class="p">,</span> <span class="n">marker</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">truncate_string</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">max_len</span><span class="p">,</span> <span class="n">marker</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">max_len</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">max_len</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">value</span>
         <span class="n">half_len</span> <span class="o">=</span> <span class="p">(</span><span class="n">max_len</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">marker</span><span class="p">))</span> <span class="o">//</span> <span class="mi">2</span>
@@ -277,18 +277,18 @@
 <span class="n">NotSpecified</span> <span class="o">=</span> <span class="n">mk_sentinel</span><span class="p">(</span><span class="s2">&quot;NotSpecified&quot;</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_return_this</span><span class="p">(</span><span class="n">_obj</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_return_this</span><span class="p">(</span><span class="n">_obj</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">_obj</span>
 
 
-<span class="k">def</span> <span class="nf">mk_function_returning</span><span class="p">(</span><span class="n">_obj</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">mk_function_returning</span><span class="p">(</span><span class="n">_obj</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">partial</span><span class="p">(</span><span class="n">_return_this</span><span class="p">,</span> <span class="n">_obj</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="Gettable">
 <a class="viewcode-back" href="../../module_docs/ju/util.html#ju.util.Gettable">[docs]</a>
 <span class="nd">@runtime_checkable</span>
-<span class="k">class</span> <span class="nc">Gettable</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Gettable</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The missing type for objects that can be fetched from.</span>
 <span class="sd">    The contract is that we can fetch an element from ``obj`` with brackets: ``obj[k]``.</span>
 <span class="sd">    That is, ``obj`` has a ``__getitem__`` method.</span>
@@ -311,12 +311,12 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="n">KT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">VT</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="n">KT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">VT</span><span class="p">:</span>
         <span class="k">pass</span></div>
 
 
 
-<span class="k">def</span> <span class="nf">_defaulted_function_call</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_defaulted_function_call</span><span class="p">(</span>
     <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">arg</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">NotSpecified</span><span class="p">,</span> <span class="n">handle_exceptions</span><span class="p">:</span> <span class="n">Exceptions</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">):</span>
     <span class="k">if</span> <span class="n">handle_exceptions</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">default</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">NotSpecified</span><span class="p">:</span>
@@ -333,7 +333,7 @@
 <div class="viewcode-block" id="GetWithCaller">
 <a class="viewcode-back" href="../../module_docs/ju/util.html#ju.util.GetWithCaller">[docs]</a>
 <span class="nd">@dataclass</span>
-<span class="k">class</span> <span class="nc">GetWithCaller</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GetWithCaller</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Implements the [.] operator with a backend caller.</span>
 
@@ -346,7 +346,7 @@
     <span class="n">default</span><span class="p">:</span> <span class="n">VT</span> <span class="o">=</span> <span class="n">NotSpecified</span>
     <span class="n">handle_exceptions</span><span class="p">:</span> <span class="n">Exceptions</span> <span class="o">=</span> <span class="p">(</span><span class="ne">KeyError</span><span class="p">,)</span>
 
-    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="n">KT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">VT</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="n">KT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">VT</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the value for a given a key k.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">_defaulted_function_call</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">getter_func</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">default</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">handle_exceptions</span>
@@ -354,7 +354,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_handle_default</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">NotSpecified</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_handle_default</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">NotSpecified</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Adds default handling to an object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -375,7 +375,7 @@
 
 <div class="viewcode-block" id="ensure_mapping_mapper">
 <a class="viewcode-back" href="../../module_docs/ju/util.html#ju.util.ensure_mapping_mapper">[docs]</a>
-<span class="k">def</span> <span class="nf">ensure_mapping_mapper</span><span class="p">(</span><span class="n">mapper</span><span class="p">:</span> <span class="n">Mapper</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">NotSpecified</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MappingMapper</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ensure_mapping_mapper</span><span class="p">(</span><span class="n">mapper</span><span class="p">:</span> <span class="n">Mapper</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">NotSpecified</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MappingMapper</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Will return a MappingMapper (a dict really) from the specification of a Mapper,</span>
 <span class="sd">    which could be a Mapping itself, a callable, or (key, value) pairs.</span>
@@ -409,7 +409,7 @@
 
 <div class="viewcode-block" id="ensure_callable_mapper">
 <a class="viewcode-back" href="../../module_docs/ju/util.html#ju.util.ensure_callable_mapper">[docs]</a>
-<span class="k">def</span> <span class="nf">ensure_callable_mapper</span><span class="p">(</span><span class="n">mapper</span><span class="p">:</span> <span class="n">Mapper</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">NotSpecified</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CallableMapper</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ensure_callable_mapper</span><span class="p">(</span><span class="n">mapper</span><span class="p">:</span> <span class="n">Mapper</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">NotSpecified</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CallableMapper</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Will return a CallableMapper from the specification of a Mapper,</span>
 <span class="sd">    which could be a Mapping itself, a callable, or (key, value) pairs.</span>
@@ -444,19 +444,19 @@
 <span class="c1"># utils for routing</span>
 <span class="c1"># See https://github.com/i2mint/i2//blob/f547257c272433b7651d09276afdfb1bb7b2f67b/misc/i2.routing.ipynb#L17</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Callable</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Callable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
 
 
-<span class="k">def</span> <span class="nf">display_dag_of_code</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">meshed</span> <span class="kn">import</span> <span class="n">code_to_dag</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">display_dag_of_code</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">meshed</span><span class="w"> </span><span class="kn">import</span> <span class="n">code_to_dag</span>
 
     <span class="k">return</span> <span class="n">code_to_dag</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="apply">
 <a class="viewcode-back" href="../../module_docs/ju/util.html#ju.util.apply">[docs]</a>
-<span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calls a function to an object, returing the result</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -464,7 +464,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_switch_case</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">default</span><span class="p">,</span> <span class="n">feature</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_switch_case</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">default</span><span class="p">,</span> <span class="n">feature</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns the value of a feature in a mapping or a default value</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -473,7 +473,7 @@
 
 <div class="viewcode-block" id="switch_case">
 <a class="viewcode-back" href="../../module_docs/ju/util.html#ju.util.switch_case">[docs]</a>
-<span class="k">def</span> <span class="nf">switch_case</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">default</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">switch_case</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">default</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns a function that switches between cases based on a feature</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -481,7 +481,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_feature_based_search</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_feature_based_search</span><span class="p">(</span>
     <span class="n">feature_processor_pairs</span><span class="p">,</span> <span class="n">feature_similarity</span><span class="p">,</span> <span class="n">default</span><span class="p">,</span> <span class="n">feature</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -498,7 +498,7 @@
 
 <div class="viewcode-block" id="feature_based_search">
 <a class="viewcode-back" href="../../module_docs/ju/util.html#ju.util.feature_based_search">[docs]</a>
-<span class="k">def</span> <span class="nf">feature_based_search</span><span class="p">(</span><span class="n">feature_processor_pairs</span><span class="p">,</span> <span class="n">feature_similarity</span><span class="p">,</span> <span class="n">default</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">feature_based_search</span><span class="p">(</span><span class="n">feature_processor_pairs</span><span class="p">,</span> <span class="n">feature_similarity</span><span class="p">,</span> <span class="n">default</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns a function that searches for a feature in a list of feature_processor_pairs</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -510,7 +510,7 @@
 
 <div class="viewcode-block" id="feature_switch">
 <a class="viewcode-back" href="../../module_docs/ju/util.html#ju.util.feature_switch">[docs]</a>
-<span class="k">def</span> <span class="nf">feature_switch</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">featurizer</span><span class="p">,</span> <span class="n">feature_to_output_mapping</span><span class="p">,</span> <span class="n">default</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">feature_switch</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">featurizer</span><span class="p">,</span> <span class="n">feature_to_output_mapping</span><span class="p">,</span> <span class="n">default</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns the output of a feature based on a featurizer and a mapping</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -523,7 +523,7 @@
 
 <div class="viewcode-block" id="feature_similarity_search">
 <a class="viewcode-back" href="../../module_docs/ju/util.html#ju.util.feature_similarity_search">[docs]</a>
-<span class="k">def</span> <span class="nf">feature_similarity_search</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">feature_similarity_search</span><span class="p">(</span>
     <span class="n">obj</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">featurizer</span><span class="p">,</span>
@@ -544,7 +544,7 @@
 
 
 
-<span class="kn">from</span> <span class="nn">i2</span> <span class="kn">import</span> <span class="n">FuncFactory</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">i2</span><span class="w"> </span><span class="kn">import</span> <span class="n">FuncFactory</span>
 
 <span class="n">FeatureSwitch</span> <span class="o">=</span> <span class="n">FuncFactory</span><span class="p">(</span><span class="n">feature_switch</span><span class="p">)</span>
 </pre></div>

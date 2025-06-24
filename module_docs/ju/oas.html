@@ -7,16 +7,16 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ju.oas &mdash; ju 0.1.4 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=fd3f3429" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../_static/documentation_options.js?v=fd825880"></script>
-      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
       <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -121,7 +121,7 @@ represents an array of objects, and not just a single object.</p>
 <p>Each route has a method (e.g., ‘get’, ‘post’), an endpoint (e.g., ‘/items’), and a spec, which is a dictionary
 containing the details of the route as specified in the OpenAPI document.</p>
 <p>The <cite>type_mapping</cite> attribute is a dictionary that maps OpenAPI types to corresponding Python types.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">yaml</span> <span class="kn">import</span> <span class="n">safe_load</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">yaml</span><span class="w"> </span><span class="kn">import</span> <span class="n">safe_load</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">spec_yaml</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
 <span class="gp">... </span><span class="s1">openapi: 3.0.3</span>
 <span class="gp">... </span><span class="s1">paths:</span>
@@ -172,7 +172,7 @@ We’re calling this ‘params’ because that’s what FastAPI calls it.</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ju.oas.</span></span><span class="sig-name descname"><span class="pre">Routes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec:</span> <span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_mapping:</span> <span class="pre">dict</span> <span class="pre">=</span> <span class="pre">(('array'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'list'&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">('integer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'int'&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">('object'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'dict'&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">('string'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'str'&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">('boolean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'bool'&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">('number'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'float'&gt;))</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ju/oas.html#Routes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.oas.Routes" title="Link to this definition"></a></dt>
 <dd><p>Represents a collection of routes in an OpenAPI specification.</p>
 <p>Each instance of this class contains a list of <cite>Route</cite> objects, which can be accessed and manipulated as needed.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">yaml</span> <span class="kn">import</span> <span class="n">safe_load</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">yaml</span><span class="w"> </span><span class="kn">import</span> <span class="n">safe_load</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">spec_yaml</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
 <span class="gp">... </span><span class="s1">openapi: 3.0.3</span>
 <span class="gp">... </span><span class="s1">paths:</span>
@@ -219,7 +219,7 @@ In either case, this is followed by: for k, v in F.items(): D[k] = v</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ju.oas.get_routes">
-<span class="sig-prename descclassname"><span class="pre">ju.oas.</span></span><span class="sig-name descname"><span class="pre">get_routes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_methods</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('get',</span> <span class="pre">'put',</span> <span class="pre">'post',</span> <span class="pre">'head',</span> <span class="pre">'delete',</span> <span class="pre">'options',</span> <span class="pre">'patch')</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/ju/oas.html#get_routes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.oas.get_routes" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">ju.oas.</span></span><span class="sig-name descname"><span class="pre">get_routes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_methods</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('head',</span> <span class="pre">'options',</span> <span class="pre">'post',</span> <span class="pre">'get',</span> <span class="pre">'patch',</span> <span class="pre">'delete',</span> <span class="pre">'put')</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/ju/oas.html#get_routes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.oas.get_routes" title="Link to this definition"></a></dt>
 <dd><p>Takes OpenAPI specification dict ‘d’ and returns the key-paths to all the endpoints.</p>
 </dd></dl>
 
