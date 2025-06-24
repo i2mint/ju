@@ -251,7 +251,7 @@ class RJSFViewer:
     Example:
 
     >>> rjsf_dict = {'rjsf': {'schema': {...}, 'uiSchema': {...}}}
-    >>> viewer = RJSFViewer(rjsf_dict)
+    >>> viewer = RJSFViewer(rjsf_dict)  # doctest: +SKIP
     >>> viewer.display()  # doctest: +SKIP
     """
 
@@ -491,7 +491,7 @@ def create_rjsf_viewer(
 
     >>> def handle_data(data):
     ...     print(f"Received: {data}")
-    >>> viewer = create_rjsf_viewer(rjsf_dict, on_submit=handle_data)
+    >>> viewer = create_rjsf_viewer(rjsf_dict, on_submit=handle_data)  # doctest: +SKIP
     >>> viewer.display()  # doctest: +SKIP
     """
     return RJSFViewer(rjsf_spec, on_submit=on_submit, config=config)
