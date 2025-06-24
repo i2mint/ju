@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ju.rjsf &mdash; ju 0.1.4 documentation</title>
+  <title>ju.rjsf &mdash; ju 0.1.17 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=fd825880"></script>
+      <script src="../../_static/documentation_options.js?v=71734efd"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -385,7 +385,7 @@
             <span class="n">on_submit_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_submit_sig</span><span class="o">.</span><span class="n">names</span><span class="p">)</span>
             <span class="n">on_submit_required_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_submit_sig</span><span class="o">.</span><span class="n">required_names</span><span class="p">)</span>
             <span class="n">rjsf_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
-                <span class="n">rjsf_spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rjsf&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;schema&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;properties&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+                <span class="n">rjsf_spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rjsf&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;schema&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;properties&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
             <span class="p">)</span>
             <span class="n">unpack_form_data</span> <span class="o">=</span> <span class="n">rjsf_names</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span>
                 <span class="n">on_submit_names</span>
@@ -396,9 +396,9 @@
         <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># set the name to the name of the rjsf_spec if it has one</span>
             <span class="n">name</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">rjsf_spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rjsf&#39;</span><span class="p">,</span> <span class="p">{})</span>
-                <span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;schema&#39;</span><span class="p">,</span> <span class="p">{})</span>
-                <span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_submit_sig</span><span class="o">.</span><span class="n">name</span> <span class="ow">or</span> <span class="s1">&#39;RJSF Form&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">rjsf_spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rjsf&quot;</span><span class="p">,</span> <span class="p">{})</span>
+                <span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;schema&quot;</span><span class="p">,</span> <span class="p">{})</span>
+                <span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_submit_sig</span><span class="o">.</span><span class="n">name</span> <span class="ow">or</span> <span class="s2">&quot;RJSF Form&quot;</span><span class="p">)</span>
             <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
 
@@ -424,9 +424,9 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            Tuple of (schema, ui_schema)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">rjsf_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rjsf_spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rjsf&#39;</span><span class="p">,</span> <span class="p">{})</span>
-        <span class="n">schema</span> <span class="o">=</span> <span class="n">rjsf_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;schema&#39;</span><span class="p">,</span> <span class="p">{})</span>
-        <span class="n">ui_schema</span> <span class="o">=</span> <span class="n">rjsf_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;uiSchema&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">rjsf_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rjsf_spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rjsf&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">schema</span> <span class="o">=</span> <span class="n">rjsf_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;schema&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">ui_schema</span> <span class="o">=</span> <span class="n">rjsf_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;uiSchema&quot;</span><span class="p">,</span> <span class="p">{})</span>
         <span class="k">return</span> <span class="n">schema</span><span class="p">,</span> <span class="n">ui_schema</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_create_widget_for_property</span><span class="p">(</span>
@@ -442,37 +442,37 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            Configured widget instance</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">prop_type</span> <span class="o">=</span> <span class="n">prop_schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;type&#39;</span><span class="p">,</span> <span class="s1">&#39;string&#39;</span><span class="p">)</span>
-        <span class="n">default_value</span> <span class="o">=</span> <span class="n">prop_schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">prop_type</span> <span class="o">=</span> <span class="n">prop_schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;string&quot;</span><span class="p">)</span>
+        <span class="n">default_value</span> <span class="o">=</span> <span class="n">prop_schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
 
         <span class="n">widget_kwargs</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="n">prop_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39;:&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;style&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;description_width&#39;</span><span class="p">:</span> <span class="s1">&#39;initial&#39;</span><span class="p">},</span>
-            <span class="s1">&#39;layout&#39;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s1">&#39;100%&#39;</span><span class="p">),</span>
+            <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">prop_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;style&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;description_width&quot;</span><span class="p">:</span> <span class="s2">&quot;initial&quot;</span><span class="p">},</span>
+            <span class="s2">&quot;layout&quot;</span><span class="p">:</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s2">&quot;100%&quot;</span><span class="p">),</span>
         <span class="p">}</span>
 
-        <span class="k">if</span> <span class="n">prop_type</span> <span class="o">==</span> <span class="s1">&#39;string&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">prop_type</span> <span class="o">==</span> <span class="s2">&quot;string&quot;</span><span class="p">:</span>
             <span class="n">widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span>
                 <span class="n">value</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">default_value</span><span class="p">),</span>
                 <span class="n">placeholder</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Enter </span><span class="si">{</span><span class="n">prop_name</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">,</span>
                 <span class="o">**</span><span class="n">widget_kwargs</span><span class="p">,</span>
             <span class="p">)</span>
-        <span class="k">elif</span> <span class="n">prop_type</span> <span class="o">==</span> <span class="s1">&#39;number&#39;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">prop_type</span> <span class="o">==</span> <span class="s2">&quot;number&quot;</span><span class="p">:</span>
             <span class="n">widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">FloatText</span><span class="p">(</span>
                 <span class="n">value</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">default_value</span><span class="p">)</span> <span class="k">if</span> <span class="n">default_value</span> <span class="k">else</span> <span class="mf">0.0</span><span class="p">,</span> <span class="o">**</span><span class="n">widget_kwargs</span>
             <span class="p">)</span>
-        <span class="k">elif</span> <span class="n">prop_type</span> <span class="o">==</span> <span class="s1">&#39;integer&#39;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">prop_type</span> <span class="o">==</span> <span class="s2">&quot;integer&quot;</span><span class="p">:</span>
             <span class="n">widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">IntText</span><span class="p">(</span>
                 <span class="n">value</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">default_value</span><span class="p">)</span> <span class="k">if</span> <span class="n">default_value</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">widget_kwargs</span>
             <span class="p">)</span>
-        <span class="k">elif</span> <span class="n">prop_type</span> <span class="o">==</span> <span class="s1">&#39;boolean&#39;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">prop_type</span> <span class="o">==</span> <span class="s2">&quot;boolean&quot;</span><span class="p">:</span>
             <span class="n">widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Checkbox</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="n">default_value</span><span class="p">),</span> <span class="o">**</span><span class="n">widget_kwargs</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Fallback to text input</span>
             <span class="n">widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">default_value</span><span class="p">),</span> <span class="o">**</span><span class="n">widget_kwargs</span><span class="p">)</span>
 
         <span class="c1"># Apply autofocus if specified</span>
-        <span class="k">if</span> <span class="n">ui_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ui:autofocus&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">ui_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ui:autofocus&quot;</span><span class="p">):</span>
             <span class="c1"># Note: ipywidgets doesn&#39;t have direct autofocus,</span>
             <span class="c1"># but we can store this info for later use</span>
             <span class="n">widget</span><span class="o">.</span><span class="n">_autofocus</span> <span class="o">=</span> <span class="kc">True</span>
@@ -483,10 +483,10 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Build the complete form widget structure.&quot;&quot;&quot;</span>
         <span class="n">schema</span><span class="p">,</span> <span class="n">ui_schema</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_extract_schema_info</span><span class="p">()</span>
 
-        <span class="n">title</span> <span class="o">=</span> <span class="n">schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;Form&#39;</span><span class="p">)</span>
-        <span class="n">description</span> <span class="o">=</span> <span class="n">schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-        <span class="n">properties</span> <span class="o">=</span> <span class="n">schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;properties&#39;</span><span class="p">,</span> <span class="p">{})</span>
-        <span class="n">required_fields</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;required&#39;</span><span class="p">,</span> <span class="p">[]))</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="n">schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;Form&quot;</span><span class="p">)</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;description&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">properties</span> <span class="o">=</span> <span class="n">schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;properties&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">required_fields</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;required&quot;</span><span class="p">,</span> <span class="p">[]))</span>
 
         <span class="c1"># Create title widget</span>
         <span class="n">title_widget</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">HTML</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&lt;h3&gt;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s2">&lt;/h3&gt;&quot;</span><span class="p">)</span>
@@ -510,13 +510,13 @@
             <span class="n">widgets_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">widget</span><span class="p">)</span>
 
         <span class="c1"># Create submit button</span>
-        <span class="n">submit_options</span> <span class="o">=</span> <span class="n">ui_schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;ui:submitButtonOptions&#39;</span><span class="p">,</span> <span class="p">{})</span>
-        <span class="n">submit_text</span> <span class="o">=</span> <span class="n">submit_options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;submitText&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">submit_text</span><span class="p">)</span>
+        <span class="n">submit_options</span> <span class="o">=</span> <span class="n">ui_schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ui:submitButtonOptions&quot;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">submit_text</span> <span class="o">=</span> <span class="n">submit_options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;submitText&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">submit_text</span><span class="p">)</span>
 
         <span class="n">submit_button</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span>
             <span class="n">description</span><span class="o">=</span><span class="n">submit_text</span><span class="p">,</span>
-            <span class="n">button_style</span><span class="o">=</span><span class="s1">&#39;primary&#39;</span><span class="p">,</span>
-            <span class="n">layout</span><span class="o">=</span><span class="n">widgets</span><span class="o">.</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">margin</span><span class="o">=</span><span class="s1">&#39;10px 0 0 0&#39;</span><span class="p">),</span>
+            <span class="n">button_style</span><span class="o">=</span><span class="s2">&quot;primary&quot;</span><span class="p">,</span>
+            <span class="n">layout</span><span class="o">=</span><span class="n">widgets</span><span class="o">.</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">margin</span><span class="o">=</span><span class="s2">&quot;10px 0 0 0&quot;</span><span class="p">),</span>
         <span class="p">)</span>
         <span class="n">submit_button</span><span class="o">.</span><span class="n">on_click</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle_submit</span><span class="p">)</span>
 
@@ -527,9 +527,9 @@
             <span class="n">widgets_list</span><span class="p">,</span>
             <span class="n">layout</span><span class="o">=</span><span class="n">widgets</span><span class="o">.</span><span class="n">Layout</span><span class="p">(</span>
                 <span class="n">width</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">layout_width</span><span class="p">,</span>
-                <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;10px&#39;</span><span class="p">,</span>
-                <span class="n">border</span><span class="o">=</span><span class="s1">&#39;1px solid #ddd&#39;</span><span class="p">,</span>
-                <span class="n">border_radius</span><span class="o">=</span><span class="s1">&#39;5px&#39;</span><span class="p">,</span>
+                <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;10px&quot;</span><span class="p">,</span>
+                <span class="n">border</span><span class="o">=</span><span class="s2">&quot;1px solid #ddd&quot;</span><span class="p">,</span>
+                <span class="n">border_radius</span><span class="o">=</span><span class="s2">&quot;5px&quot;</span><span class="p">,</span>
             <span class="p">),</span>
         <span class="p">)</span>
 
@@ -589,6 +589,8 @@
     <span class="n">rjsf_spec</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">on_submit</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">DFLT_RJSF_VIEWER_ON_SUBMIT</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">unpack_form_data</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">config</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">FormConfig</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RJSFViewer</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Factory function to create and display an RJSF viewer.</span>
@@ -608,7 +610,13 @@
 <span class="sd">    &gt;&gt;&gt; viewer = create_rjsf_viewer(rjsf_dict, on_submit=handle_data)  # doctest: +SKIP</span>
 <span class="sd">    &gt;&gt;&gt; viewer.display()  # doctest: +SKIP</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">RJSFViewer</span><span class="p">(</span><span class="n">rjsf_spec</span><span class="p">,</span> <span class="n">on_submit</span><span class="o">=</span><span class="n">on_submit</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">RJSFViewer</span><span class="p">(</span>
+        <span class="n">rjsf_spec</span><span class="p">,</span>
+        <span class="n">on_submit</span><span class="o">=</span><span class="n">on_submit</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+        <span class="n">unpack_form_data</span><span class="o">=</span><span class="n">unpack_form_data</span><span class="p">,</span>
+        <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+    <span class="p">)</span></div>
 
 </pre></div>
 

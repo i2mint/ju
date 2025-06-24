@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ju.json_schema &mdash; ju 0.1.4 documentation</title>
+  <title>ju.json_schema &mdash; ju 0.1.17 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=fd825880"></script>
+      <script src="../../_static/documentation_options.js?v=71734efd"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -89,8 +89,8 @@
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This module provides tools to transform Python functions to JSON schemas.</span>
 
-<span class="sd">The main function in this module is `signature_to_json_schema`, which takes a </span>
-<span class="sd">Python function as input and returns a JSON schema that can be used to generate </span>
+<span class="sd">The main function in this module is `signature_to_json_schema`, which takes a</span>
+<span class="sd">Python function as input and returns a JSON schema that can be used to generate</span>
 <span class="sd">a form in a React application.</span>
 
 <span class="sd">Example usage:</span>
@@ -100,12 +100,12 @@
 <span class="sd">...     return sweet * sour</span>
 <span class="sd">&gt;&gt;&gt;</span>
 <span class="sd">&gt;&gt;&gt; assert signature_to_json_schema(mercury) == {</span>
-<span class="sd">...         &#39;title&#39;: &#39;mercury&#39;, </span>
-<span class="sd">...         &#39;type&#39;: &#39;object&#39;, </span>
+<span class="sd">...         &#39;title&#39;: &#39;mercury&#39;,</span>
+<span class="sd">...         &#39;type&#39;: &#39;object&#39;,</span>
 <span class="sd">...         &#39;properties&#39;: {</span>
-<span class="sd">...             &#39;sweet&#39;: {&#39;type&#39;: &#39;number&#39;}, </span>
-<span class="sd">...             &#39;sour&#39;: {&#39;type&#39;: &#39;boolean&#39;, &#39;default&#39;: True}}, </span>
-<span class="sd">...          &#39;required&#39;: [&#39;sweet&#39;], </span>
+<span class="sd">...             &#39;sweet&#39;: {&#39;type&#39;: &#39;number&#39;},</span>
+<span class="sd">...             &#39;sour&#39;: {&#39;type&#39;: &#39;boolean&#39;, &#39;default&#39;: True}},</span>
+<span class="sd">...          &#39;required&#39;: [&#39;sweet&#39;],</span>
 <span class="sd">...          &#39;description&#39;: &#39;Near the sun&#39;</span>
 <span class="sd">... }</span>
 
