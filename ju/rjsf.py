@@ -2,7 +2,9 @@
 
 from typing import Callable, Optional, Union
 import inspect
+
 from copy import deepcopy
+from i2 import Sig
 
 from ju.json_schema import (
     signature_to_json_schema,
@@ -212,6 +214,34 @@ class FormConfig:
     autofocus_first: bool = True
 
 
+def display_in_notebook(string: str) -> None:
+    """Display a string in a Jupyter notebook cell."""
+    from IPython.display import display, Markdown
+
+    display(Markdown(string))
+
+
+def display_form_data(
+    form_data: Dict[str, Any],
+    *,
+    indent=2,
+    ensure_ascii=False,
+    prefix: str = "**Submitted data:**\n\n",
+) -> None:
+    """Prints form_data in a nicely formatted way.
+
+    Args:
+        form_data: The collected form data
+    """
+    import json
+
+    formatted = json.dumps(form_data, indent=indent, ensure_ascii=ensure_ascii)
+    display_in_notebook(f"{prefix}```json\n{formatted}\n```")
+
+
+DFLT_RJSF_VIEWER_ON_SUBMIT = display_form_data
+
+
 class RJSFViewer:
     """Renders RJSF specifications as Jupyter widgets.
 
@@ -219,16 +249,19 @@ class RJSFViewer:
     allowing interactive form viewing and data collection in notebooks.
 
     Example:
-        >>> rjsf_dict = {'rjsf': {'schema': {...}, 'uiSchema': {...}}}
-        >>> viewer = RJSFViewer(rjsf_dict)
-        >>> viewer.display()  # doctest: +SKIP
+
+    >>> rjsf_dict = {'rjsf': {'schema': {...}, 'uiSchema': {...}}}
+    >>> viewer = RJSFViewer(rjsf_dict)
+    >>> viewer.display()  # doctest: +SKIP
     """
 
     def __init__(
         self,
         rjsf_spec: Dict[str, Any],
         *,
-        on_submit: Optional[Callable[[Dict[str, Any]], None]] = None,
+        on_submit: Callable = DFLT_RJSF_VIEWER_ON_SUBMIT,
+        name: str = None,
+        unpack_form_data: bool = None,
         config: Optional[FormConfig] = None,
     ):
         """Initialize the RJSF viewer.
@@ -239,22 +272,49 @@ class RJSFViewer:
             config: Optional form configuration
         """
         self.rjsf_spec = rjsf_spec
-        self.on_submit = on_submit or self._default_submit_handler
+        self.on_submit = on_submit
+        self._on_submit_sig = Sig(on_submit)
         self.config = config or FormConfig()
+        if unpack_form_data is None:
+            # if unpack_form_data not given, use the signature of on_submit
+            # to determine if it (might) require unpacking (if the names of the rjsf
+            # schema are a subset of the names of on_submit, and all required_names of
+            # on_submit are in the rjsf schema)
+            on_submit_names = set(self._on_submit_sig.names)
+            on_submit_required_names = set(self._on_submit_sig.required_names)
+            rjsf_names = set(
+                rjsf_spec.get('rjsf', {}).get('schema', {}).get('properties', {}).keys()
+            )
+            unpack_form_data = rjsf_names.issubset(
+                on_submit_names
+            ) and on_submit_required_names.issubset(rjsf_names)
+
+        self.unpack_form_data = unpack_form_data
+
+        if name is None:
+            # set the name to the name of the rjsf_spec if it has one
+            name = (
+                self.rjsf_spec.get('rjsf', {})
+                .get('schema', {})
+                .get('title', self._on_submit_sig.name or 'RJSF Form')
+            )
+        self.name = name
 
         self._widgets = {}
         self._form_widget = None
         self._build_form()
 
     def _default_submit_handler(self, form_data: Dict[str, Any]) -> None:
-        """Default handler that prints submitted data.
+        """Default handler that prints submitted data in a nicely formatted way.
 
         Args:
             form_data: The collected form data
         """
-        print("Form submitted with data:")
-        for key, value in form_data.items():
-            print(f"  {key}: {value}")
+        from IPython.display import display, Markdown
+        import json
+
+        formatted = json.dumps(form_data, indent=2, ensure_ascii=False)
+        display(Markdown(f"**Submitted data:**\n\n```json\n{formatted}\n```"))
 
     def _extract_schema_info(self) -> tuple[Dict[str, Any], Dict[str, Any]]:
         """Extract schema and UI schema from RJSF specification.
@@ -414,7 +474,7 @@ class RJSFViewer:
 def create_rjsf_viewer(
     rjsf_spec: Dict[str, Any],
     *,
-    on_submit: Optional[Callable[[Dict[str, Any]], None]] = None,
+    on_submit: Callable = DFLT_RJSF_VIEWER_ON_SUBMIT,
     config: Optional[FormConfig] = None,
 ) -> RJSFViewer:
     """Factory function to create and display an RJSF viewer.
@@ -428,9 +488,10 @@ def create_rjsf_viewer(
         Configured RJSFViewer instance
 
     Example:
-        >>> def handle_data(data):
-        ...     print(f"Received: {data}")
-        >>> viewer = create_rjsf_viewer(rjsf_dict, on_submit=handle_data)
-        >>> viewer.display()  # doctest: +SKIP
+
+    >>> def handle_data(data):
+    ...     print(f"Received: {data}")
+    >>> viewer = create_rjsf_viewer(rjsf_dict, on_submit=handle_data)
+    >>> viewer.display()  # doctest: +SKIP
     """
     return RJSFViewer(rjsf_spec, on_submit=on_submit, config=config)
