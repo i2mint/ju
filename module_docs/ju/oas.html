@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ju.oas &mdash; ju 0.1.19 documentation</title>
+  <title>ju.oas &mdash; ju 0.1.23 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=3d116926"></script>
+      <script src="../../_static/documentation_options.js?v=20522496"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -51,26 +51,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../ju.html">ju</a></li>
 <li class="toctree-l1"><a class="reference internal" href="json_schema.html">ju.json_schema</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">ju.oas</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#ju.oas.ArrayOf"><code class="docutils literal notranslate"><span class="pre">ArrayOf</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ju.oas.Route"><code class="docutils literal notranslate"><span class="pre">Route</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#ju.oas.Route.output_properties"><code class="docutils literal notranslate"><span class="pre">Route.output_properties</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#ju.oas.Route.params"><code class="docutils literal notranslate"><span class="pre">Route.params</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#ju.oas.Routes"><code class="docutils literal notranslate"><span class="pre">Routes</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#ju.oas.Routes.update"><code class="docutils literal notranslate"><span class="pre">Routes.update()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#ju.oas.Routes.update_keys_cache"><code class="docutils literal notranslate"><span class="pre">Routes.update_keys_cache()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#ju.oas.ensure_openapi_dict"><code class="docutils literal notranslate"><span class="pre">ensure_openapi_dict()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ju.oas.get_routes"><code class="docutils literal notranslate"><span class="pre">get_routes()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ju.oas.make_openapi_func"><code class="docutils literal notranslate"><span class="pre">make_openapi_func()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ju.oas.openapi_to_funcs"><code class="docutils literal notranslate"><span class="pre">openapi_to_funcs()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ju.oas.properties_of_schema"><code class="docutils literal notranslate"><span class="pre">properties_of_schema()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ju.oas.resolve_refs"><code class="docutils literal notranslate"><span class="pre">resolve_refs()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">ju.oas</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pydantic_util.html">ju.pydantic_util</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rjsf.html">ju.rjsf</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tests.html">ju.tests</a></li>
@@ -107,178 +88,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-ju.oas">
-<span id="ju-oas"></span><h1>ju.oas<a class="headerlink" href="#module-ju.oas" title="Link to this heading"></a></h1>
-<p>OpenAPI specification tools.</p>
-<dl class="py class">
-<dt class="sig sig-object py" id="ju.oas.ArrayOf">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ju.oas.</span></span><span class="sig-name descname"><span class="pre">ArrayOf</span></span><a class="reference internal" href="../../_modules/ju/oas.html#ArrayOf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.oas.ArrayOf" title="Link to this definition"></a></dt>
-<dd><p>A class that is simply meant to mark the fact that some properties dict really
-represents an array of objects, and not just a single object.</p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ju.oas.Route">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ju.oas.</span></span><span class="sig-name descname"><span class="pre">Route</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endpoint:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spec:</span> <span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_mapping:</span> <span class="pre">dict</span> <span class="pre">=</span> <span class="pre">(('array'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'list'&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">('integer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'int'&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">('object'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'dict'&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">('string'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'str'&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">('boolean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'bool'&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">('number'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'float'&gt;))</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ju/oas.html#Route"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.oas.Route" title="Link to this definition"></a></dt>
-<dd><p>Represents a route in an OpenAPI specification.</p>
-<p>Each route has a method (e.g., ‘get’, ‘post’), an endpoint (e.g., ‘/items’), and a spec, which is a dictionary
-containing the details of the route as specified in the OpenAPI document.</p>
-<p>The <cite>type_mapping</cite> attribute is a dictionary that maps OpenAPI types to corresponding Python types.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">yaml</span><span class="w"> </span><span class="kn">import</span> <span class="n">safe_load</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">spec_yaml</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
-<span class="gp">... </span><span class="s1">openapi: 3.0.3</span>
-<span class="gp">... </span><span class="s1">paths:</span>
-<span class="gp">... </span><span class="s1">  /items:</span>
-<span class="gp">... </span><span class="s1">    get:</span>
-<span class="gp">... </span><span class="s1">      summary: List items</span>
-<span class="gp">... </span><span class="s1">      parameters:</span>
-<span class="gp">... </span><span class="s1">        - in: query</span>
-<span class="gp">... </span><span class="s1">          name: type</span>
-<span class="gp">... </span><span class="s1">          schema:</span>
-<span class="gp">... </span><span class="s1">            type: string</span>
-<span class="gp">... </span><span class="s1">          required: true</span>
-<span class="gp">... </span><span class="s1">          description: Type of items to list</span>
-<span class="gp">... </span><span class="s1">      responses:</span>
-<span class="gp">... </span><span class="s1">        &#39;200&#39;:</span>
-<span class="gp">... </span><span class="s1">          description: An array of items</span>
-<span class="gp">... </span><span class="s1">&#39;&#39;&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">spec</span> <span class="o">=</span> <span class="n">safe_load</span><span class="p">(</span><span class="n">spec_yaml</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">route_get</span> <span class="o">=</span> <span class="n">Route</span><span class="p">(</span><span class="s1">&#39;get&#39;</span><span class="p">,</span> <span class="s1">&#39;/items&#39;</span><span class="p">,</span> <span class="n">spec</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">route_get</span><span class="o">.</span><span class="n">method</span>
-<span class="go">&#39;get&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">route_get</span><span class="o">.</span><span class="n">endpoint</span>
-<span class="go">&#39;/items&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">route_get</span><span class="o">.</span><span class="n">method_data</span><span class="p">[</span><span class="s1">&#39;summary&#39;</span><span class="p">]</span>
-<span class="go">&#39;List items&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">route_get</span><span class="o">.</span><span class="n">params</span>
-<span class="go">{&#39;type&#39;: &#39;object&#39;, &#39;properties&#39;: {&#39;type&#39;: {&#39;type&#39;: &#39;string&#39;}}, &#39;required&#39;: [&#39;type&#39;]}</span>
-</pre></div>
-</div>
-<dl class="py property">
-<dt class="sig sig-object py" id="ju.oas.Route.output_properties">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">output_properties</span></span><a class="headerlink" href="#ju.oas.Route.output_properties" title="Link to this definition"></a></dt>
-<dd><p>Returns the schema for the response with the given status code.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="ju.oas.Route.params">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">params</span></span><a class="headerlink" href="#ju.oas.Route.params" title="Link to this definition"></a></dt>
-<dd><p>Combined parameters from parameters and requestBody
-(it should usually just be one or the other, not both).
-We’re calling this ‘params’ because that’s what FastAPI calls it.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ju.oas.Routes">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ju.oas.</span></span><span class="sig-name descname"><span class="pre">Routes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec:</span> <span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_mapping:</span> <span class="pre">dict</span> <span class="pre">=</span> <span class="pre">(('array'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'list'&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">('integer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'int'&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">('object'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'dict'&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">('string'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'str'&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">('boolean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'bool'&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">('number'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'float'&gt;))</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ju/oas.html#Routes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.oas.Routes" title="Link to this definition"></a></dt>
-<dd><p>Represents a collection of routes in an OpenAPI specification.</p>
-<p>Each instance of this class contains a list of <cite>Route</cite> objects, which can be accessed and manipulated as needed.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">yaml</span><span class="w"> </span><span class="kn">import</span> <span class="n">safe_load</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">spec_yaml</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
-<span class="gp">... </span><span class="s1">openapi: 3.0.3</span>
-<span class="gp">... </span><span class="s1">paths:</span>
-<span class="gp">... </span><span class="s1">  /items:</span>
-<span class="gp">... </span><span class="s1">    get:</span>
-<span class="gp">... </span><span class="s1">      summary: List items</span>
-<span class="gp">... </span><span class="s1">      responses:</span>
-<span class="gp">... </span><span class="s1">        &#39;200&#39;:</span>
-<span class="gp">... </span><span class="s1">          description: An array of items</span>
-<span class="gp">... </span><span class="s1">    post:</span>
-<span class="gp">... </span><span class="s1">      summary: Create item</span>
-<span class="gp">... </span><span class="s1">      responses:</span>
-<span class="gp">... </span><span class="s1">        &#39;201&#39;:</span>
-<span class="gp">... </span><span class="s1">          description: Item created</span>
-<span class="gp">... </span><span class="s1">&#39;&#39;&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">spec</span> <span class="o">=</span> <span class="n">safe_load</span><span class="p">(</span><span class="n">spec_yaml</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">routes</span> <span class="o">=</span> <span class="n">Routes</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">routes</span><span class="p">)</span>
-<span class="go">2</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">list</span><span class="p">(</span><span class="n">routes</span><span class="p">)</span>
-<span class="go">[(&#39;get&#39;, &#39;/items&#39;), (&#39;post&#39;, &#39;/items&#39;)]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">routes</span><span class="p">[</span><span class="s1">&#39;get&#39;</span><span class="p">,</span> <span class="s1">&#39;/items&#39;</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span>
-<span class="go">Route(method=&#39;get&#39;, endpoint=&#39;/items&#39;)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span><span class="o">.</span><span class="n">method_data</span>
-<span class="go">{&#39;summary&#39;: &#39;List items&#39;, &#39;responses&#39;: {&#39;200&#39;: {&#39;description&#39;: &#39;An array of items&#39;}}}</span>
-</pre></div>
-</div>
-<dl class="py method">
-<dt class="sig sig-object py" id="ju.oas.Routes.update">
-<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param"><span class="n"><span class="pre">E</span></span></em>, <span class="optional">]</span><em class="sig-param"><span class="n"><span class="pre">**F</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None.</span>&#160; <span class="pre">Update</span> <span class="pre">D</span> <span class="pre">from</span> <span class="pre">mapping/iterable</span> <span class="pre">E</span> <span class="pre">and</span> <span class="pre">F.</span></span></span><a class="headerlink" href="#ju.oas.Routes.update" title="Link to this definition"></a></dt>
-<dd><p>If E present and has a .keys() method, does:     for k in E: D[k] = E[k]
-If E present and lacks .keys() method, does:     for (k, v) in E: D[k] = v
-In either case, this is followed by: for k, v in F.items(): D[k] = v</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ju.oas.Routes.update_keys_cache">
-<span class="sig-name descname"><span class="pre">update_keys_cache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keys</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ju.oas.Routes.update_keys_cache" title="Link to this definition"></a></dt>
-<dd><p>Updates the _keys_cache by deleting the attribute</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ju.oas.ensure_openapi_dict">
-<span class="sig-prename descclassname"><span class="pre">ju.oas.</span></span><span class="sig-name descname"><span class="pre">ensure_openapi_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../../_modules/ju/oas.html#ensure_openapi_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.oas.ensure_openapi_dict" title="Link to this definition"></a></dt>
-<dd><p>Ensure that the OpenAPI specification is a dictionary.</p>
-<p>It will handle:
-- JSON strings
-- YAML strings
-- File paths to JSON or YAML files
-- URLs pointing to OpenAPI specs
-- Direct dictionaries</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ju.oas.get_routes">
-<span class="sig-prename descclassname"><span class="pre">ju.oas.</span></span><span class="sig-name descname"><span class="pre">get_routes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_methods</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('get',</span> <span class="pre">'patch',</span> <span class="pre">'options',</span> <span class="pre">'head',</span> <span class="pre">'put',</span> <span class="pre">'post',</span> <span class="pre">'delete')</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/ju/oas.html#get_routes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.oas.get_routes" title="Link to this definition"></a></dt>
-<dd><p>Takes OpenAPI specification dict ‘d’ and returns the key-paths to all the endpoints.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ju.oas.make_openapi_func">
-<span class="sig-prename descclassname"><span class="pre">ju.oas.</span></span><span class="sig-name descname"><span class="pre">make_openapi_func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_schema</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_response=&lt;function</span> <span class="pre">default_get_response&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response_egress=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ju/oas.html#make_openapi_func"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.oas.make_openapi_func" title="Link to this definition"></a></dt>
-<dd><p>Helper to create a function for a given OpenAPI route, with signature and egress.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ju.oas.openapi_to_funcs">
-<span class="sig-prename descclassname"><span class="pre">ju.oas.</span></span><span class="sig-name descname"><span class="pre">openapi_to_funcs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">spec:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">dict,</span> <span class="pre">*,</span> <span class="pre">base_url:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">default_servers_url:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'http://localhost:8000',</span> <span class="pre">path_to_func_name:</span> <span class="pre">~typing.Callable[[str,</span> <span class="pre">str],</span> <span class="pre">str]</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;,</span> <span class="pre">get_response=&lt;function</span> <span class="pre">default_get_response&gt;,</span> <span class="pre">response_egress=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ju/oas.html#openapi_to_funcs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.oas.openapi_to_funcs" title="Link to this definition"></a></dt>
-<dd><p>spec: dict or str (YAML/JSON string or file path)
-base_url: override the spec’s server URL
-default_servers_url: default URL to use if no servers are specified in the spec
-get_response: function to get the response object (default: requests.request)
-response_egress: function (method, uri) -&gt; callable to extract result from response
-Returns a generator yielding function names and their corresponding callable functions.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ju.oas.properties_of_schema">
-<span class="sig-prename descclassname"><span class="pre">ju.oas.</span></span><span class="sig-name descname"><span class="pre">properties_of_schema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schema</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../../_modules/ju/oas.html#properties_of_schema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.oas.properties_of_schema" title="Link to this definition"></a></dt>
-<dd><p>Returns the properties of the given schema, encapsulating in ArrayOf to indicate
-that the schema is for an array of objects, and not just a single object.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ju.oas.resolve_refs">
-<span class="sig-prename descclassname"><span class="pre">ju.oas.</span></span><span class="sig-name descname"><span class="pre">resolve_refs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">open_api_spec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../../_modules/ju/oas.html#resolve_refs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.oas.resolve_refs" title="Link to this definition"></a></dt>
-<dd><p>Recursively resolves all references in ‘d’ using ‘open_api_spec’.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>open_api_spec</strong> – The complete OpenAPI specification as a dictionary.</p></li>
-<li><p><strong>d</strong> – The dictionary in which references need to be resolved.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The dictionary with all references resolved.</p>
-</dd>
-</dl>
-</dd></dl>
-
+  <section id="ju-oas">
+<h1>ju.oas<a class="headerlink" href="#ju-oas" title="Link to this heading"></a></h1>
 </section>
 
 

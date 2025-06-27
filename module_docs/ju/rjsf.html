@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ju.rjsf &mdash; ju 0.1.19 documentation</title>
+  <title>ju.rjsf &mdash; ju 0.1.23 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=3d116926"></script>
+      <script src="../../_static/documentation_options.js?v=20522496"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -53,22 +53,7 @@
 <li class="toctree-l1"><a class="reference internal" href="json_schema.html">ju.json_schema</a></li>
 <li class="toctree-l1"><a class="reference internal" href="oas.html">ju.oas</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pydantic_util.html">ju.pydantic_util</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">ju.rjsf</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#ju.rjsf.DFLT_RJSF_VIEWER_ON_SUBMIT"><code class="docutils literal notranslate"><span class="pre">DFLT_RJSF_VIEWER_ON_SUBMIT()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ju.rjsf.FormConfig"><code class="docutils literal notranslate"><span class="pre">FormConfig</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ju.rjsf.RJSFViewer"><code class="docutils literal notranslate"><span class="pre">RJSFViewer</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#ju.rjsf.RJSFViewer.display"><code class="docutils literal notranslate"><span class="pre">RJSFViewer.display()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#ju.rjsf.RJSFViewer.get_form_data"><code class="docutils literal notranslate"><span class="pre">RJSFViewer.get_form_data()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#ju.rjsf.RJSFViewer.set_form_data"><code class="docutils literal notranslate"><span class="pre">RJSFViewer.set_form_data()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#ju.rjsf.RJSFViewer.widget"><code class="docutils literal notranslate"><span class="pre">RJSFViewer.widget</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#ju.rjsf.create_rjsf_viewer"><code class="docutils literal notranslate"><span class="pre">create_rjsf_viewer()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ju.rjsf.display_form_data"><code class="docutils literal notranslate"><span class="pre">display_form_data()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ju.rjsf.display_in_notebook"><code class="docutils literal notranslate"><span class="pre">display_in_notebook()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ju.rjsf.func_to_form_spec"><code class="docutils literal notranslate"><span class="pre">func_to_form_spec()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">ju.rjsf</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tests.html">ju.tests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tests/oas_test.html">ju.tests.oas_test</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tests/pydantic_util_test.html">ju.tests.pydantic_util_test</a></li>
@@ -103,169 +88,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-ju.rjsf">
-<span id="ju-rjsf"></span><h1>ju.rjsf<a class="headerlink" href="#module-ju.rjsf" title="Link to this heading"></a></h1>
-<p>Tools for React-JSONSchema-Form (RJSF)</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="ju.rjsf.DFLT_RJSF_VIEWER_ON_SUBMIT">
-<span class="sig-prename descclassname"><span class="pre">ju.rjsf.</span></span><span class="sig-name descname"><span class="pre">DFLT_RJSF_VIEWER_ON_SUBMIT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">form_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ensure_ascii</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'**Submitted</span> <span class="pre">data:**\n\n'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ju.rjsf.DFLT_RJSF_VIEWER_ON_SUBMIT" title="Link to this definition"></a></dt>
-<dd><p>Prints form_data in a nicely formatted way.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>form_data</strong> – The collected form data</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ju.rjsf.FormConfig">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ju.rjsf.</span></span><span class="sig-name descname"><span class="pre">FormConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">submit_text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Submit'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_labels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layout_width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'400px'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">autofocus_first</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ju/rjsf.html#FormConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.rjsf.FormConfig" title="Link to this definition"></a></dt>
-<dd><p>Configuration for form rendering behavior.</p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ju.rjsf.RJSFViewer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ju.rjsf.</span></span><span class="sig-name descname"><span class="pre">RJSFViewer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">rjsf_spec:</span> <span class="pre">~typing.Dict[str,</span> <span class="pre">~typing.Any],</span> <span class="pre">*,</span> <span class="pre">on_submit:</span> <span class="pre">~typing.Callable</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">display_form_data&gt;,</span> <span class="pre">name:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">unpack_form_data:</span> <span class="pre">bool</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">config:</span> <span class="pre">~ju.rjsf.FormConfig</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ju/rjsf.html#RJSFViewer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.rjsf.RJSFViewer" title="Link to this definition"></a></dt>
-<dd><p>Renders RJSF specifications as Jupyter widgets.</p>
-<p>Provides a bridge between RJSF form specifications and ipywidgets,
-allowing interactive form viewing and data collection in notebooks.</p>
-<p>Example:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">rjsf_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;rjsf&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;schema&#39;</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="s1">&#39;uiSchema&#39;</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">}}}</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">viewer</span> <span class="o">=</span> <span class="n">RJSFViewer</span><span class="p">(</span><span class="n">rjsf_dict</span><span class="p">)</span>  
-<span class="gp">&gt;&gt;&gt; </span><span class="n">viewer</span><span class="o">.</span><span class="n">display</span><span class="p">()</span>  
-</pre></div>
-</div>
-<dl class="py method">
-<dt class="sig sig-object py" id="ju.rjsf.RJSFViewer.display">
-<span class="sig-name descname"><span class="pre">display</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/ju/rjsf.html#RJSFViewer.display"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.rjsf.RJSFViewer.display" title="Link to this definition"></a></dt>
-<dd><p>Display the form in the notebook.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ju.rjsf.RJSFViewer.get_form_data">
-<span class="sig-name descname"><span class="pre">get_form_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/ju/rjsf.html#RJSFViewer.get_form_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.rjsf.RJSFViewer.get_form_data" title="Link to this definition"></a></dt>
-<dd><p>Extract current form data from widgets.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dictionary of form field values</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ju.rjsf.RJSFViewer.set_form_data">
-<span class="sig-name descname"><span class="pre">set_form_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/ju/rjsf.html#RJSFViewer.set_form_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.rjsf.RJSFViewer.set_form_data" title="Link to this definition"></a></dt>
-<dd><p>Set form data programmatically.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data</strong> – Dictionary of field values to set</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="ju.rjsf.RJSFViewer.widget">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">widget</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Widget</span></em><a class="headerlink" href="#ju.rjsf.RJSFViewer.widget" title="Link to this definition"></a></dt>
-<dd><p>Access the underlying widget for custom layouts.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ju.rjsf.create_rjsf_viewer">
-<span class="sig-prename descclassname"><span class="pre">ju.rjsf.</span></span><span class="sig-name descname"><span class="pre">create_rjsf_viewer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">rjsf_spec:</span> <span class="pre">~typing.Dict[str,</span> <span class="pre">~typing.Any],</span> <span class="pre">*,</span> <span class="pre">on_submit:</span> <span class="pre">~typing.Callable</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">display_form_data&gt;,</span> <span class="pre">name:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">unpack_form_data:</span> <span class="pre">bool</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">config:</span> <span class="pre">~ju.rjsf.FormConfig</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">display:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#ju.rjsf.RJSFViewer" title="ju.rjsf.RJSFViewer"><span class="pre">RJSFViewer</span></a></span></span><a class="reference internal" href="../../_modules/ju/rjsf.html#create_rjsf_viewer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.rjsf.create_rjsf_viewer" title="Link to this definition"></a></dt>
-<dd><p>Factory function to create and display an RJSF viewer.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>rjsf_spec</strong> – The RJSF specification</p></li>
-<li><p><strong>on_submit</strong> – Optional submission callback</p></li>
-<li><p><strong>config</strong> – Optional form configuration</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Configured RJSFViewer instance</p>
-</dd>
-</dl>
-<p>Example:</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">handle_data</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Received: </span><span class="si">{</span><span class="n">data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">viewer</span> <span class="o">=</span> <span class="n">create_rjsf_viewer</span><span class="p">(</span><span class="n">rjsf_dict</span><span class="p">,</span> <span class="n">on_submit</span><span class="o">=</span><span class="n">handle_data</span><span class="p">)</span>  
-<span class="gp">&gt;&gt;&gt; </span><span class="n">viewer</span><span class="o">.</span><span class="n">display</span><span class="p">()</span>  
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ju.rjsf.display_form_data">
-<span class="sig-prename descclassname"><span class="pre">ju.rjsf.</span></span><span class="sig-name descname"><span class="pre">display_form_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">form_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ensure_ascii</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'**Submitted</span> <span class="pre">data:**\n\n'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/ju/rjsf.html#display_form_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.rjsf.display_form_data" title="Link to this definition"></a></dt>
-<dd><p>Prints form_data in a nicely formatted way.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>form_data</strong> – The collected form data</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ju.rjsf.display_in_notebook">
-<span class="sig-prename descclassname"><span class="pre">ju.rjsf.</span></span><span class="sig-name descname"><span class="pre">display_in_notebook</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../../_modules/ju/rjsf.html#display_in_notebook"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.rjsf.display_in_notebook" title="Link to this definition"></a></dt>
-<dd><p>Display a string in a Jupyter notebook cell.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ju.rjsf.func_to_form_spec">
-<span class="sig-prename descclassname"><span class="pre">ju.rjsf.</span></span><span class="sig-name descname"><span class="pre">func_to_form_spec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">func:</span> <span class="pre">~typing.Callable,</span> <span class="pre">*,</span> <span class="pre">doc:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">bool</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">True,</span> <span class="pre">param_to_prop_type:</span> <span class="pre">~typing.Callable</span> <span class="pre">=</span> <span class="pre">functools.partial(&lt;function</span> <span class="pre">parametrized_param_to_type&gt;,</span> <span class="pre">type_mapping=((&lt;class</span> <span class="pre">'str'&gt;,</span> <span class="pre">'string'),</span> <span class="pre">(&lt;class</span> <span class="pre">'bool'&gt;,</span> <span class="pre">'boolean'),</span> <span class="pre">(&lt;class</span> <span class="pre">'int'&gt;,</span> <span class="pre">'integer'),</span> <span class="pre">(&lt;class</span> <span class="pre">'float'&gt;,</span> <span class="pre">'number'),</span> <span class="pre">(typing.Mapping,</span> <span class="pre">'object'),</span> <span class="pre">(typing.Sequence[str],</span> <span class="pre">'array'))),</span> <span class="pre">nest_under_field:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">'rjsf',</span> <span class="pre">base_rjsf_spec:</span> <span class="pre">dict</span> <span class="pre">=</span> <span class="pre">{'disabled':</span> <span class="pre">False,</span> <span class="pre">'focusOnFirstError':</span> <span class="pre">False,</span> <span class="pre">'liveOmit':</span> <span class="pre">False,</span> <span class="pre">'liveValidate':</span> <span class="pre">False,</span> <span class="pre">'noHtml5Validate':</span> <span class="pre">False,</span> <span class="pre">'noValidate':</span> <span class="pre">False,</span> <span class="pre">'omitExtraData':</span> <span class="pre">False,</span> <span class="pre">'readonly':</span> <span class="pre">False,</span> <span class="pre">'schema':</span> <span class="pre">{'properties':</span> <span class="pre">{},</span> <span class="pre">'required':</span> <span class="pre">[],</span> <span class="pre">'title':</span> <span class="pre">'',</span> <span class="pre">'type':</span> <span class="pre">'object'},</span> <span class="pre">'showErrorList':</span> <span class="pre">'top',</span> <span class="pre">'uiSchema':</span> <span class="pre">{'ui:submitButtonOptions':</span> <span class="pre">{'submitText':</span> <span class="pre">'Run'}}},</span> <span class="pre">pyname_to_title:</span> <span class="pre">~typing.Callable[[str],</span> <span class="pre">str]</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">asis&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ju/rjsf.html#func_to_form_spec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.rjsf.func_to_form_spec" title="Link to this definition"></a></dt>
-<dd><p>Returns a JSON object that can be used as a form specification, along with the
-function, to generate a FuncCaller React component in a React application.</p>
-<p>param func: The function to transform
-return: The form specification for the function</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span>
-<span class="gp">... </span>    <span class="n">a_bool</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">a_float</span><span class="o">=</span><span class="mf">3.14</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">an_int</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">a_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;hello&#39;</span><span class="p">,</span>
-<span class="gp">... </span>    <span class="n">something_else</span><span class="o">=</span><span class="kc">None</span>
-<span class="gp">... </span><span class="p">):</span>
-<span class="gp">... </span><span class="w">    </span><span class="sd">&#39;&#39;&#39;A Foo function&#39;&#39;&#39;</span>
-<span class="gp">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">form_spec</span> <span class="o">=</span> <span class="n">func_to_form_spec</span><span class="p">(</span><span class="n">foo</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">form_spec</span> <span class="o">==</span> <span class="p">{</span>
-<span class="gp">... </span>    <span class="s1">&#39;rjsf&#39;</span><span class="p">:</span> <span class="p">{</span>
-<span class="gp">... </span>        <span class="s1">&#39;schema&#39;</span><span class="p">:</span> <span class="p">{</span>
-<span class="gp">... </span>            <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;foo&#39;</span><span class="p">,</span>
-<span class="gp">... </span>            <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
-<span class="gp">... </span>            <span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{</span>
-<span class="gp">... </span>                <span class="s1">&#39;a_bool&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;boolean&#39;</span><span class="p">},</span>
-<span class="gp">... </span>                <span class="s1">&#39;a_float&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="mf">3.14</span><span class="p">},</span>
-<span class="gp">... </span>                <span class="s1">&#39;an_int&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;integer&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
-<span class="gp">... </span>                <span class="s1">&#39;a_str&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="s1">&#39;hello&#39;</span><span class="p">},</span>
-<span class="gp">... </span>                <span class="s1">&#39;something_else&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
-<span class="gp">... </span>            <span class="p">},</span>
-<span class="gp">... </span>            <span class="s1">&#39;required&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;a_bool&#39;</span><span class="p">],</span>
-<span class="gp">... </span>            <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;A Foo function&#39;</span>
-<span class="gp">... </span>        <span class="p">},</span>
-<span class="gp">... </span>        <span class="s1">&#39;uiSchema&#39;</span><span class="p">:</span> <span class="p">{</span>
-<span class="gp">... </span>            <span class="s1">&#39;ui:submitButtonOptions&#39;</span><span class="p">:</span> <span class="p">{</span>
-<span class="gp">... </span>                <span class="s1">&#39;submitText&#39;</span><span class="p">:</span> <span class="s1">&#39;Run&#39;</span>
-<span class="gp">... </span>            <span class="p">},</span>
-<span class="gp">... </span>            <span class="s1">&#39;a_bool&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;ui:autofocus&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
-<span class="gp">... </span>        <span class="p">},</span>
-<span class="gp">... </span>        <span class="s1">&#39;liveValidate&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="s1">&#39;disabled&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="s1">&#39;readonly&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="s1">&#39;omitExtraData&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="s1">&#39;liveOmit&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="s1">&#39;noValidate&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="s1">&#39;noHtml5Validate&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="s1">&#39;focusOnFirstError&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-<span class="gp">... </span>        <span class="s1">&#39;showErrorList&#39;</span><span class="p">:</span> <span class="s1">&#39;top&#39;</span>
-<span class="gp">... </span>    <span class="p">}</span>
-<span class="gp">... </span><span class="p">}</span>
-</pre></div>
-</div>
-</dd></dl>
-
+  <section id="ju-rjsf">
+<h1>ju.rjsf<a class="headerlink" href="#ju-rjsf" title="Link to this heading"></a></h1>
 </section>
 
 

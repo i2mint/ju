@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ju.tests.pydantic_util_test &mdash; ju 0.1.19 documentation</title>
+  <title>ju.tests.pydantic_util_test &mdash; ju 0.1.23 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=3d116926"></script>
+      <script src="../../../_static/documentation_options.js?v=20522496"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -56,10 +56,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../rjsf.html">ju.rjsf</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tests.html">ju.tests</a></li>
 <li class="toctree-l1"><a class="reference internal" href="oas_test.html">ju.tests.oas_test</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">ju.tests.pydantic_util_test</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#ju.tests.pydantic_util_test.test_pydantic_model_to_code"><code class="docutils literal notranslate"><span class="pre">test_pydantic_model_to_code()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">ju.tests.pydantic_util_test</a></li>
 <li class="toctree-l1"><a class="reference internal" href="rjsf_test.html">ju.tests.rjsf_test</a></li>
 <li class="toctree-l1"><a class="reference internal" href="traitlets_util_test.html">ju.tests.traitlets_util_test</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../traitlets_util.html">ju.traitlets_util</a></li>
@@ -91,58 +88,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-ju.tests.pydantic_util_test">
-<span id="ju-tests-pydantic-util-test"></span><h1>ju.tests.pydantic_util_test<a class="headerlink" href="#module-ju.tests.pydantic_util_test" title="Link to this heading"></a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="ju.tests.pydantic_util_test.test_pydantic_model_to_code">
-<span class="sig-prename descclassname"><span class="pre">ju.tests.pydantic_util_test.</span></span><span class="sig-name descname"><span class="pre">test_pydantic_model_to_code</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../../_modules/ju/tests/pydantic_util_test.html#test_pydantic_model_to_code"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.tests.pydantic_util_test.test_pydantic_model_to_code" title="Link to this definition"></a></dt>
-<dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">json_schema</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;{</span>
-<span class="gp">... </span><span class="s1">    &quot;type&quot;: &quot;object&quot;,</span>
-<span class="gp">... </span><span class="s1">    &quot;properties&quot;: {</span>
-<span class="gp">... </span><span class="s1">        &quot;number&quot;: {&quot;type&quot;: &quot;number&quot;},</span>
-<span class="gp">... </span><span class="s1">        &quot;street_name&quot;: {&quot;type&quot;: &quot;string&quot;},</span>
-<span class="gp">... </span><span class="s1">        &quot;street_type&quot;: {&quot;type&quot;: &quot;string&quot;,</span>
-<span class="gp">... </span><span class="s1">                        &quot;enum&quot;: [&quot;Street&quot;, &quot;Avenue&quot;, &quot;Boulevard&quot;]</span>
-<span class="gp">... </span><span class="s1">                        }</span>
-<span class="gp">... </span><span class="s1">    }</span>
-<span class="gp">... </span><span class="s1">}&#39;&#39;&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">pydantic_model_to_code</span><span class="p">(</span><span class="n">json_schema</span><span class="p">))</span>
-<span class="go">from __future__ import annotations</span>
-
-<span class="go">from enum import Enum</span>
-<span class="go">from typing import Optional</span>
-
-<span class="go">from pydantic import BaseModel</span>
-
-
-<span class="go">class StreetType(Enum):</span>
-<span class="go">    Street = &#39;Street&#39;</span>
-<span class="go">    Avenue = &#39;Avenue&#39;</span>
-<span class="go">    Boulevard = &#39;Boulevard&#39;</span>
-
-
-<span class="go">class Model(BaseModel):</span>
-<span class="go">    number: Optional[float] = None</span>
-<span class="go">    street_name: Optional[str] = None</span>
-<span class="go">    street_type: Optional[StreetType] = None</span>
-</pre></div>
-</div>
-<p>This means you can get some model code from an example data dict,
-using pydantic_model_to_code</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">M</span> <span class="o">=</span> <span class="n">data_to_pydantic_model</span><span class="p">({</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;John&quot;</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">},</span> <span class="s2">&quot;Simple&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">pydantic_model_to_code</span><span class="p">(</span><span class="n">M</span><span class="p">))</span>
-<span class="go">from __future__ import annotations</span>
-
-<span class="go">from pydantic import BaseModel, Field</span>
-
-
-<span class="go">class Simple(BaseModel):</span>
-<span class="go">    name: str = Field(..., title=&#39;Name&#39;)</span>
-<span class="go">    age: int = Field(..., title=&#39;Age&#39;)</span>
-</pre></div>
-</div>
-</dd></dl>
-
+  <section id="ju-tests-pydantic-util-test">
+<h1>ju.tests.pydantic_util_test<a class="headerlink" href="#ju-tests-pydantic-util-test" title="Link to this heading"></a></h1>
 </section>
 
 
