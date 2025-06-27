@@ -344,32 +344,9 @@ def default_get_response(method, url, **kwargs):
     return requests.request(method.upper(), url, **kwargs)
 
 
-<<<<<<< HEAD
 def default_response_egress(method, uri):
     return operations.methodcaller('json')
 
-=======
-def make_openapi_func(
-    *,
-    method,
-    uri,
-    base_url,
-    param_schema,
-    get_response=default_get_response,
-    response_egress=lambda method, uri: operations.methodcaller("json"),
-):
-    """
-    Helper to create a function for a given OpenAPI route, with signature and egress.
-    """
-    sig = json_schema_to_signature(param_schema)
-    egress_for_this_route = response_egress(method, uri)
-
-    def func(**kwargs):
-        url = base_url + uri.format(**kwargs)
-        params = {k: v for k, v in kwargs.items() if "{" + k + "}" not in uri}
-        resp = get_response(method, url, json=params)
-        return egress_for_this_route(resp)
->>>>>>> 9b608b5a6b94865843811baf87d2fcec207965f1
 
 class OpenApiFunc:
     """
@@ -521,13 +498,8 @@ def openapi_to_funcs(
         [str, str], str
     ] = openapi_python_client_style_func_namer,
     get_response=default_get_response,
-<<<<<<< HEAD
     response_egress=None,
 ) -> Iterator["OpenApiFunc"]:
-=======
-    response_egress=lambda method, uri: operations.methodcaller("json"),
-):
->>>>>>> 9b608b5a6b94865843811baf87d2fcec207965f1
     """
     spec: dict or str (YAML/JSON string or file path)
     base_url: override the spec's server URL
@@ -541,7 +513,6 @@ def openapi_to_funcs(
     spec_dict = ensure_openapi_dict(spec)
     routes = Routes(spec_dict)
     if not base_url:
-<<<<<<< HEAD
         base_url = spec_dict.get('servers', [{}])[0].get('url', default_servers_url)
     for method, uri in routes:
         route = routes[method, uri]
@@ -735,10 +706,6 @@ def openapi_to_generated_funcs(
     ]
     opid_to_modbase = {f[:-3]: f[:-3] for f in py_files}
     for uri, methods in paths.items():
-=======
-        base_url = spec.get("servers", [{}])[0].get("url", default_servers_url)
-    for uri, methods in spec["paths"].items():
->>>>>>> 9b608b5a6b94865843811baf87d2fcec207965f1
         for method, details in methods.items():
             func_name = path_to_func_name(method, uri, details)
             opid = details.get('operationId')
@@ -759,29 +726,8 @@ def openapi_to_generated_funcs(
                 "title": func_name,
                 "parameters": details.get("parameters", []),
             }
-<<<<<<< HEAD
             param_schema = merge_request_body_json_schema(details, param_schema)
             yield OpenApiFunc(
-=======
-            # If requestBody exists, merge its schema properties
-            if "requestBody" in details:
-                content = details["requestBody"].get("content", {})
-                json_schema = None
-                for ct in content:
-                    if ct.endswith("json") and "schema" in content[ct]:
-                        json_schema = content[ct]["schema"]
-                        break
-                if json_schema and "properties" in json_schema:
-                    param_schema.setdefault("properties", {}).update(
-                        json_schema["properties"]
-                    )
-                    if "required" in json_schema:
-                        param_schema.setdefault("required", []).extend(
-                            json_schema["required"]
-                        )
-            f = partial(
-                make_openapi_func,
->>>>>>> 9b608b5a6b94865843811baf87d2fcec207965f1
                 method=method,
                 uri=uri,
                 base_url=base_url
