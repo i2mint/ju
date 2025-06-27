@@ -265,3 +265,164 @@ def resolve_refs(open_api_spec: dict, d: dict) -> dict:
     else:
         # If 'd' is neither a dict nor a list, return it as is
         return d
+
+
+# --------------------------------------------------------------------------------------
+# OpenAPI specifications to Python functions
+
+import json
+import os
+from typing import Union, Generator, Tuple, Callable, Optional
+import requests
+from ju.json_schema import json_schema_to_signature
+import operator as operations
+from functools import partial, update_wrapper
+
+OpenAPISpec = Union[str, dict]
+DFLT_SERVERS_URL = 'http://localhost:8000'
+
+
+def ensure_openapi_dict(spec: OpenAPISpec) -> dict:
+    """
+    Ensure that the OpenAPI specification is a dictionary.
+
+    It will handle:
+    - JSON strings
+    - YAML strings
+    - File paths to JSON or YAML files
+    - URLs pointing to OpenAPI specs
+    - Direct dictionaries
+
+    """
+    if isinstance(spec, str):
+        if spec.strip().startswith('{') or spec.strip().startswith('openapi:'):
+            # It's a string spec
+            try:
+                spec = json.loads(spec)
+            except Exception:
+                import yaml
+
+                spec = yaml.safe_load(spec)
+        elif spec.startswith('http://') or spec.startswith('https://'):
+            # It's a URL, fetch the spec
+            response = requests.get(spec)
+            response.raise_for_status()
+            content_type = response.headers.get('Content-Type', '')
+            if 'application/json' in content_type:
+                spec = response.json()
+            elif 'application/x-yaml' in content_type or 'text/yaml' in content_type:
+                import yaml
+
+                spec = yaml.safe_load(response.text)
+            else:
+                raise ValueError(f"Unsupported content type: {content_type}")
+        elif os.path.isfile(spec):
+            # It's a file path
+            with open(spec) as f:
+                if spec.endswith('.json'):
+                    spec = json.load(f)
+                elif spec.endswith('.yaml') or spec.endswith('.yml'):
+                    import yaml
+
+                    spec = yaml.safe_load(f)
+        else:
+            raise ValueError(
+                "spec must be a dict, JSON string, YAML string, or file path"
+            )
+    elif not isinstance(spec, dict):
+        raise ValueError("spec must be a dict, JSON string, or YAML string/file path")
+
+    return spec
+
+
+def default_get_response(method, url, **kwargs):
+    import requests
+
+    return requests.request(method.upper(), url, **kwargs)
+
+
+def make_openapi_func(
+    *,
+    method,
+    uri,
+    base_url,
+    param_schema,
+    get_response=default_get_response,
+    response_egress=lambda method, uri: operations.methodcaller('json'),
+):
+    """
+    Helper to create a function for a given OpenAPI route, with signature and egress.
+    """
+    sig = json_schema_to_signature(param_schema)
+    egress_for_this_route = response_egress(method, uri)
+
+    def func(**kwargs):
+        url = base_url + uri.format(**kwargs)
+        params = {k: v for k, v in kwargs.items() if '{' + k + '}' not in uri}
+        resp = get_response(method, url, json=params)
+        return egress_for_this_route(resp)
+
+    func.__signature__ = sig
+    func.__name__ = f"{method.lower()}_{uri.strip('/').replace('/', '_').replace('{','').replace('}','')}"
+    update_wrapper(func, func)
+    return func
+
+
+def openapi_to_funcs(
+    spec: OpenAPISpec,
+    *,
+    base_url: Optional[str] = None,
+    default_servers_url: str = DFLT_SERVERS_URL,
+    path_to_func_name: Callable[
+        [str, str], str
+    ] = lambda m, p: f"{m.lower()}_{p.strip('/').replace('/', '_').replace('{','').replace('}','')}",
+    get_response=default_get_response,
+    response_egress=lambda method, uri: operations.methodcaller('json'),
+):
+    """
+    spec: dict or str (YAML/JSON string or file path)
+    base_url: override the spec's server URL
+    default_servers_url: default URL to use if no servers are specified in the spec
+    get_response: function to get the response object (default: requests.request)
+    response_egress: function (method, uri) -> callable to extract result from response
+    Returns a generator yielding function names and their corresponding callable functions.
+    """
+    spec = ensure_openapi_dict(spec)
+    if not base_url:
+        base_url = spec.get('servers', [{}])[0].get('url', default_servers_url)
+    for uri, methods in spec['paths'].items():
+        for method, details in methods.items():
+            func_name = path_to_func_name(method, uri)
+            # Build param schema for signature
+            param_schema = {
+                'title': func_name,
+                'parameters': details.get('parameters', []),
+            }
+            # If requestBody exists, merge its schema properties
+            if 'requestBody' in details:
+                content = details['requestBody'].get('content', {})
+                json_schema = None
+                for ct in content:
+                    if ct.endswith('json') and 'schema' in content[ct]:
+                        json_schema = content[ct]['schema']
+                        break
+                if json_schema and 'properties' in json_schema:
+                    param_schema.setdefault('properties', {}).update(
+                        json_schema['properties']
+                    )
+                    if 'required' in json_schema:
+                        param_schema.setdefault('required', []).extend(
+                            json_schema['required']
+                        )
+            f = partial(
+                make_openapi_func,
+                method=method,
+                uri=uri,
+                base_url=base_url,
+                param_schema=param_schema,
+                get_response=get_response,
+                response_egress=response_egress,
+            )
+            func = f()
+            func.__qualname__ = func_name
+            yield func_name, func

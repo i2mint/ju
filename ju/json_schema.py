@@ -345,10 +345,8 @@ def json_schema_to_signature(
     default_description: str = "",
 ):
     """
-    Transforms a JSON schema to a Python function signature.
-
-    param schema: The JSON schema to transform
-    return: The Python function signature
+    Transforms a JSON schema or OpenAPI parameters list to a Python function signature.
+    Supports both JSON schema 'properties' and OpenAPI 'parameters'.
 
     >>> schema = {'title': 'earth',
     ...  'type': 'object',
@@ -358,7 +356,6 @@ def json_schema_to_signature(
     ...   'west': {'type': 'number', 'default': 2.0}},
     ...  'required': ['north', 'south'],
     ...  'description': 'Earth docs'}
-
     >>> sig = json_schema_to_signature(schema)
     >>> sig
     <Sig (north: str, south: bool, east: int = 1, west: float = 2.0)>
@@ -367,35 +364,71 @@ def json_schema_to_signature(
     >>> sig.docs
     'Earth docs'
 
-
+    # --- OpenAPI parameters support ---
+    >>> openapi_params = {
+    ...     'title': 'get_thing',
+    ...     'parameters': [
+    ...         {'name': 'thing_id', 'in': 'path', 'required': True, 'schema': {'type': 'string'}},
+    ...         {'name': 'detail', 'in': 'query', 'required': False, 'schema': {'type': 'boolean', 'default': False}},
+    ...         {'name': 'count', 'in': 'query', 'schema': {'type': 'integer', 'default': 1}},
+    ...     ],
+    ...     'description': 'Get a thing by ID.'
+    ... }
+    >>> sig2 = json_schema_to_signature(openapi_params)
+    >>> sig2
+    <Sig (thing_id: str, detail: bool = False, count: int = 1)>
+    >>> sig2.name
+    'get_thing'
+    >>> sig2.docs
+    'Get a thing by ID.'
     """
     type_mapper = ensure_callable_mapper(type_mapper, default=default_annotation)
-    properties = json_schema["properties"]
-
-    def _params():
+    params = []
+    # Support OpenAPI 'parameters' (list of dicts)
+    if "parameters" in json_schema and isinstance(json_schema["parameters"], list):
+        for param in json_schema["parameters"]:
+            name = param["name"]
+            # Try to get type from schema/type, fallback to string
+            py_type = type_mapper(param.get("schema", {}).get("type", "string"))
+            default = param.get("schema", {}).get("default", default_default)
+            if param.get("required", False):
+                default = Parameter.empty
+            params.append(
+                Parameter(
+                    name=name,
+                    annotation=py_type,
+                    default=default,
+                    kind=Parameter.POSITIONAL_OR_KEYWORD,
+                )
+            )
+    # Support JSON schema 'properties' (as before)
+    elif "properties" in json_schema:
+        properties = json_schema["properties"]
         for name, field in properties.items():
             if (json_type := field.get("type", None)) is not None:
                 if not isinstance(json_type, list):
                     py_type = type_mapper(json_type)
                 else:
                     json_types = map(type_mapper, json_type)
-                    # Make a typing.Union of the json_types
                     py_type = Union[tuple(json_types)]
             else:
                 py_type = Parameter.empty
             default = field.get("default", default_default)
-            yield Parameter(
-                name=name,
-                annotation=py_type,
-                default=default,
-                kind=Parameter.POSITIONAL_OR_KEYWORD,
+            params.append(
+                Parameter(
+                    name=name,
+                    annotation=py_type,
+                    default=default,
+                    kind=Parameter.POSITIONAL_OR_KEYWORD,
+                )
             )
-
-    sig = Sig(sort_params(_params()))
+    else:
+        # Fallback: no parameters
+        params = []
+    sig = Sig(sort_params(params))
     if title := json_schema.get("title"):
         sig.name = title_to_pyname(title)
     sig.docs = json_schema.get("description", default_description)
-
     return sig
 
 
