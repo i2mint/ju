@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ju.json_schema &mdash; ju 0.1.18 documentation</title>
+  <title>ju.json_schema &mdash; ju 0.1.19 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=9969ed3f"></script>
+      <script src="../../_static/documentation_options.js?v=3d116926"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -447,10 +447,8 @@
     <span class="n">default_description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Transforms a JSON schema to a Python function signature.</span>
-
-<span class="sd">    param schema: The JSON schema to transform</span>
-<span class="sd">    return: The Python function signature</span>
+<span class="sd">    Transforms a JSON schema or OpenAPI parameters list to a Python function signature.</span>
+<span class="sd">    Supports both JSON schema &#39;properties&#39; and OpenAPI &#39;parameters&#39;.</span>
 
 <span class="sd">    &gt;&gt;&gt; schema = {&#39;title&#39;: &#39;earth&#39;,</span>
 <span class="sd">    ...  &#39;type&#39;: &#39;object&#39;,</span>
@@ -460,7 +458,6 @@
 <span class="sd">    ...   &#39;west&#39;: {&#39;type&#39;: &#39;number&#39;, &#39;default&#39;: 2.0}},</span>
 <span class="sd">    ...  &#39;required&#39;: [&#39;north&#39;, &#39;south&#39;],</span>
 <span class="sd">    ...  &#39;description&#39;: &#39;Earth docs&#39;}</span>
-
 <span class="sd">    &gt;&gt;&gt; sig = json_schema_to_signature(schema)</span>
 <span class="sd">    &gt;&gt;&gt; sig</span>
 <span class="sd">    &lt;Sig (north: str, south: bool, east: int = 1, west: float = 2.0)&gt;</span>
@@ -469,35 +466,71 @@
 <span class="sd">    &gt;&gt;&gt; sig.docs</span>
 <span class="sd">    &#39;Earth docs&#39;</span>
 
-
+<span class="sd">    # --- OpenAPI parameters support ---</span>
+<span class="sd">    &gt;&gt;&gt; openapi_params = {</span>
+<span class="sd">    ...     &#39;title&#39;: &#39;get_thing&#39;,</span>
+<span class="sd">    ...     &#39;parameters&#39;: [</span>
+<span class="sd">    ...         {&#39;name&#39;: &#39;thing_id&#39;, &#39;in&#39;: &#39;path&#39;, &#39;required&#39;: True, &#39;schema&#39;: {&#39;type&#39;: &#39;string&#39;}},</span>
+<span class="sd">    ...         {&#39;name&#39;: &#39;detail&#39;, &#39;in&#39;: &#39;query&#39;, &#39;required&#39;: False, &#39;schema&#39;: {&#39;type&#39;: &#39;boolean&#39;, &#39;default&#39;: False}},</span>
+<span class="sd">    ...         {&#39;name&#39;: &#39;count&#39;, &#39;in&#39;: &#39;query&#39;, &#39;schema&#39;: {&#39;type&#39;: &#39;integer&#39;, &#39;default&#39;: 1}},</span>
+<span class="sd">    ...     ],</span>
+<span class="sd">    ...     &#39;description&#39;: &#39;Get a thing by ID.&#39;</span>
+<span class="sd">    ... }</span>
+<span class="sd">    &gt;&gt;&gt; sig2 = json_schema_to_signature(openapi_params)</span>
+<span class="sd">    &gt;&gt;&gt; sig2</span>
+<span class="sd">    &lt;Sig (thing_id: str, detail: bool = False, count: int = 1)&gt;</span>
+<span class="sd">    &gt;&gt;&gt; sig2.name</span>
+<span class="sd">    &#39;get_thing&#39;</span>
+<span class="sd">    &gt;&gt;&gt; sig2.docs</span>
+<span class="sd">    &#39;Get a thing by ID.&#39;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">type_mapper</span> <span class="o">=</span> <span class="n">ensure_callable_mapper</span><span class="p">(</span><span class="n">type_mapper</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">default_annotation</span><span class="p">)</span>
-    <span class="n">properties</span> <span class="o">=</span> <span class="n">json_schema</span><span class="p">[</span><span class="s2">&quot;properties&quot;</span><span class="p">]</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_params</span><span class="p">():</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># Support OpenAPI &#39;parameters&#39; (list of dicts)</span>
+    <span class="k">if</span> <span class="s2">&quot;parameters&quot;</span> <span class="ow">in</span> <span class="n">json_schema</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">json_schema</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">json_schema</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">param</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+            <span class="c1"># Try to get type from schema/type, fallback to string</span>
+            <span class="n">py_type</span> <span class="o">=</span> <span class="n">type_mapper</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;schema&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;string&quot;</span><span class="p">))</span>
+            <span class="n">default</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;schema&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">default_default</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;required&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+                <span class="n">default</span> <span class="o">=</span> <span class="n">Parameter</span><span class="o">.</span><span class="n">empty</span>
+            <span class="n">params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">Parameter</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                    <span class="n">annotation</span><span class="o">=</span><span class="n">py_type</span><span class="p">,</span>
+                    <span class="n">default</span><span class="o">=</span><span class="n">default</span><span class="p">,</span>
+                    <span class="n">kind</span><span class="o">=</span><span class="n">Parameter</span><span class="o">.</span><span class="n">POSITIONAL_OR_KEYWORD</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+    <span class="c1"># Support JSON schema &#39;properties&#39; (as before)</span>
+    <span class="k">elif</span> <span class="s2">&quot;properties&quot;</span> <span class="ow">in</span> <span class="n">json_schema</span><span class="p">:</span>
+        <span class="n">properties</span> <span class="o">=</span> <span class="n">json_schema</span><span class="p">[</span><span class="s2">&quot;properties&quot;</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">properties</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">json_type</span> <span class="o">:=</span> <span class="n">field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">json_type</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
                     <span class="n">py_type</span> <span class="o">=</span> <span class="n">type_mapper</span><span class="p">(</span><span class="n">json_type</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">json_types</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">type_mapper</span><span class="p">,</span> <span class="n">json_type</span><span class="p">)</span>
-                    <span class="c1"># Make a typing.Union of the json_types</span>
                     <span class="n">py_type</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">json_types</span><span class="p">)]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">py_type</span> <span class="o">=</span> <span class="n">Parameter</span><span class="o">.</span><span class="n">empty</span>
             <span class="n">default</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">default_default</span><span class="p">)</span>
-            <span class="k">yield</span> <span class="n">Parameter</span><span class="p">(</span>
-                <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
-                <span class="n">annotation</span><span class="o">=</span><span class="n">py_type</span><span class="p">,</span>
-                <span class="n">default</span><span class="o">=</span><span class="n">default</span><span class="p">,</span>
-                <span class="n">kind</span><span class="o">=</span><span class="n">Parameter</span><span class="o">.</span><span class="n">POSITIONAL_OR_KEYWORD</span><span class="p">,</span>
+            <span class="n">params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">Parameter</span><span class="p">(</span>
+                    <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
+                    <span class="n">annotation</span><span class="o">=</span><span class="n">py_type</span><span class="p">,</span>
+                    <span class="n">default</span><span class="o">=</span><span class="n">default</span><span class="p">,</span>
+                    <span class="n">kind</span><span class="o">=</span><span class="n">Parameter</span><span class="o">.</span><span class="n">POSITIONAL_OR_KEYWORD</span><span class="p">,</span>
+                <span class="p">)</span>
             <span class="p">)</span>
-
-    <span class="n">sig</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span><span class="n">sort_params</span><span class="p">(</span><span class="n">_params</span><span class="p">()))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Fallback: no parameters</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span><span class="n">sort_params</span><span class="p">(</span><span class="n">params</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">title</span> <span class="o">:=</span> <span class="n">json_schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">):</span>
         <span class="n">sig</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">title_to_pyname</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
     <span class="n">sig</span><span class="o">.</span><span class="n">docs</span> <span class="o">=</span> <span class="n">json_schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;description&quot;</span><span class="p">,</span> <span class="n">default_description</span><span class="p">)</span>
-
     <span class="k">return</span> <span class="n">sig</span></div>
 
 

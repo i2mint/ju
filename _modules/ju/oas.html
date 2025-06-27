@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ju.oas &mdash; ju 0.1.18 documentation</title>
+  <title>ju.oas &mdash; ju 0.1.19 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=9969ed3f"></script>
+      <script src="../../_static/documentation_options.js?v=3d116926"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -370,6 +370,176 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># If &#39;d&#39; is neither a dict nor a list, return it as is</span>
         <span class="k">return</span> <span class="n">d</span></div>
+
+
+
+<span class="c1"># --------------------------------------------------------------------------------------</span>
+<span class="c1"># OpenAPI specifications to Python functions</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ju.json_schema</span><span class="w"> </span><span class="kn">import</span> <span class="n">json_schema_to_signature</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">operator</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">operations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span><span class="p">,</span> <span class="n">update_wrapper</span>
+
+<span class="n">OpenAPISpec</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]</span>
+<span class="n">DFLT_SERVERS_URL</span> <span class="o">=</span> <span class="s1">&#39;http://localhost:8000&#39;</span>
+
+
+<div class="viewcode-block" id="ensure_openapi_dict">
+<a class="viewcode-back" href="../../module_docs/ju/oas.html#ju.oas.ensure_openapi_dict">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">ensure_openapi_dict</span><span class="p">(</span><span class="n">spec</span><span class="p">:</span> <span class="n">OpenAPISpec</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Ensure that the OpenAPI specification is a dictionary.</span>
+
+<span class="sd">    It will handle:</span>
+<span class="sd">    - JSON strings</span>
+<span class="sd">    - YAML strings</span>
+<span class="sd">    - File paths to JSON or YAML files</span>
+<span class="sd">    - URLs pointing to OpenAPI specs</span>
+<span class="sd">    - Direct dictionaries</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">spec</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;{&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">spec</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;openapi:&#39;</span><span class="p">):</span>
+            <span class="c1"># It&#39;s a string spec</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">spec</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+
+                <span class="n">spec</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">spec</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;http://&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">spec</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;https://&#39;</span><span class="p">):</span>
+            <span class="c1"># It&#39;s a URL, fetch the spec</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+            <span class="n">content_type</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">&#39;application/json&#39;</span> <span class="ow">in</span> <span class="n">content_type</span><span class="p">:</span>
+                <span class="n">spec</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="s1">&#39;application/x-yaml&#39;</span> <span class="ow">in</span> <span class="n">content_type</span> <span class="ow">or</span> <span class="s1">&#39;text/yaml&#39;</span> <span class="ow">in</span> <span class="n">content_type</span><span class="p">:</span>
+                <span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+
+                <span class="n">spec</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported content type: </span><span class="si">{</span><span class="n">content_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">spec</span><span class="p">):</span>
+            <span class="c1"># It&#39;s a file path</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">spec</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.json&#39;</span><span class="p">):</span>
+                    <span class="n">spec</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">spec</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.yaml&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">spec</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.yml&#39;</span><span class="p">):</span>
+                    <span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+
+                    <span class="n">spec</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;spec must be a dict, JSON string, YAML string, or file path&quot;</span>
+            <span class="p">)</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">spec</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;spec must be a dict, JSON string, or YAML string/file path&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">spec</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">default_get_response</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+
+    <span class="k">return</span> <span class="n">requests</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">method</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">url</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="make_openapi_func">
+<a class="viewcode-back" href="../../module_docs/ju/oas.html#ju.oas.make_openapi_func">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_openapi_func</span><span class="p">(</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">method</span><span class="p">,</span>
+    <span class="n">uri</span><span class="p">,</span>
+    <span class="n">base_url</span><span class="p">,</span>
+    <span class="n">param_schema</span><span class="p">,</span>
+    <span class="n">get_response</span><span class="o">=</span><span class="n">default_get_response</span><span class="p">,</span>
+    <span class="n">response_egress</span><span class="o">=</span><span class="k">lambda</span> <span class="n">method</span><span class="p">,</span> <span class="n">uri</span><span class="p">:</span> <span class="n">operations</span><span class="o">.</span><span class="n">methodcaller</span><span class="p">(</span><span class="s1">&#39;json&#39;</span><span class="p">),</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper to create a function for a given OpenAPI route, with signature and egress.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">json_schema_to_signature</span><span class="p">(</span><span class="n">param_schema</span><span class="p">)</span>
+    <span class="n">egress_for_this_route</span> <span class="o">=</span> <span class="n">response_egress</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">uri</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">base_url</span> <span class="o">+</span> <span class="n">uri</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="s1">&#39;{&#39;</span> <span class="o">+</span> <span class="n">k</span> <span class="o">+</span> <span class="s1">&#39;}&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">uri</span><span class="p">}</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="n">get_response</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">egress_for_this_route</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span>
+
+    <span class="n">func</span><span class="o">.</span><span class="n">__signature__</span> <span class="o">=</span> <span class="n">sig</span>
+    <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">method</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">uri</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;{&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;}&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">update_wrapper</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">func</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">func</span></div>
+
+
+
+<div class="viewcode-block" id="openapi_to_funcs">
+<a class="viewcode-back" href="../../module_docs/ju/oas.html#ju.oas.openapi_to_funcs">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">openapi_to_funcs</span><span class="p">(</span>
+    <span class="n">spec</span><span class="p">:</span> <span class="n">OpenAPISpec</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">base_url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">default_servers_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DFLT_SERVERS_URL</span><span class="p">,</span>
+    <span class="n">path_to_func_name</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span>
+        <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">str</span>
+    <span class="p">]</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">m</span><span class="p">,</span> <span class="n">p</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">m</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;{&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;}&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="n">get_response</span><span class="o">=</span><span class="n">default_get_response</span><span class="p">,</span>
+    <span class="n">response_egress</span><span class="o">=</span><span class="k">lambda</span> <span class="n">method</span><span class="p">,</span> <span class="n">uri</span><span class="p">:</span> <span class="n">operations</span><span class="o">.</span><span class="n">methodcaller</span><span class="p">(</span><span class="s1">&#39;json&#39;</span><span class="p">),</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    spec: dict or str (YAML/JSON string or file path)</span>
+<span class="sd">    base_url: override the spec&#39;s server URL</span>
+<span class="sd">    default_servers_url: default URL to use if no servers are specified in the spec</span>
+<span class="sd">    get_response: function to get the response object (default: requests.request)</span>
+<span class="sd">    response_egress: function (method, uri) -&gt; callable to extract result from response</span>
+<span class="sd">    Returns a generator yielding function names and their corresponding callable functions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">spec</span> <span class="o">=</span> <span class="n">ensure_openapi_dict</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">base_url</span><span class="p">:</span>
+        <span class="n">base_url</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;servers&#39;</span><span class="p">,</span> <span class="p">[{}])[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;url&#39;</span><span class="p">,</span> <span class="n">default_servers_url</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">uri</span><span class="p">,</span> <span class="n">methods</span> <span class="ow">in</span> <span class="n">spec</span><span class="p">[</span><span class="s1">&#39;paths&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">method</span><span class="p">,</span> <span class="n">details</span> <span class="ow">in</span> <span class="n">methods</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">func_name</span> <span class="o">=</span> <span class="n">path_to_func_name</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">uri</span><span class="p">)</span>
+            <span class="c1"># Build param schema for signature</span>
+            <span class="n">param_schema</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="n">func_name</span><span class="p">,</span>
+                <span class="s1">&#39;parameters&#39;</span><span class="p">:</span> <span class="n">details</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parameters&#39;</span><span class="p">,</span> <span class="p">[]),</span>
+            <span class="p">}</span>
+            <span class="c1"># If requestBody exists, merge its schema properties</span>
+            <span class="k">if</span> <span class="s1">&#39;requestBody&#39;</span> <span class="ow">in</span> <span class="n">details</span><span class="p">:</span>
+                <span class="n">content</span> <span class="o">=</span> <span class="n">details</span><span class="p">[</span><span class="s1">&#39;requestBody&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">,</span> <span class="p">{})</span>
+                <span class="n">json_schema</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">for</span> <span class="n">ct</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">ct</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;json&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;schema&#39;</span> <span class="ow">in</span> <span class="n">content</span><span class="p">[</span><span class="n">ct</span><span class="p">]:</span>
+                        <span class="n">json_schema</span> <span class="o">=</span> <span class="n">content</span><span class="p">[</span><span class="n">ct</span><span class="p">][</span><span class="s1">&#39;schema&#39;</span><span class="p">]</span>
+                        <span class="k">break</span>
+                <span class="k">if</span> <span class="n">json_schema</span> <span class="ow">and</span> <span class="s1">&#39;properties&#39;</span> <span class="ow">in</span> <span class="n">json_schema</span><span class="p">:</span>
+                    <span class="n">param_schema</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;properties&#39;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                        <span class="n">json_schema</span><span class="p">[</span><span class="s1">&#39;properties&#39;</span><span class="p">]</span>
+                    <span class="p">)</span>
+                    <span class="k">if</span> <span class="s1">&#39;required&#39;</span> <span class="ow">in</span> <span class="n">json_schema</span><span class="p">:</span>
+                        <span class="n">param_schema</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s1">&#39;required&#39;</span><span class="p">,</span> <span class="p">[])</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                            <span class="n">json_schema</span><span class="p">[</span><span class="s1">&#39;required&#39;</span><span class="p">]</span>
+                        <span class="p">)</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
+                <span class="n">make_openapi_func</span><span class="p">,</span>
+                <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
+                <span class="n">uri</span><span class="o">=</span><span class="n">uri</span><span class="p">,</span>
+                <span class="n">base_url</span><span class="o">=</span><span class="n">base_url</span><span class="p">,</span>
+                <span class="n">param_schema</span><span class="o">=</span><span class="n">param_schema</span><span class="p">,</span>
+                <span class="n">get_response</span><span class="o">=</span><span class="n">get_response</span><span class="p">,</span>
+                <span class="n">response_egress</span><span class="o">=</span><span class="n">response_egress</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">func</span> <span class="o">=</span> <span class="n">f</span><span class="p">()</span>
+            <span class="n">func</span><span class="o">.</span><span class="vm">__qualname__</span> <span class="o">=</span> <span class="n">func_name</span>
+            <span class="k">yield</span> <span class="n">func_name</span><span class="p">,</span> <span class="n">func</span></div>
 
 </pre></div>
 

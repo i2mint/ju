@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ju.json_schema &mdash; ju 0.1.18 documentation</title>
+  <title>ju.json_schema &mdash; ju 0.1.19 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=9969ed3f"></script>
+      <script src="../../_static/documentation_options.js?v=3d116926"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -175,9 +175,8 @@ return: The JSON schema (as a dict) for the function</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="ju.json_schema.json_schema_to_signature">
 <span class="sig-prename descclassname"><span class="pre">ju.json_schema.</span></span><span class="sig-name descname"><span class="pre">json_schema_to_signature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">json_schema:</span> <span class="pre">dict,</span> <span class="pre">*,</span> <span class="pre">type_mapper:</span> <span class="pre">~typing.Sequence[~typing.Tuple]</span> <span class="pre">|</span> <span class="pre">~typing.Mapping</span> <span class="pre">|</span> <span class="pre">~typing.Callable[[KT],</span> <span class="pre">VT]</span> <span class="pre">=</span> <span class="pre">(('string',</span> <span class="pre">&lt;class</span> <span class="pre">'str'&gt;),</span> <span class="pre">('boolean',</span> <span class="pre">&lt;class</span> <span class="pre">'bool'&gt;),</span> <span class="pre">('integer',</span> <span class="pre">&lt;class</span> <span class="pre">'int'&gt;),</span> <span class="pre">('number',</span> <span class="pre">&lt;class</span> <span class="pre">'float'&gt;),</span> <span class="pre">('object',</span> <span class="pre">typing.Mapping),</span> <span class="pre">('array',</span> <span class="pre">typing.Sequence[str])),</span> <span class="pre">default_default,</span> <span class="pre">title_to_pyname:</span> <span class="pre">~typing.Callable[[str],</span> <span class="pre">str]</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">title_to_pyname&gt;,</span> <span class="pre">default_annotation,</span> <span class="pre">default_description:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">''</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/ju/json_schema.html#json_schema_to_signature"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.json_schema.json_schema_to_signature" title="Link to this definition"></a></dt>
-<dd><p>Transforms a JSON schema to a Python function signature.</p>
-<p>param schema: The JSON schema to transform
-return: The Python function signature</p>
+<dd><p>Transforms a JSON schema or OpenAPI parameters list to a Python function signature.
+Supports both JSON schema ‘properties’ and OpenAPI ‘parameters’.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">schema</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;earth&#39;</span><span class="p">,</span>
 <span class="gp">... </span> <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;object&#39;</span><span class="p">,</span>
 <span class="gp">... </span> <span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;north&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">},</span>
@@ -186,9 +185,7 @@ return: The Python function signature</p>
 <span class="gp">... </span>  <span class="s1">&#39;west&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;number&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">}},</span>
 <span class="gp">... </span> <span class="s1">&#39;required&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;north&#39;</span><span class="p">,</span> <span class="s1">&#39;south&#39;</span><span class="p">],</span>
 <span class="gp">... </span> <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="s1">&#39;Earth docs&#39;</span><span class="p">}</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sig</span> <span class="o">=</span> <span class="n">json_schema_to_signature</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sig</span> <span class="o">=</span> <span class="n">json_schema_to_signature</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sig</span>
 <span class="go">&lt;Sig (north: str, south: bool, east: int = 1, west: float = 2.0)&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sig</span><span class="o">.</span><span class="n">name</span>
@@ -197,6 +194,23 @@ return: The Python function signature</p>
 <span class="go">&#39;Earth docs&#39;</span>
 </pre></div>
 </div>
+<p># — OpenAPI parameters support —
+&gt;&gt;&gt; openapi_params = {
+…     ‘title’: ‘get_thing’,
+…     ‘parameters’: [
+…         {‘name’: ‘thing_id’, ‘in’: ‘path’, ‘required’: True, ‘schema’: {‘type’: ‘string’}},
+…         {‘name’: ‘detail’, ‘in’: ‘query’, ‘required’: False, ‘schema’: {‘type’: ‘boolean’, ‘default’: False}},
+…         {‘name’: ‘count’, ‘in’: ‘query’, ‘schema’: {‘type’: ‘integer’, ‘default’: 1}},
+…     ],
+…     ‘description’: ‘Get a thing by ID.’
+… }
+&gt;&gt;&gt; sig2 = json_schema_to_signature(openapi_params)
+&gt;&gt;&gt; sig2
+&lt;Sig (thing_id: str, detail: bool = False, count: int = 1)&gt;
+&gt;&gt;&gt; sig2.name
+‘get_thing’
+&gt;&gt;&gt; sig2.docs
+‘Get a thing by ID.’</p>
 </dd></dl>
 
 <dl class="py function">
