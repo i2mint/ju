@@ -279,7 +279,7 @@ import operator as operations
 from functools import partial, update_wrapper
 
 OpenAPISpec = Union[str, dict]
-DFLT_SERVERS_URL = 'http://localhost:8000'
+DFLT_SERVERS_URL = "http://localhost:8000"
 
 
 def ensure_openapi_dict(spec: OpenAPISpec) -> dict:
@@ -295,7 +295,7 @@ def ensure_openapi_dict(spec: OpenAPISpec) -> dict:
 
     """
     if isinstance(spec, str):
-        if spec.strip().startswith('{') or spec.strip().startswith('openapi:'):
+        if spec.strip().startswith("{") or spec.strip().startswith("openapi:"):
             # It's a string spec
             try:
                 spec = json.loads(spec)
@@ -303,14 +303,14 @@ def ensure_openapi_dict(spec: OpenAPISpec) -> dict:
                 import yaml
 
                 spec = yaml.safe_load(spec)
-        elif spec.startswith('http://') or spec.startswith('https://'):
+        elif spec.startswith("http://") or spec.startswith("https://"):
             # It's a URL, fetch the spec
             response = requests.get(spec)
             response.raise_for_status()
-            content_type = response.headers.get('Content-Type', '')
-            if 'application/json' in content_type:
+            content_type = response.headers.get("Content-Type", "")
+            if "application/json" in content_type:
                 spec = response.json()
-            elif 'application/x-yaml' in content_type or 'text/yaml' in content_type:
+            elif "application/x-yaml" in content_type or "text/yaml" in content_type:
                 import yaml
 
                 spec = yaml.safe_load(response.text)
@@ -319,9 +319,9 @@ def ensure_openapi_dict(spec: OpenAPISpec) -> dict:
         elif os.path.isfile(spec):
             # It's a file path
             with open(spec) as f:
-                if spec.endswith('.json'):
+                if spec.endswith(".json"):
                     spec = json.load(f)
-                elif spec.endswith('.yaml') or spec.endswith('.yml'):
+                elif spec.endswith(".yaml") or spec.endswith(".yml"):
                     import yaml
 
                     spec = yaml.safe_load(f)
@@ -348,7 +348,7 @@ def make_openapi_func(
     base_url,
     param_schema,
     get_response=default_get_response,
-    response_egress=lambda method, uri: operations.methodcaller('json'),
+    response_egress=lambda method, uri: operations.methodcaller("json"),
 ):
     """
     Helper to create a function for a given OpenAPI route, with signature and egress.
@@ -358,7 +358,7 @@ def make_openapi_func(
 
     def func(**kwargs):
         url = base_url + uri.format(**kwargs)
-        params = {k: v for k, v in kwargs.items() if '{' + k + '}' not in uri}
+        params = {k: v for k, v in kwargs.items() if "{" + k + "}" not in uri}
         resp = get_response(method, url, json=params)
         return egress_for_this_route(resp)
 
@@ -377,7 +377,7 @@ def openapi_to_funcs(
         [str, str], str
     ] = lambda m, p: f"{m.lower()}_{p.strip('/').replace('/', '_').replace('{','').replace('}','')}",
     get_response=default_get_response,
-    response_egress=lambda method, uri: operations.methodcaller('json'),
+    response_egress=lambda method, uri: operations.methodcaller("json"),
 ):
     """
     spec: dict or str (YAML/JSON string or file path)
@@ -389,30 +389,30 @@ def openapi_to_funcs(
     """
     spec = ensure_openapi_dict(spec)
     if not base_url:
-        base_url = spec.get('servers', [{}])[0].get('url', default_servers_url)
-    for uri, methods in spec['paths'].items():
+        base_url = spec.get("servers", [{}])[0].get("url", default_servers_url)
+    for uri, methods in spec["paths"].items():
         for method, details in methods.items():
             func_name = path_to_func_name(method, uri)
             # Build param schema for signature
             param_schema = {
-                'title': func_name,
-                'parameters': details.get('parameters', []),
+                "title": func_name,
+                "parameters": details.get("parameters", []),
             }
             # If requestBody exists, merge its schema properties
-            if 'requestBody' in details:
-                content = details['requestBody'].get('content', {})
+            if "requestBody" in details:
+                content = details["requestBody"].get("content", {})
                 json_schema = None
                 for ct in content:
-                    if ct.endswith('json') and 'schema' in content[ct]:
-                        json_schema = content[ct]['schema']
+                    if ct.endswith("json") and "schema" in content[ct]:
+                        json_schema = content[ct]["schema"]
                         break
-                if json_schema and 'properties' in json_schema:
-                    param_schema.setdefault('properties', {}).update(
-                        json_schema['properties']
+                if json_schema and "properties" in json_schema:
+                    param_schema.setdefault("properties", {}).update(
+                        json_schema["properties"]
                     )
-                    if 'required' in json_schema:
-                        param_schema.setdefault('required', []).extend(
-                            json_schema['required']
+                    if "required" in json_schema:
+                        param_schema.setdefault("required", []).extend(
+                            json_schema["required"]
                         )
             f = partial(
                 make_openapi_func,
