@@ -435,18 +435,14 @@ class OpenApiFunc:
         )
 
 
-def simple_func_namer(method: str, path: str, details: dict = None) -> str:
-    trans_path = path.strip('/').replace('/', '_').replace('{', '').replace('}', '')
-    return f"{method.lower()}_{trans_path}"
-
-
-def openapi_python_client_style_func_namer(
+def default_func_namer(
     method: str, path: str, details: dict = None, *, favor_operation_id: bool = False
 ) -> str:
     """
-    Mimics openapi-python-client's operationId naming:
-    - method + '_' + path, with path params as double underscores, and always ending with _<method>.
-    E.g. get /stores/{store_name}/{key} -> get_stores__store_name___key__get
+    Default function name generator for OpenAPI routes.
+
+    >>> default_func_namer('get', '/stores/{store_name}/{key}')
+    'get_stores__store_name__key'
     """
     if favor_operation_id and details and 'operationId' in details:
         # If operationId is provided, use it directly
@@ -460,15 +456,15 @@ def openapi_python_client_style_func_namer(
     path = re.sub(r'\{([^}]+)\}', r'_\1_', path)
     # Replace all non-alphanumeric characters (including dashes and slashes) with underscores
     path = re.sub(r'[^0-9a-zA-Z_]', '_', path)
-    # Remove duplicate underscores
-    path = re.sub(r'_+', '_', path)
+    # Replace sequences of more than two underscores with two underscores
+    path = re.sub(r'__+', '__', path)
     # Remove leading/trailing underscores
     path = path.strip('_')
     # Compose name: <method>_<path>
     if path:
         return f"{method.lower()}_{path}"
     else:
-        return f"{method.lower()}"
+        return f"root_{method.lower()}"
 
 
 def merge_request_body_json_schema(details, param_schema):
@@ -494,11 +490,10 @@ def openapi_to_funcs(
     *,
     base_url: Optional[str] = None,
     default_servers_url: str = DFLT_SERVERS_URL,
-    path_to_func_name: Callable[
-        [str, str], str
-    ] = openapi_python_client_style_func_namer,
+    func_namer: Callable[[str, str, dict], str] = default_func_namer,
     get_response=default_get_response,
     response_egress=None,
+    use_default_func_namer_when_name_is_none: bool = True,
 ) -> Iterator["OpenApiFunc"]:
     """
     spec: dict or str (YAML/JSON string or file path)
@@ -516,7 +511,10 @@ def openapi_to_funcs(
         base_url = spec_dict.get('servers', [{}])[0].get('url', default_servers_url)
     for method, uri in routes:
         route = routes[method, uri]
-        func_name = path_to_func_name(method, uri, route.method_data)
+        func_name = func_namer(method, uri, route.method_data)
+        if not func_name and use_default_func_namer_when_name_is_none:
+            # If func_name is None, use the default function name generator
+            func_name = default_func_namer(method, uri, route.method_data)
         # Build param_schema: include both parameters and requestBody fields, using resolved schemas
         param_schema = {
             'title': func_name,
@@ -563,7 +561,8 @@ def openapi_to_funcs(
             response_egress=response_egress,
             name=func_name,
             qualname=func_name,
-            doc=route.method_data.get('summary') or route.method_data.get('description'),
+            doc=route.method_data.get('summary')
+            or route.method_data.get('description'),
         )
         yield func
 
@@ -676,15 +675,13 @@ def openapi_to_generated_funcs(
     default_servers_url: str = DFLT_SERVERS_URL,
     output_dir=None,
     file_format="json",
-    path_to_func_name: Callable[
-        [str, str], str
-    ] = openapi_python_client_style_func_namer,
+    func_namer: Callable[[str, str], str] = default_func_namer,
     get_response=default_get_response,
     response_egress=None,
 ) -> Iterator[OpenApiFunc]:
     """
     Like openapi_to_funcs, but yields OpenApiFunc objects for each route, using the generated client for requests.
-    Uses path_to_func_name for naming, and parameter schema from the OpenAPI spec.
+    Uses func_namer for naming, and parameter schema from the OpenAPI spec.
     """
     import types
     import copy
@@ -707,11 +704,11 @@ def openapi_to_generated_funcs(
     opid_to_modbase = {f[:-3]: f[:-3] for f in py_files}
     for uri, methods in paths.items():
         for method, details in methods.items():
-            func_name = path_to_func_name(method, uri, details)
+            func_name = func_namer(method, uri, details)
             opid = details.get('operationId')
             mod_base = opid if opid in opid_to_modbase else None
             if not mod_base:
-                mod_base = openapi_python_client_style_func_namer(method, uri, details)
+                mod_base = default_func_namer(method, uri, details)
                 if mod_base not in opid_to_modbase:
                     continue
             mod_name = f"{client_module.__name__}.api.default.{mod_base}"
