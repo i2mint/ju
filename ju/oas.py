@@ -455,9 +455,9 @@ def default_func_namer(
     # Replace {param} with _param_
     path = re.sub(r"\{([^}]+)\}", r"_\1_", path)
     # Replace all non-alphanumeric characters (including dashes and slashes) with underscores
-    path = re.sub(r'[^0-9a-zA-Z_]', '_', path)
+    path = re.sub(r"[^0-9a-zA-Z_]", "_", path)
     # Replace sequences of more than two underscores with two underscores
-    path = re.sub(r'__+', '__', path)
+    path = re.sub(r"__+", "__", path)
     # Remove leading/trailing underscores
     path = path.strip("_")
     # Compose name: <method>_<path>
@@ -561,8 +561,8 @@ def openapi_to_funcs(
             response_egress=response_egress,
             name=func_name,
             qualname=func_name,
-            doc=route.method_data.get('summary')
-            or route.method_data.get('description'),
+            doc=route.method_data.get("summary")
+            or route.method_data.get("description"),
         )
         yield func
 
@@ -705,7 +705,7 @@ def openapi_to_generated_funcs(
     for uri, methods in paths.items():
         for method, details in methods.items():
             func_name = func_namer(method, uri, details)
-            opid = details.get('operationId')
+            opid = details.get("operationId")
             mod_base = opid if opid in opid_to_modbase else None
             if not mod_base:
                 mod_base = default_func_namer(method, uri, details)
