@@ -345,7 +345,7 @@ def default_get_response(method, url, **kwargs):
 
 
 def default_response_egress(method, uri):
-    return operations.methodcaller('json')
+    return operations.methodcaller("json")
 
 
 class OpenApiFunc:
@@ -389,12 +389,12 @@ class OpenApiFunc:
         import re
 
         # Get path param names from the URL
-        path_param_names = re.findall(r'{(\w+)}', self.uri)
+        path_param_names = re.findall(r"{(\w+)}", self.uri)
         # Get parameter names from OpenAPI 'parameters'
-        oas_parameters = self.param_schema.get('_oas_parameters', [])
-        param_names = set(p['name'] for p in oas_parameters)
+        oas_parameters = self.param_schema.get("_oas_parameters", [])
+        param_names = set(p["name"] for p in oas_parameters)
         # Get requestBody schema
-        oas_request_body = self.param_schema.get('_oas_request_body', None)
+        oas_request_body = self.param_schema.get("_oas_request_body", None)
         # Path params
         path_params = {k: _kwargs[k] for k in path_param_names if k in _kwargs}
         # Query params (those in parameters but not in path)
@@ -406,19 +406,19 @@ class OpenApiFunc:
         # Body params
         body = None
         if oas_request_body:
-            if oas_request_body.get('type') == 'object':
+            if oas_request_body.get("type") == "object":
                 # All properties of the object schema
                 body = {
                     k: _kwargs[k]
-                    for k in oas_request_body.get('properties', {})
+                    for k in oas_request_body.get("properties", {})
                     if k in _kwargs
                 }
-            elif oas_request_body.get('type') == 'array':
+            elif oas_request_body.get("type") == "array":
                 # The array param is named by the schema's title or 'body'
-                array_param_name = oas_request_body.get('title', 'body')
+                array_param_name = oas_request_body.get("title", "body")
                 body = _kwargs.get(array_param_name)
         url = self.base_url + self.uri.format(**path_params)
-        if self.method.lower() in ('post', 'put', 'patch'):
+        if self.method.lower() in ("post", "put", "patch"):
             resp = self.get_response(self.method, url, params=query_params, json=body)
         else:
             resp = self.get_response(self.method, url, params=query_params)
@@ -444,22 +444,22 @@ def default_func_namer(
     >>> default_func_namer('get', '/stores/{store_name}/{key}')
     'get_stores__store_name__key'
     """
-    if favor_operation_id and details and 'operationId' in details:
+    if favor_operation_id and details and "operationId" in details:
         # If operationId is provided, use it directly
-        return details['operationId']
+        return details["operationId"]
 
     import re
 
     # Remove leading/trailing slashes
-    path = path.strip('/')
+    path = path.strip("/")
     # Replace {param} with _param_
-    path = re.sub(r'\{([^}]+)\}', r'_\1_', path)
+    path = re.sub(r"\{([^}]+)\}", r"_\1_", path)
     # Replace all non-alphanumeric characters (including dashes and slashes) with underscores
     path = re.sub(r'[^0-9a-zA-Z_]', '_', path)
     # Replace sequences of more than two underscores with two underscores
     path = re.sub(r'__+', '__', path)
     # Remove leading/trailing underscores
-    path = path.strip('_')
+    path = path.strip("_")
     # Compose name: <method>_<path>
     if path:
         return f"{method.lower()}_{path}"
@@ -471,17 +471,17 @@ def merge_request_body_json_schema(details, param_schema):
     """
     If the operation has a requestBody with a JSON schema, merge its properties and required fields into param_schema.
     """
-    if 'requestBody' in details:
-        content = details['requestBody'].get('content', {})
+    if "requestBody" in details:
+        content = details["requestBody"].get("content", {})
         json_schema = None
         for ct in content:
-            if ct.endswith('json') and 'schema' in content[ct]:
-                json_schema = content[ct]['schema']
+            if ct.endswith("json") and "schema" in content[ct]:
+                json_schema = content[ct]["schema"]
                 break
-        if json_schema and 'properties' in json_schema:
-            param_schema.setdefault('properties', {}).update(json_schema['properties'])
-            if 'required' in json_schema:
-                param_schema.setdefault('required', []).extend(json_schema['required'])
+        if json_schema and "properties" in json_schema:
+            param_schema.setdefault("properties", {}).update(json_schema["properties"])
+            if "required" in json_schema:
+                param_schema.setdefault("required", []).extend(json_schema["required"])
     return param_schema
 
 
@@ -508,7 +508,7 @@ def openapi_to_funcs(
     spec_dict = ensure_openapi_dict(spec)
     routes = Routes(spec_dict)
     if not base_url:
-        base_url = spec_dict.get('servers', [{}])[0].get('url', default_servers_url)
+        base_url = spec_dict.get("servers", [{}])[0].get("url", default_servers_url)
     for method, uri in routes:
         route = routes[method, uri]
         func_name = func_namer(method, uri, route.method_data)
@@ -517,41 +517,41 @@ def openapi_to_funcs(
             func_name = default_func_namer(method, uri, route.method_data)
         # Build param_schema: include both parameters and requestBody fields, using resolved schemas
         param_schema = {
-            'title': func_name,
-            'type': 'object',
-            'properties': {},
-            'required': [],
-            '_oas_parameters': [],  # for internal use: list of parameter dicts
-            '_oas_request_body': None,  # for internal use: requestBody schema
+            "title": func_name,
+            "type": "object",
+            "properties": {},
+            "required": [],
+            "_oas_parameters": [],  # for internal use: list of parameter dicts
+            "_oas_request_body": None,  # for internal use: requestBody schema
         }
         # Add parameters (query, path, etc.)
-        for param in route.input_specs.get('parameters', []):
-            pname = param['name']
-            param_schema['properties'][pname] = param.get('schema', {})
-            if param.get('required', False):
-                param_schema['required'].append(pname)
-            param_schema['_oas_parameters'].append(param)
+        for param in route.input_specs.get("parameters", []):
+            pname = param["name"]
+            param_schema["properties"][pname] = param.get("schema", {})
+            if param.get("required", False):
+                param_schema["required"].append(pname)
+            param_schema["_oas_parameters"].append(param)
         # Add requestBody
-        request_body = route.input_specs.get('requestBody', {})
-        content = request_body.get('content', {})
+        request_body = route.input_specs.get("requestBody", {})
+        content = request_body.get("content", {})
         json_schema = None
         for ct in content:
-            if ct.endswith('json') and 'schema' in content[ct]:
-                json_schema = content[ct]['schema']
+            if ct.endswith("json") and "schema" in content[ct]:
+                json_schema = content[ct]["schema"]
                 break
         if json_schema:
-            param_schema['_oas_request_body'] = json_schema
-            if json_schema.get('type') == 'object':
+            param_schema["_oas_request_body"] = json_schema
+            if json_schema.get("type") == "object":
                 # Add each property as a parameter
-                for pname, pschema in json_schema.get('properties', {}).items():
-                    param_schema['properties'][pname] = pschema
-                if 'required' in json_schema:
-                    param_schema['required'].extend(json_schema['required'])
-            elif json_schema.get('type') == 'array':
+                for pname, pschema in json_schema.get("properties", {}).items():
+                    param_schema["properties"][pname] = pschema
+                if "required" in json_schema:
+                    param_schema["required"].extend(json_schema["required"])
+            elif json_schema.get("type") == "array":
                 # Add a single parameter for the array body
-                array_param_name = json_schema.get('title', 'body')
-                param_schema['properties'][array_param_name] = json_schema
-                param_schema['required'].append(array_param_name)
+                array_param_name = json_schema.get("title", "body")
+                param_schema["properties"][array_param_name] = json_schema
+                param_schema["required"].append(array_param_name)
         func = OpenApiFunc(
             method=method,
             uri=uri,
@@ -690,7 +690,7 @@ def openapi_to_generated_funcs(
         spec, output_dir=output_dir, file_format=file_format
     )
     spec_dict = ensure_openapi_dict(spec)
-    paths = spec_dict.get('paths', {})
+    paths = spec_dict.get("paths", {})
     api_default_dir = os.path.join(client_module.__path__[0], "api", "default")
     if not os.path.isdir(api_default_dir):
         raise RuntimeError(
@@ -699,7 +699,7 @@ def openapi_to_generated_funcs(
     py_files = [
         f
         for f in os.listdir(api_default_dir)
-        if f.endswith('.py') and f != '__init__.py'
+        if f.endswith(".py") and f != "__init__.py"
     ]
     opid_to_modbase = {f[:-3]: f[:-3] for f in py_files}
     for uri, methods in paths.items():
@@ -728,13 +728,13 @@ def openapi_to_generated_funcs(
                 method=method,
                 uri=uri,
                 base_url=base_url
-                or spec_dict.get('servers', [{}])[0].get('url', default_servers_url),
+                or spec_dict.get("servers", [{}])[0].get("url", default_servers_url),
                 param_schema=param_schema,
                 get_response=sync_func,
                 response_egress=response_egress,
                 name=func_name,
                 qualname=func_name,
-                doc=details.get('summary') or details.get('description'),
+                doc=details.get("summary") or details.get("description"),
             )
 
 
@@ -753,7 +753,7 @@ def validate_openapi_to_generated_funcs_alignment():
     import json
     import os
 
-    with open(os.path.expanduser('~/tmp/test_oas_gen.json'), 'r') as f:
+    with open(os.path.expanduser("~/tmp/test_oas_gen.json"), "r") as f:
         openapi_spec = json.load(f)
 
     generated_funcs = list(openapi_to_generated_funcs(openapi_spec))
@@ -787,11 +787,11 @@ def print_generated_modules():
     from ju.oas import generate_openapi_client
     import json
 
-    openapi_spec = json.load(open(os.path.expanduser('~/tmp/test_oas_gen.json')))
+    openapi_spec = json.load(open(os.path.expanduser("~/tmp/test_oas_gen.json")))
     client_module = generate_openapi_client(openapi_spec)
-    api_default_dir = os.path.join(client_module.__path__[0], 'api', 'default')
-    print('api/default/ modules:')
-    print(sorted([f for f in os.listdir(api_default_dir) if f.endswith('.py')]))
+    api_default_dir = os.path.join(client_module.__path__[0], "api", "default")
+    print("api/default/ modules:")
+    print(sorted([f for f in os.listdir(api_default_dir) if f.endswith(".py")]))
 
 
 def compare_modules_to_missing_funcs():
@@ -799,26 +799,26 @@ def compare_modules_to_missing_funcs():
     import json
     from ju.oas import generate_openapi_client, openapi_to_funcs
 
-    openapi_spec = json.load(open(os.path.expanduser('~/tmp/test_oas_gen.json')))
+    openapi_spec = json.load(open(os.path.expanduser("~/tmp/test_oas_gen.json")))
     client_module = generate_openapi_client(openapi_spec)
-    api_default_dir = os.path.join(client_module.__path__[0], 'api', 'default')
+    api_default_dir = os.path.join(client_module.__path__[0], "api", "default")
     module_files = sorted(
         [
             f
             for f in os.listdir(api_default_dir)
-            if f.endswith('.py') and f != '__init__.py'
+            if f.endswith(".py") and f != "__init__.py"
         ]
     )
-    print('api/default/ modules:')
+    print("api/default/ modules:")
     for f in module_files:
-        print('  ', f)
+        print("  ", f)
     # Also print the missing dynamic function names
     dynamic_funcs = list(openapi_to_funcs(openapi_spec))
     dyn_func_names = {f.__name__ for f in dynamic_funcs}
     # Print all dynamic function names for reference
-    print('\nDynamic function names:')
+    print("\nDynamic function names:")
     for name in sorted(dyn_func_names):
-        print('  ', name)
+        print("  ", name)
 
 
 def compare_modules_to_operationids():
@@ -826,35 +826,35 @@ def compare_modules_to_operationids():
     import json
     from ju.oas import generate_openapi_client
 
-    openapi_spec = json.load(open(os.path.expanduser('~/tmp/test_oas_gen.json')))
+    openapi_spec = json.load(open(os.path.expanduser("~/tmp/test_oas_gen.json")))
     client_module = generate_openapi_client(openapi_spec)
-    api_default_dir = os.path.join(client_module.__path__[0], 'api', 'default')
+    api_default_dir = os.path.join(client_module.__path__[0], "api", "default")
     module_files = sorted(
         [
             f[:-3]
             for f in os.listdir(api_default_dir)
-            if f.endswith('.py') and f != '__init__.py'
+            if f.endswith(".py") and f != "__init__.py"
         ]
     )
     # Collect all operationIds from the OpenAPI spec
     operation_ids = set()
-    for path, methods in openapi_spec['paths'].items():
+    for path, methods in openapi_spec["paths"].items():
         for method, details in methods.items():
-            opid = details.get('operationId')
+            opid = details.get("operationId")
             if opid:
                 operation_ids.add(opid)
-    print('Generated modules:')
+    print("Generated modules:")
     for mod in module_files:
-        print('  ', mod)
-    print('\nOperationIds in OpenAPI spec:')
+        print("  ", mod)
+    print("\nOperationIds in OpenAPI spec:")
     for opid in sorted(operation_ids):
-        print('  ', opid)
-    print('\nOperationIds missing generated modules:')
+        print("  ", opid)
+    print("\nOperationIds missing generated modules:")
     for opid in sorted(operation_ids - set(module_files)):
-        print('  ', opid)
-    print('\nGenerated modules with no matching operationId:')
+        print("  ", opid)
+    print("\nGenerated modules with no matching operationId:")
     for mod in sorted(set(module_files) - operation_ids):
-        print('  ', mod)
+        print("  ", mod)
 
 
 if __name__ == "__main__":
