@@ -335,7 +335,6 @@ def signature_to_json_schema(
 function_to_json_schema = signature_to_json_schema  # backwards compatibility
 
 
-
 def json_schema_to_signature(
     json_schema: dict,
     *,
