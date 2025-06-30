@@ -335,6 +335,7 @@ def signature_to_json_schema(
 function_to_json_schema = signature_to_json_schema  # backwards compatibility
 
 
+
 def json_schema_to_signature(
     json_schema: dict,
     *,
@@ -405,6 +406,7 @@ def json_schema_to_signature(
     elif "properties" in json_schema:
         properties = json_schema["properties"]
         for name, field in properties.items():
+            name = title_to_pyname(name)
             if (json_type := field.get("type", None)) is not None:
                 if not isinstance(json_type, list):
                     py_type = type_mapper(json_type)
