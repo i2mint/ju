@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ju.json_schema &mdash; ju 0.1.25 documentation</title>
+  <title>ju.json_schema &mdash; ju 0.1.26 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=4fa33042"></script>
+      <script src="../../_static/documentation_options.js?v=785bba28"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -309,7 +309,7 @@
     <span class="n">title</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\W+&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
     <span class="c1"># replace any sequence of spaces with a single underscore</span>
     <span class="n">title</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s+&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
-    <span class="n">pyname</span> <span class="o">=</span> <span class="n">title</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">pyname</span> <span class="o">=</span> <span class="n">title</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>  <span class="c1"># TODO: Should we? Get control over this?</span>
     <span class="c1"># assert pyname is a valid Python identifier</span>
     <span class="k">assert</span> <span class="p">(</span>
         <span class="n">pyname</span><span class="o">.</span><span class="n">isidentifier</span><span class="p">()</span>
@@ -433,7 +433,6 @@
 
 
 <span class="n">function_to_json_schema</span> <span class="o">=</span> <span class="n">signature_to_json_schema</span>  <span class="c1"># backwards compatibility</span>
-
 
 
 <div class="viewcode-block" id="json_schema_to_signature">
