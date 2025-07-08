@@ -416,15 +416,17 @@ class OpenApiFunc:
             elif oas_request_body.get("type") == "array":
                 # The array param is named by the schema's title or 'body'
                 array_param_name = oas_request_body.get("title", "body")
-                array_param_name = title_to_pyname(array_param_name)  # because json_schema_to_signature uses it!
-                body = _kwargs.get(array_param_name) 
+                array_param_name = title_to_pyname(
+                    array_param_name
+                )  # because json_schema_to_signature uses it!
+                body = _kwargs.get(array_param_name)
                 # TODO: Must we always have a body at this point?
                 # TODO: The above is (to be verified) a better solution to the hack below:
                 # TODO: Find a SSOT solution: For this to work, json_schema_to_signature must use title_to_pyname itself: If they ever get misaligned, there will be bugs.
                 # array_param_name = oas_request_body.get("title", "body")
                 # body = _kwargs.get(array_param_name)
                 # # Following is the Hack. Find something cleaner
-                # # Here, the array_param_name is sometimes "Data", but the argument in 
+                # # Here, the array_param_name is sometimes "Data", but the argument in
                 # # the function is "data" (because of title_to_pyname, used in json_schema_to_signature,
                 # # that does a lower()
                 # if body is None:
