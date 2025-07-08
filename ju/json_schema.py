@@ -213,7 +213,7 @@ def title_to_pyname(title: str) -> str:
     title = re.sub(r"\W+", " ", title)
     # replace any sequence of spaces with a single underscore
     title = re.sub(r"\s+", "_", title)
-    pyname = title.lower()
+    pyname = title.lower()  # TODO: Should we? Get control over this?
     # assert pyname is a valid Python identifier
     assert (
         pyname.isidentifier()
