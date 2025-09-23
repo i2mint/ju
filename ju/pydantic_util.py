@@ -82,8 +82,8 @@ def extract_friendly_errors(e: ValidationError):
     Extracts a generator of user-friendly error messages from a Pydantic ValidationError.
     """
     for error in e.errors():
-        field = error['loc'][0]
-        message = error['msg']
+        field = error["loc"][0]
+        message = error["msg"]
         yield field, message
 
 
@@ -519,7 +519,7 @@ def pydantic_model_to_code(
         except json.JSONDecodeError:
             # If not JSON, assume it's a file path
             try:
-                with open(source, 'r') as f:
+                with open(source, "r") as f:
                     schema_dict = json.load(f)
             except (FileNotFoundError, json.JSONDecodeError):
                 # If all else fails, treat as raw JSON string and let parser handle it
