@@ -430,6 +430,7 @@ ModelSource = Union[str, dict, BaseModel]
 
 def pydantic_model_to_code(
     source: ModelSource,
+    *,
     ingress_transform: Optional[Callable] = None,
     egress_transform: Optional[Callable] = None,
     **extra_json_schema_parser_kwargs,
@@ -965,3 +966,94 @@ except ImportError:
     # print("`json-schema-to-pydantic` not found. Falling back to simple conversion.")
 
 schema_to_pydantic_model = PydanticModelFactory
+
+
+# --------------------------------------------------------------------------------------
+# Possible egress/ingress transformations for pydantic_model_to_code
+
+
+def jsonschema_to_openapi_transform(schema: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Transform JSON Schema to OpenAPI-compatible schema.
+    This handles $ref resolution and other incompatibilities.
+
+    Uses jsonschema2pydantic library approach.
+    """
+    import copy
+
+    def resolve_refs(obj, definitions):
+        """Recursively resolve $ref pointers."""
+        if isinstance(obj, dict):
+            if '$ref' in obj:
+                ref_path = obj['$ref']
+                if ref_path.startswith('#/definitions/'):
+                    def_name = ref_path.split('/')[-1]
+                    if def_name in definitions:
+                        # Return the resolved definition
+                        return resolve_refs(
+                            copy.deepcopy(definitions[def_name]), definitions
+                        )
+                return obj
+            else:
+                return {k: resolve_refs(v, definitions) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [resolve_refs(item, definitions) for item in obj]
+        return obj
+
+    # Make a copy to avoid modifying original
+    schema_copy = copy.deepcopy(schema)
+
+    # Extract definitions
+    definitions = schema_copy.pop('definitions', {})
+
+    # Resolve all $ref occurrences
+    resolved_schema = resolve_refs(schema_copy, definitions)
+
+    # Remove some JSON Schema specific fields that cause issues
+    def clean_schema(obj):
+        if isinstance(obj, dict):
+            # Remove problematic fields
+            obj.pop('$schema', None)
+            obj.pop('id', None)
+            obj.pop('$id', None)
+
+            # Handle additionalProperties more carefully
+            if 'additionalProperties' in obj and obj['additionalProperties'] is False:
+                obj['additionalProperties'] = False
+            elif 'additionalProperties' in obj and obj['additionalProperties'] is True:
+                obj.pop(
+                    'additionalProperties', None
+                )  # Remove it, Pydantic handles this better
+
+            # Recursively clean
+            for k, v in obj.items():
+                clean_schema(v)
+        elif isinstance(obj, list):
+            for item in obj:
+                clean_schema(item)
+
+    clean_schema(resolved_schema)
+
+    return resolved_schema
+
+
+def fix_generated_code_transform(code: str) -> str:
+    """
+    Fix common issues in generated code.
+    """
+    # Fix import issues
+    if 'from __future__ import annotations' not in code:
+        code = 'from __future__ import annotations\n\n' + code
+
+    # Fix Optional imports if missing
+    if 'Optional' in code and 'from typing import' in code:
+        typing_import_line = re.search(r'from typing import (.+)', code)
+        if typing_import_line and 'Optional' not in typing_import_line.group(1):
+            imports = typing_import_line.group(1).split(', ')
+            imports.append('Optional')
+            code = code.replace(
+                typing_import_line.group(0),
+                f"from typing import {', '.join(sorted(set(imports)))}",
+            )
+
+    return code
