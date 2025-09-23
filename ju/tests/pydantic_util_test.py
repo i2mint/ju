@@ -65,7 +65,7 @@ def test_ingress_transform_with_json_file():
     schema_data = {"type": "object", "properties": {"old_field": {"type": "string"}}}
 
     # Create a temporary JSON file
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
         json.dump(schema_data, f)
         temp_file = f.name
 
