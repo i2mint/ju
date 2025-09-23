@@ -962,6 +962,6 @@ try:
 
 except ImportError:
     PydanticModelFactory = schema_to_pydantic_model_simple
-    print("`json-schema-to-pydantic` not found. Falling back to simple conversion.")
+    # print("`json-schema-to-pydantic` not found. Falling back to simple conversion.")
 
 schema_to_pydantic_model = PydanticModelFactory
