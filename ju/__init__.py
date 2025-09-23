@@ -9,9 +9,10 @@ from ju.json_schema import (
 )
 from ju.util import truncate_dict_values
 from ju.pydantic_util import (
+    schema_to_pydantic_model,  # Create a Pydantic model from a JSON Schema dictionary.
     ModelExtractor,  # Extracts key paths and corresponding values from data based on matching Pydantic models.
-    is_valid_wrt_model,
-    valid_models,
+    is_valid_wrt_model,  # Check if data is valid with respect to a given Pydantic model.
+    valid_models,  # generator that yields the models that json_obj is valid with respect to
     data_to_pydantic_model,  # data to pydantic model
     pydantic_model_to_code,  # pydantic model to code
     field_paths_and_annotations,  # flattened field paths & annotations from model

@@ -1,11 +1,90 @@
-"""Tools for working with Pydantic models."""
+"""
+Tools for working with Pydantic models.
+
+This module provides comprehensive utilities for creating, validating, transforming,
+and extracting information from Pydantic models and JSON schemas.
+
+## Key Functionality
+
+### Model Creation and Validation
+- `mk_pydantic_model`: Create Pydantic model instances with customizable validation
+- `mk_pydantic_models`: Batch version for multiple models
+- `is_valid_wrt_model`: Check if data is valid against a model
+- `valid_models`: Find all models that validate given data
+- `data_to_pydantic_model`: Dynamically create models from data dictionaries
+
+### Schema and Code Generation
+- `pydantic_model_to_code`: Convert schemas/models to Pydantic code with transforms
+- `schema_to_pydantic_model_simple/advanced`: Convert JSON schemas to Pydantic models
+
+### Model Introspection and Analysis
+- `model_field_descriptions`: Extract field descriptions from models
+- `field_paths_and_annotations`: Get flattened field paths and types
+- `match_typevars_to_args`: Resolve generic type variables
+- `is_a_basemodel`: Check if object is a Pydantic BaseModel
+
+### Data Extraction
+- `ModelExtractor`: Extract data using model schemas as templates
+- Supports nested models and collection types with path notation (e.g., 'items.*.ref')
+
+### Type Classification
+- `is_pydantic_model`: Detect Pydantic model classes
+- `is_typing_type`: Detect typing module types
+- `is_type_hint`: Combined type hint detection
+
+### Error Handling
+- `extract_friendly_errors`: Convert ValidationError to user-friendly messages
+
+### Schema Transformations
+The `pydantic_model_to_code` function supports:
+- `ingress_transform`: Transform schemas before code generation
+- `egress_transform`: Transform generated code
+- Multiple source types: dicts, models, JSON strings, JSON files
+
+## Examples
+
+```python
+# Create models from data
+model = data_to_pydantic_model({"name": "John", "age": 30}, "User")
+
+# Generate code with transformations
+def fix_field_names(schema):
+    # Transform problematic field names
+    return schema
+
+code = pydantic_model_to_code(model, ingress_transform=fix_field_names)
+
+# Extract data using model schemas
+extractor = ModelExtractor([UserModel, AdminModel])
+data_reader = extractor(json_data)  # Returns KeysReader with model-based paths
+
+# Validate data against multiple models
+valid_model_list = list(valid_models(data, [Model1, Model2, Model3]))
+```
+
+"""
 
 import json
 from functools import partial
 
 from typing import Any, Dict, Iterable, Optional, Callable, Union
-from pydantic import BaseModel, ValidationError, create_model
+from pydantic import BaseModel, ValidationError, create_model, Field
 from i2 import ObjectClassifier
+
+
+# -------------------------------------------------------------------------------------
+# Misc utils
+from pydantic import ValidationError
+
+
+def extract_friendly_errors(e: ValidationError):
+    """
+    Extracts a generator of user-friendly error messages from a Pydantic ValidationError.
+    """
+    for error in e.errors():
+        field = error['loc'][0]
+        message = error['msg']
+        yield field, message
 
 
 # -------------------------------------------------------------------------------------
@@ -212,7 +291,7 @@ def valid_models(
     factory: Callable[[ModelType, Data], BaseModel] = _model_validate,
 ):
     """
-    A generator that yields the models that json_obj is valid wrt to.
+    A generator that yields the models that json_obj is valid with respect to.
 
     >>> from pydantic import BaseModel
     >>> class User(BaseModel):
@@ -350,7 +429,10 @@ ModelSource = Union[str, dict, BaseModel]
 
 
 def pydantic_model_to_code(
-    source: ModelSource, **extra_json_schema_parser_kwargs
+    source: ModelSource,
+    ingress_transform: Optional[Callable] = None,
+    egress_transform: Optional[Callable] = None,
+    **extra_json_schema_parser_kwargs,
 ) -> str:
     """
     Convert a model source (json string, dict, or pydantic model) to pydantic code.
@@ -360,6 +442,10 @@ def pydantic_model_to_code(
     Code was based on: https://koxudaxi.github.io/datamodel-code-generator/using_as_module/
 
     See also this free online converter: https://jsontopydantic.com/
+
+    Args:
+        ingress_transform: Function to transform schema before generation
+        egress_transform: Function to transform generated code
 
     >>> json_schema: str = '''{
     ...     "type": "object",
@@ -421,20 +507,47 @@ def pydantic_model_to_code(
     is_pydantic_model = lambda source: hasattr(source, "model_json_schema")
     is_json_schema_dict = lambda source: isinstance(source, dict) and "type" in source
 
+    # Convert all sources to schema dict first
     if is_pydantic_model(source):
-        source = source.model_json_schema()
-    elif isinstance(source, bytes):
-        source = source.decode()
-    if is_json_schema_dict(source):
-        source = json.dumps(source)
+        schema_dict = source.model_json_schema()
+    elif isinstance(source, (str, bytes)):
+        if isinstance(source, bytes):
+            source = source.decode()
+        # Try to parse as JSON first
+        try:
+            schema_dict = json.loads(source)
+        except json.JSONDecodeError:
+            # If not JSON, assume it's a file path
+            try:
+                with open(source, 'r') as f:
+                    schema_dict = json.load(f)
+            except (FileNotFoundError, json.JSONDecodeError):
+                # If all else fails, treat as raw JSON string and let parser handle it
+                schema_dict = None
+                json_source = source
+    elif is_json_schema_dict(source):
+        schema_dict = source
+    else:
+        raise ValueError(f"Unsupported source type: {type(source)}")
+
+    # Apply ingress transformation if provided and we have a schema dict
+    if schema_dict is not None and ingress_transform:
+        if not callable(ingress_transform):
+            raise AssertionError("ingress_transform must be callable")
+        schema_dict = ingress_transform(schema_dict)
+        json_source = json.dumps(schema_dict)
+    else:
+        # No transformation needed, use original approach
+        if schema_dict is not None:
+            json_source = json.dumps(schema_dict)
+        # json_source should be defined if schema_dict is None
 
     data_model_types = get_data_model_types(
         DataModelType.PydanticV2BaseModel,
         target_python_version=PythonVersion.PY_311,
-        # target_datetime_class=DatetimeClassType.Datetime,  # datamodel_code_generator no longer has this (as of 0.33.0)
     )
     parser = JsonSchemaParser(
-        source,
+        json_source,
         data_model_type=data_model_types.data_model,
         data_model_root_type=data_model_types.root_model,
         data_model_field_type=data_model_types.field_model,
@@ -442,7 +555,12 @@ def pydantic_model_to_code(
         dump_resolve_reference_action=data_model_types.dump_resolve_reference_action,
         **extra_json_schema_parser_kwargs,
     )
-    return parser.parse()
+    code_string = parser.parse()
+
+    if egress_transform:
+        assert callable(egress_transform), "egress_transform must be callable"
+        code_string = egress_transform(code_string)
+    return code_string
 
 
 # -------------------------------------------------------------------------------------
@@ -742,3 +860,108 @@ class ModelExtractor:
         paths = list(self.model_paths[model_key])
         # return a mapping that lists the paths and extracts the corresponding values from the data
         return KeysReader(data, paths, getter=self.getter)
+
+
+# -------------------------------------------------------------------------------------
+# Schema-to-Pydantic Model Conversion Functions
+
+
+def schema_to_pydantic_model_simple(
+    schema: dict, model_name: str = "AutoModel"
+) -> Type[BaseModel]:
+    """
+    Converts a JSON schema (with 'properties') to a Pydantic model.
+    Only supports basic types and required fields for demonstration.
+
+    >>> schema_simple = {
+    ...     "type": "object",
+    ...     "properties": {
+    ...         "name": {"type": "string"},
+    ...         "age": {"type": "integer"},
+    ...         "city": {"type": "string", "default": "New York"}
+    ...     },
+    ...     "required": ["name"]
+    ... }
+    >>> model = schema_to_pydantic_model_simple(schema_simple, "User")
+    >>> model.__name__
+    'User'
+    >>> model.model_json_schema()['properties']['name']
+    {'title': 'Name', 'type': 'string'}
+    >>> age_schema = model.model_json_schema()['properties']['age']
+    >>> assert age_schema['title'] == 'Age'
+    >>> # Ensure both integer and null are allowed (order-independent)
+    >>> assert {'type': 'integer'} in age_schema.get('anyOf', []) and {'type': 'null'} in age_schema.get('anyOf', [])
+    >>> city_schema = model.model_json_schema()['properties']['city']
+    >>> assert city_schema['title'] == 'City' and city_schema['default'] == 'New York' and city_schema['type'] == 'string'
+    >>> model.model_json_schema()['required']
+    ['name']
+    """
+    type_mapping = {
+        "string": (str, Field()),
+        "integer": (int, Field()),
+        "number": (float, Field()),
+        "boolean": (bool, Field()),
+        "object": (dict, Field()),
+        "array": (list, Field()),
+    }
+    fields = {}
+    properties = schema.get("properties", {})
+    required = set(schema.get("required", []))
+    for prop, prop_schema in properties.items():
+        prop_type = prop_schema.get("type", "string")
+
+        # Determine the field definition, including a default value if specified
+        if "default" in prop_schema:
+            field_def = (
+                type_mapping.get(prop_type, (Any, Field()))[0],
+                prop_schema["default"],
+            )
+        elif prop in required:
+            field_def = (type_mapping.get(prop_type, (Any, Field()))[0], ...)
+        else:
+            field_def = (Optional[type_mapping.get(prop_type, (Any, Field()))[0]], None)
+
+        fields[prop] = field_def
+    return create_model(model_name, **fields)
+
+
+try:
+    from json_schema_to_pydantic import jsonschema_to_pydantic
+
+    def schema_to_pydantic_model_advanced(
+        schema: dict, model_name: str = "AutoModel"
+    ) -> Type[BaseModel]:
+        """
+        Converts a full JSON schema to a Pydantic model using json_schema_to_pydantic.
+
+        >>> schema_advanced = {
+        ...     "title": "User",
+        ...     "type": "object",
+        ...     "properties": {
+        ...         "name": {"type": "string", "description": "User's name"},
+        ...         "age": {"type": "integer", "minimum": 18}
+        ...     },
+        ...     "required": ["name"]
+        ... }
+        >>> model = schema_to_pydantic_model_advanced(schema_advanced, "AdvancedUser")
+        >>> model.__name__
+        'AdvancedUser'
+        >>> model.model_fields['name'].description
+        "User's name"
+        >>> model.model_fields['age'].ge
+        18
+        """
+        pydantic_model = jsonschema_to_pydantic(schema)
+
+        pydantic_model.__name__ = model_name
+        pydantic_model.__qualname__ = model_name
+        return pydantic_model
+
+    PydanticModelFactory = schema_to_pydantic_model_advanced
+    print("Using advanced schema-to-pydantic conversion.")
+
+except ImportError:
+    PydanticModelFactory = schema_to_pydantic_model_simple
+    print("`json-schema-to-pydantic` not found. Falling back to simple conversion.")
+
+schema_to_pydantic_model = PydanticModelFactory
