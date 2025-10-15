@@ -987,10 +987,10 @@ def jsonschema_to_openapi_transform(schema: dict[str, Any]) -> dict[str, Any]:
     def resolve_refs(obj, definitions):
         """Recursively resolve $ref pointers."""
         if isinstance(obj, dict):
-            if '$ref' in obj:
-                ref_path = obj['$ref']
-                if ref_path.startswith('#/definitions/'):
-                    def_name = ref_path.split('/')[-1]
+            if "$ref" in obj:
+                ref_path = obj["$ref"]
+                if ref_path.startswith("#/definitions/"):
+                    def_name = ref_path.split("/")[-1]
                     if def_name in definitions:
                         # Return the resolved definition
                         return resolve_refs(
@@ -1007,7 +1007,7 @@ def jsonschema_to_openapi_transform(schema: dict[str, Any]) -> dict[str, Any]:
     schema_copy = copy.deepcopy(schema)
 
     # Extract definitions
-    definitions = schema_copy.pop('definitions', {})
+    definitions = schema_copy.pop("definitions", {})
 
     # Resolve all $ref occurrences
     resolved_schema = resolve_refs(schema_copy, definitions)
@@ -1016,16 +1016,16 @@ def jsonschema_to_openapi_transform(schema: dict[str, Any]) -> dict[str, Any]:
     def clean_schema(obj):
         if isinstance(obj, dict):
             # Remove problematic fields
-            obj.pop('$schema', None)
-            obj.pop('id', None)
-            obj.pop('$id', None)
+            obj.pop("$schema", None)
+            obj.pop("id", None)
+            obj.pop("$id", None)
 
             # Handle additionalProperties more carefully
-            if 'additionalProperties' in obj and obj['additionalProperties'] is False:
-                obj['additionalProperties'] = False
-            elif 'additionalProperties' in obj and obj['additionalProperties'] is True:
+            if "additionalProperties" in obj and obj["additionalProperties"] is False:
+                obj["additionalProperties"] = False
+            elif "additionalProperties" in obj and obj["additionalProperties"] is True:
                 obj.pop(
-                    'additionalProperties', None
+                    "additionalProperties", None
                 )  # Remove it, Pydantic handles this better
 
             # Recursively clean
@@ -1045,15 +1045,15 @@ def fix_generated_code_transform(code: str) -> str:
     Fix common issues in generated code.
     """
     # Fix import issues
-    if 'from __future__ import annotations' not in code:
-        code = 'from __future__ import annotations\n\n' + code
+    if "from __future__ import annotations" not in code:
+        code = "from __future__ import annotations\n\n" + code
 
     # Fix Optional imports if missing
-    if 'Optional' in code and 'from typing import' in code:
-        typing_import_line = re.search(r'from typing import (.+)', code)
-        if typing_import_line and 'Optional' not in typing_import_line.group(1):
-            imports = typing_import_line.group(1).split(', ')
-            imports.append('Optional')
+    if "Optional" in code and "from typing import" in code:
+        typing_import_line = re.search(r"from typing import (.+)", code)
+        if typing_import_line and "Optional" not in typing_import_line.group(1):
+            imports = typing_import_line.group(1).split(", ")
+            imports.append("Optional")
             code = code.replace(
                 typing_import_line.group(0),
                 f"from typing import {', '.join(sorted(set(imports)))}",
