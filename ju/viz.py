@@ -1,13 +1,14 @@
 """Visualization functions for Ju."""
 
-from typing import get_origin, get_args, Iterable, Union
+from typing import get_origin, get_args, Union
+from collections.abc import Iterable
 from pydantic import BaseModel
 
 
 # TODO: Handle ids and labels more carefully (e.g. what happens when the field names appear in different models?)
 # TODO: Test loops and recursion artifacts
 def model_digraph(
-    model: Union[BaseModel, Iterable[BaseModel]], *, dot=None, parent=None
+    model: BaseModel | Iterable[BaseModel], *, dot=None, parent=None
 ):
     r"""
     Visualize Pydantic models using Graphviz, showing the relationship between models

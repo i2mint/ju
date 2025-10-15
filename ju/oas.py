@@ -1,6 +1,7 @@
 """OpenAPI specification tools."""
 
-from typing import Any, Dict, Iterable, Iterator
+from typing import Any, Dict
+from collections.abc import Iterable, Iterator
 from functools import cached_property, partial
 
 from dataclasses import dataclass, field
@@ -23,7 +24,7 @@ path_get = partial(
 )
 
 
-def get_routes(d: Dict[str, Any], include_methods=tuple(http_methods)) -> Iterable[str]:
+def get_routes(d: dict[str, Any], include_methods=tuple(http_methods)) -> Iterable[str]:
     """
     Takes OpenAPI specification dict 'd' and returns the key-paths to all the endpoints.
     """
@@ -273,7 +274,8 @@ def resolve_refs(open_api_spec: dict, d: dict) -> dict:
 
 import json
 import os
-from typing import Union, Generator, Tuple, Callable, Optional
+from typing import Union, Tuple, Optional
+from collections.abc import Generator, Callable
 import requests
 from ju.json_schema import json_schema_to_signature, title_to_pyname
 import operator as operations
@@ -392,7 +394,7 @@ class OpenApiFunc:
         path_param_names = re.findall(r"{(\w+)}", self.uri)
         # Get parameter names from OpenAPI 'parameters'
         oas_parameters = self.param_schema.get("_oas_parameters", [])
-        param_names = set(p["name"] for p in oas_parameters)
+        param_names = {p["name"] for p in oas_parameters}
         # Get requestBody schema
         oas_request_body = self.param_schema.get("_oas_request_body", None)
         # Path params
@@ -502,7 +504,7 @@ def merge_request_body_json_schema(details, param_schema):
 def openapi_to_funcs(
     spec: OpenAPISpec,
     *,
-    base_url: Optional[str] = None,
+    base_url: str | None = None,
     default_servers_url: str = DFLT_SERVERS_URL,
     func_namer: Callable[[str, str, dict], str] = default_func_namer,
     get_response=default_get_response,
@@ -685,7 +687,7 @@ generate_and_import_openapi_client = generate_openapi_client
 def openapi_to_generated_funcs(
     spec: OpenAPISpec,
     *,
-    base_url: Optional[str] = None,
+    base_url: str | None = None,
     default_servers_url: str = DFLT_SERVERS_URL,
     output_dir=None,
     file_format="json",
@@ -767,7 +769,7 @@ def validate_openapi_to_generated_funcs_alignment():
     import json
     import os
 
-    with open(os.path.expanduser("~/tmp/test_oas_gen.json"), "r") as f:
+    with open(os.path.expanduser("~/tmp/test_oas_gen.json")) as f:
         openapi_spec = json.load(f)
 
     generated_funcs = list(openapi_to_generated_funcs(openapi_spec))

@@ -79,8 +79,8 @@ def test_trait_to_py():
                 ), f"Instance mismatch for {traitlet_type}: expected {DummyClass}, got {result}"
             elif traitlet_type is traitlets.Type:
                 assert (
-                    result == typing.Type[DummyClass]
-                ), f"Type mismatch for {traitlet_type}: expected {typing.Type[DummyClass]}, got {result}"
+                    result == type[DummyClass]
+                ), f"Type mismatch for {traitlet_type}: expected {type[DummyClass]}, got {result}"
             elif traitlet_type is traitlets.UseEnum:
                 assert (
                     result == Color

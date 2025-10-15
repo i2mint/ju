@@ -3,12 +3,9 @@
 import json
 from functools import partial
 from typing import (
-    Mapping,
-    Callable,
     Union,
     KT,
     VT,
-    Sequence,
     Tuple,
     runtime_checkable,
     Protocol,
@@ -18,6 +15,7 @@ from typing import (
     Type,
     Optional,
 )
+from collections.abc import Mapping, Callable, Sequence
 from collections import defaultdict
 from dataclasses import dataclass
 from types import GenericAlias
@@ -45,7 +43,7 @@ def is_jsonable(x):
         return False
 
 
-SomeType = Union[Type, GenericAlias, Any]
+SomeType = Union[type, GenericAlias, Any]
 SomeType.__doc__ = "A type or a GenericAlias, but also Any, just in case"
 
 
@@ -109,8 +107,8 @@ def is_type(param: Parameter, type_: SomeType):
 def truncate_dict_values(
     d: dict,
     *,
-    max_list_size: Optional[int] = 2,
-    max_string_size: Optional[int] = 66,
+    max_list_size: int | None = 2,
+    max_string_size: int | None = 66,
     middle_marker: str = "...",
 ) -> dict:
     """
@@ -175,7 +173,7 @@ def truncate_dict_values(
 
 CallableMapper = Callable[[KT], VT]
 MappingMapper = Mapping[KT, VT]
-PairsMapper = Sequence[Tuple[KT, VT]]
+PairsMapper = Sequence[tuple[KT, VT]]
 Mapper = Union[PairsMapper, MappingMapper, CallableMapper]
 Mapper.__doc__ = "A Mapper is a specification of (key, value) pairs"
 
@@ -338,7 +336,7 @@ def ensure_callable_mapper(mapper: Mapper, *, default=NotSpecified) -> CallableM
 # utils for routing
 # See https://github.com/i2mint/i2//blob/f547257c272433b7651d09276afdfb1bb7b2f67b/misc/i2.routing.ipynb#L17
 
-from typing import Mapping, Callable
+from collections.abc import Mapping, Callable
 from functools import partial
 
 

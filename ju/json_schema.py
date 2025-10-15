@@ -23,7 +23,8 @@ Example usage:
 
 """
 
-from typing import Mapping, Sequence, Callable, Union, Optional, Any
+from typing import Union, Optional, Any
+from collections.abc import Mapping, Sequence, Callable
 from inspect import Parameter
 from functools import partial
 import re
@@ -224,7 +225,7 @@ def title_to_pyname(title: str) -> str:
 # -------------------------------------------------------------------------------------
 # The signature_to_json_schema function
 
-from typing import Mapping, Sequence
+from collections.abc import Mapping, Sequence
 import inspect
 from operator import attrgetter
 from i2 import Sig, sort_params
@@ -262,8 +263,8 @@ BASE_SCHEMA = {
 def signature_to_json_schema(
     func: ParamsAble,
     *,
-    doc: Optional[Union[str, bool]] = True,
-    name_of_obj: Union[str, Callable[[Any], str]] = name_of_obj,
+    doc: str | bool | None = True,
+    name_of_obj: str | Callable[[Any], str] = name_of_obj,
     pyname_to_title: Callable[[str], str] = DFLT_PYNAME_TO_TITLE,
     param_to_prop_type: Callable = DFLT_PARAM_TO_TYPE,
 ) -> dict:

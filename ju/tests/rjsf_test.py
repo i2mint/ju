@@ -3,7 +3,7 @@ Test objects from the ju.rjsf module
 """
 
 from functools import partial
-from typing import Callable
+from collections.abc import Callable
 import inspect
 from operator import attrgetter
 from ju.json_schema import signature_to_json_schema

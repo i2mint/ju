@@ -67,7 +67,8 @@ valid_model_list = list(valid_models(data, [Model1, Model2, Model3]))
 import json
 from functools import partial
 
-from typing import Any, Dict, Iterable, Optional, Callable, Union
+from typing import Any, Dict, Optional, Union
+from collections.abc import Iterable, Callable
 from pydantic import BaseModel, ValidationError, create_model, Field
 from i2 import ObjectClassifier
 
@@ -124,11 +125,11 @@ from typing import Type, Dict, get_origin
 
 
 def model_field_descriptions(
-    model: Type[BaseModel],
+    model: type[BaseModel],
     default_description: str = "No description provided",
     *,
     prefix: str = "",
-) -> Dict[str, str]:
+) -> dict[str, str]:
     """
     Extracts a dictionary of field paths and their descriptions from a Pydantic model,
     including nested models.
@@ -178,10 +179,11 @@ def model_field_descriptions(
 # Construct and validate Pydantic models
 
 from pydantic import BaseModel, ValidationError
-from typing import Callable, Type, TypeVar
+from typing import Type, TypeVar
+from collections.abc import Callable
 
 Data = TypeVar("Data", bound=Any)
-ModelType = Type[BaseModel]
+ModelType = type[BaseModel]
 ModelFactory = Callable[[ModelType, Data], BaseModel]
 
 
@@ -352,12 +354,12 @@ def infer_json_friendly_type(value):
 # TODO: Extend to something more robust
 #   Perhaps based on datamodel-code-generator (see https://jsontopydantic.com/)?
 def data_to_pydantic_model(
-    data: Dict[str, Any],
-    name: Union[str, Callable[[dict], str]] = "DataBasedModel",
+    data: dict[str, Any],
+    name: str | Callable[[dict], str] = "DataBasedModel",
     *,
-    defaults: Optional[Dict[str, Any]] = None,
+    defaults: dict[str, Any] | None = None,
     create_nested_models: bool = True,
-    mk_nested_name: Optional[Callable[[str], str]] = None,
+    mk_nested_name: Callable[[str], str] | None = None,
 ):
     """
     Generate a dynamic Pydantic model, optionally creating nested models for nested dictionaries.
@@ -431,8 +433,8 @@ ModelSource = Union[str, dict, BaseModel]
 def pydantic_model_to_code(
     source: ModelSource,
     *,
-    ingress_transform: Optional[Callable] = None,
-    egress_transform: Optional[Callable] = None,
+    ingress_transform: Callable | None = None,
+    egress_transform: Callable | None = None,
     **extra_json_schema_parser_kwargs,
 ) -> str:
     """
@@ -520,7 +522,7 @@ def pydantic_model_to_code(
         except json.JSONDecodeError:
             # If not JSON, assume it's a file path
             try:
-                with open(source, "r") as f:
+                with open(source) as f:
                     schema_dict = json.load(f)
             except (FileNotFoundError, json.JSONDecodeError):
                 # If all else fails, treat as raw JSON string and let parser handle it
@@ -569,7 +571,7 @@ def pydantic_model_to_code(
 from typing import Any, Dict, Type, Union, get_args, get_origin, List
 
 
-def _get_type_parameters(origin: Type[BaseModel]):
+def _get_type_parameters(origin: type[BaseModel]):
     """Helper function to safely retrieve the type parameters of a generic class.
 
     Note: This is because it's not safe to call `__parameters__` directly on the origin,
@@ -579,7 +581,7 @@ def _get_type_parameters(origin: Type[BaseModel]):
     return getattr(origin, "__parameters__", ())
 
 
-def match_typevars_to_args(generic_model: Type[BaseModel]) -> Dict[TypeVar, Type[Any]]:
+def match_typevars_to_args(generic_model: type[BaseModel]) -> dict[TypeVar, type[Any]]:
     """
     Given a Pydantic generic model, returns a mapping of type variables to their
     concrete types.
@@ -643,8 +645,8 @@ def is_a_basemodel(obj) -> bool:
 
 
 def field_paths_and_annotations(
-    data_model: Type[BaseModel],
-) -> Dict[str, Type[Any]]:
+    data_model: type[BaseModel],
+) -> dict[str, type[Any]]:
     """
     Get flattened field paths and their corresponding annotations from a Pydantic model.
 
@@ -699,7 +701,7 @@ def field_paths_and_annotations(
 
     """
 
-    def get_field_type(field_type, model: Type[BaseModel]):
+    def get_field_type(field_type, model: type[BaseModel]):
         """Resolves the actual type of a field, replacing generics with their concrete types."""
         typevar_mapping = match_typevars_to_args(model)
 
@@ -717,7 +719,7 @@ def field_paths_and_annotations(
 
         return field_type
 
-    def recurse_model(model: Type[BaseModel], prefix: str = "") -> Dict[str, Type[Any]]:
+    def recurse_model(model: type[BaseModel], prefix: str = "") -> dict[str, type[Any]]:
         paths = {}
         for field_name, field_info in model.model_fields.items():
             field_type = get_field_type(field_info.annotation, model)
@@ -729,7 +731,7 @@ def field_paths_and_annotations(
                 # the field type is a BaseModel or a generic BaseModel
                 paths.update(recurse_model(field_type, current_path))
             elif (
-                origin in {list, set, tuple, List}
+                origin in {list, set, tuple, list}
                 and args
                 and is_a_basemodel(args[0])  # TODO: What if args[1] is a generic?
             ):
@@ -745,7 +747,8 @@ def field_paths_and_annotations(
 # -------------------------------------------------------------------------------------
 # ModelBasedDataExtractors
 
-from typing import Mapping, Iterable, Union, Callable, Type
+from typing import Union, Type
+from collections.abc import Mapping, Iterable, Callable
 from dataclasses import dataclass, KW_ONLY
 
 from i2 import ObjectClassifier, name_of_obj
@@ -817,7 +820,7 @@ class ModelExtractor:
 
     """
 
-    models: Union[Mapping[str, BaseModel], Iterable[BaseModel]]
+    models: Mapping[str, BaseModel] | Iterable[BaseModel]
     _: KW_ONLY
     getter: Callable = glom
 
@@ -869,7 +872,7 @@ class ModelExtractor:
 
 def schema_to_pydantic_model_simple(
     schema: dict, model_name: str = "AutoModel"
-) -> Type[BaseModel]:
+) -> type[BaseModel]:
     """
     Converts a JSON schema (with 'properties') to a Pydantic model.
     Only supports basic types and required fields for demonstration.
@@ -931,7 +934,7 @@ try:
 
     def schema_to_pydantic_model_advanced(
         schema: dict, model_name: str = "AutoModel"
-    ) -> Type[BaseModel]:
+    ) -> type[BaseModel]:
         """
         Converts a full JSON schema to a Pydantic model using json_schema_to_pydantic.
 
@@ -972,7 +975,7 @@ schema_to_pydantic_model = PydanticModelFactory
 # Possible egress/ingress transformations for pydantic_model_to_code
 
 
-def jsonschema_to_openapi_transform(schema: Dict[str, Any]) -> Dict[str, Any]:
+def jsonschema_to_openapi_transform(schema: dict[str, Any]) -> dict[str, Any]:
     """
     Transform JSON Schema to OpenAPI-compatible schema.
     This handles $ref resolution and other incompatibilities.

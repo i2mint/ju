@@ -1,6 +1,7 @@
 """Tools for React-JSONSchema-Form (RJSF)"""
 
-from typing import Callable, Optional, Union
+from typing import Optional, Union
+from collections.abc import Callable
 import inspect
 
 from copy import deepcopy
@@ -48,9 +49,9 @@ BASE_RJSF_SPEC = {
 def func_to_form_spec(
     func: Callable,
     *,
-    doc: Optional[Union[str, bool]] = True,
+    doc: str | bool | None = True,
     param_to_prop_type: Callable = DFLT_PARAM_TO_TYPE,
-    nest_under_field: Optional[str] = "rjsf",
+    nest_under_field: str | None = "rjsf",
     base_rjsf_spec: dict = BASE_RJSF_SPEC,
     pyname_to_title: Callable[[str], str] = DFLT_PYNAME_TO_TITLE,
 ):
@@ -131,7 +132,7 @@ def func_to_form_spec(
 def _func_to_rjsf_schemas(
     func,
     *,
-    doc: Optional[Union[str, bool]] = True,
+    doc: str | bool | None = True,
     base_rjsf_spec: dict = BASE_RJSF_SPEC,
     pyname_to_title: Callable[[str], str] = DFLT_PYNAME_TO_TITLE,
     param_to_prop_type: Callable = DFLT_PARAM_TO_TYPE,
@@ -197,7 +198,8 @@ def _func_to_rjsf_schemas(
 # RJSF jupyter notebook viewer
 
 
-from typing import Dict, Any, Optional, Callable, Union
+from typing import Dict, Any, Optional, Union
+from collections.abc import Callable
 from dataclasses import dataclass, field
 
 # TODO: Make this import conditional
@@ -222,7 +224,7 @@ def display_in_notebook(string: str) -> None:
 
 
 def display_form_data(
-    form_data: Dict[str, Any],
+    form_data: dict[str, Any],
     *,
     indent=2,
     ensure_ascii=False,
@@ -257,12 +259,12 @@ class RJSFViewer:
 
     def __init__(
         self,
-        rjsf_spec: Dict[str, Any],
+        rjsf_spec: dict[str, Any],
         *,
         on_submit: Callable = DFLT_RJSF_VIEWER_ON_SUBMIT,
         name: str = None,
         unpack_form_data: bool = None,
-        config: Optional[FormConfig] = None,
+        config: FormConfig | None = None,
     ):
         """Initialize the RJSF viewer.
 
@@ -304,7 +306,7 @@ class RJSFViewer:
         self._form_widget = None
         self._build_form()
 
-    def _default_submit_handler(self, form_data: Dict[str, Any]) -> None:
+    def _default_submit_handler(self, form_data: dict[str, Any]) -> None:
         """Default handler that prints submitted data in a nicely formatted way.
 
         Args:
@@ -316,7 +318,7 @@ class RJSFViewer:
         formatted = json.dumps(form_data, indent=2, ensure_ascii=False)
         display(Markdown(f"**Submitted data:**\n\n```json\n{formatted}\n```"))
 
-    def _extract_schema_info(self) -> tuple[Dict[str, Any], Dict[str, Any]]:
+    def _extract_schema_info(self) -> tuple[dict[str, Any], dict[str, Any]]:
         """Extract schema and UI schema from RJSF specification.
 
         Returns:
@@ -328,7 +330,7 @@ class RJSFViewer:
         return schema, ui_schema
 
     def _create_widget_for_property(
-        self, prop_name: str, prop_schema: Dict[str, Any], ui_config: Dict[str, Any]
+        self, prop_name: str, prop_schema: dict[str, Any], ui_config: dict[str, Any]
     ) -> widgets.Widget:
         """Create appropriate widget for a schema property.
 
@@ -440,7 +442,7 @@ class RJSFViewer:
         form_data = self.get_form_data()
         self.on_submit(form_data)
 
-    def get_form_data(self) -> Dict[str, Any]:
+    def get_form_data(self) -> dict[str, Any]:
         """Extract current form data from widgets.
 
         Returns:
@@ -448,7 +450,7 @@ class RJSFViewer:
         """
         return {name: widget.value for name, widget in self._widgets.items()}
 
-    def set_form_data(self, data: Dict[str, Any]) -> None:
+    def set_form_data(self, data: dict[str, Any]) -> None:
         """Set form data programmatically.
 
         Args:
@@ -472,12 +474,12 @@ class RJSFViewer:
 
 
 def create_rjsf_viewer(
-    rjsf_spec: Dict[str, Any],
+    rjsf_spec: dict[str, Any],
     *,
     on_submit: Callable = DFLT_RJSF_VIEWER_ON_SUBMIT,
     name: str = None,
     unpack_form_data: bool = None,
-    config: Optional[FormConfig] = None,
+    config: FormConfig | None = None,
     display: bool = False,
 ) -> RJSFViewer:
     """Factory function to create and display an RJSF viewer.
