@@ -33,12 +33,13 @@ jobs:
       # - name: Format Source Code
       #   uses: i2mint/isee/actions/format-source-code@master
 
-      - name: Pylint Validation
-        uses: i2mint/isee/actions/pylint-validation@master
-        with:
-          root-dir: ${{ env.PROJECT_NAME }}
-          enable: missing-module-docstring
-          ignore: tests,examples,scrap
+      # TODO: The ignore stopped working.
+      # - name: Pylint Validation
+      #   uses: i2mint/isee/actions/pylint-validation@master
+      #   with:
+      #     root-dir: ${{ env.PROJECT_NAME }}
+      #     enable: missing-module-docstring
+      #     ignore: tests,examples,scrap
 
       - name: Pytest Validation
         uses: i2mint/isee/actions/pytest-validation@master
