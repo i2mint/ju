@@ -1,4 +1,0 @@
-ju.tests.traitlets_util_test
-============================
-.. automodule:: ju.tests.traitlets_util_test
-   :members:

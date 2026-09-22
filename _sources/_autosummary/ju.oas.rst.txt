@@ -1,0 +1,37 @@
+ju.oas
+======
+
+.. automodule:: ju.oas
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      compare_modules_to_missing_funcs
+      compare_modules_to_operationids
+      default_func_namer
+      default_get_response
+      default_response_egress
+      ensure_openapi_dict
+      generate_and_import_openapi_client
+      generate_openapi_client
+      get_routes
+      merge_request_body_json_schema
+      openapi_to_funcs
+      openapi_to_generated_funcs
+      print_generated_modules
+      properties_of_schema
+      resolve_refs
+      return_empty_dict_on_error
+      validate_openapi_to_generated_funcs_alignment
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      ArrayOf
+      OpenApiFunc
+      Route
+      Routes
+   

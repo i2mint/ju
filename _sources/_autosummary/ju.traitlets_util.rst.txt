@@ -1,0 +1,13 @@
+ju.traitlets\_util
+==================
+
+.. automodule:: ju.traitlets_util
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      extract_type_params
+      trait_to_py
+   

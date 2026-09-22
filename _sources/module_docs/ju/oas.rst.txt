@@ -1,4 +1,0 @@
-ju.oas
-======
-.. automodule:: ju.oas
-   :members:

@@ -1,4 +1,0 @@
-ju
-==
-.. automodule:: ju
-   :members:

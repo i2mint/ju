@@ -1,4 +1,0 @@
-ju.tests.pydantic_util_test
-===========================
-.. automodule:: ju.tests.pydantic_util_test
-   :members:

@@ -1,4 +1,0 @@
-ju.tests.oas_test
-=================
-.. automodule:: ju.tests.oas_test
-   :members:

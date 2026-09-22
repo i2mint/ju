@@ -1,0 +1,37 @@
+ju.pydantic\_util
+=================
+
+.. automodule:: ju.pydantic_util
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      PydanticModelFactory
+      data_to_pydantic_model
+      extract_friendly_errors
+      field_paths_and_annotations
+      fix_generated_code_transform
+      infer_json_friendly_type
+      is_a_basemodel
+      is_pydantic_model
+      is_type_hint
+      is_typing_type
+      is_valid_wrt_model
+      jsonschema_to_openapi_transform
+      match_typevars_to_args
+      mk_pydantic_model
+      mk_pydantic_models
+      model_field_descriptions
+      pydantic_model_to_code
+      schema_to_pydantic_model
+      schema_to_pydantic_model_simple
+      valid_models
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      ModelExtractor
+   

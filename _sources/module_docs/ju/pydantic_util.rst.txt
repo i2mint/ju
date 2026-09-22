@@ -1,4 +1,0 @@
-ju.pydantic_util
-================
-.. automodule:: ju.pydantic_util
-   :members:

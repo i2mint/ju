@@ -1,0 +1,26 @@
+# ju
+
+> JSON schema Utils
+
+
+## Pages
+
+- [ju](index.html.md): JSON schema Utils
+- [API reference](api.html.md): | &#96;ju&#96;   | JSON schema Utils   |
+- [ju](_autosummary/ju.html.md): JSON schema Utils
+- [ju.json_schema](_autosummary/ju.json_schema.html.md): This module provides tools to transform Python functions to JSON schemas.
+- [ju.oas](_autosummary/ju.oas.html.md): OpenAPI specification tools.
+- [ju.pydantic_util](_autosummary/ju.pydantic_util.html.md): Tools for working with Pydantic models.
+- [ju.rjsf](_autosummary/ju.rjsf.html.md): Tools for React-JSONSchema-Form (RJSF)
+- [ju.traitlets_util](_autosummary/ju.traitlets_util.html.md): Utils for traitlets
+- [ju.util](_autosummary/ju.util.html.md): Ju base utils.
+- [ju.viz](_autosummary/ju.viz.html.md): Visualization functions for Ju.
+- [About this build](about-this-build.html.md): This documentation was built on &#42;&#42;2026-09-22 14:42 UTC&#42;&#42; from commit &lt;a href="https://github.com/i2m...
+
+## Optional
+
+- [ju.md](ju.md): Complete documentation in a single file.
+
+## Build
+
+- [build_info.json](build_info.json): build provenance (commit, version, tool versions, whether the docs match the package)

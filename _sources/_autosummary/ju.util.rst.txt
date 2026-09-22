@@ -1,0 +1,31 @@
+ju.util
+=======
+
+.. automodule:: ju.util
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      apply
+      asis
+      display_dag_of_code
+      ensure_callable_mapper
+      ensure_mapping_mapper
+      feature_based_search
+      feature_similarity_search
+      feature_switch
+      is_jsonable
+      is_type
+      mk_function_returning
+      switch_case
+      truncate_dict_values
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      GetWithCaller
+      Gettable
+   

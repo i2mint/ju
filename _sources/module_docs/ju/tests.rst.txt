@@ -1,4 +1,0 @@
-ju.tests
-========
-.. automodule:: ju.tests
-   :members:

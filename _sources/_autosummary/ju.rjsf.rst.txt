@@ -1,0 +1,23 @@
+ju.rjsf
+=======
+
+.. automodule:: ju.rjsf
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      DFLT_RJSF_VIEWER_ON_SUBMIT
+      create_rjsf_viewer
+      display_form_data
+      display_in_notebook
+      func_to_form_spec
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      FormConfig
+      RJSFViewer
+   

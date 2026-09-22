@@ -1,92 +1,251 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+<link rel="alternate" type="text/markdown" href="json_schema.html.md">
+<link rel="describedby" href="../../llms.txt" type="text/markdown"><link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html">
+
+    <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+        <title>ju.json_schema - ju</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
 
 
-<!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="../../">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ju.json_schema &mdash; ju 0.1.30 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
-      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
-
+<style>
+  body {
+    --color-code-background: #f0f0f0;
+  --color-code-foreground: black;
+  --color-brand-primary: #5a479a;
+  --color-brand-content: #5a479a;
   
-      <script src="../../_static/jquery.js?v=5d32c60e"></script>
-      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=73657eb8"></script>
-      <script src="../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
-      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
-      <script src="../../_static/copybutton.js?v=f281be69"></script>
-    <script src="../../_static/js/theme.js"></script>
-    <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" /> 
-</head>
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #b8a8ff;
+  --color-brand-content: #b8a8ff;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  --color-brand-primary: #b8a8ff;
+  --color-brand-content: #b8a8ff;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
 
-          
-          
-          <a href="../../index.html" class="icon icon-home">
-            ju
-          </a>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju.html">ju</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/json_schema.html">ju.json_schema</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/oas.html">ju.oas</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/pydantic_util.html">ju.pydantic_util</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/rjsf.html">ju.rjsf</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/tests.html">ju.tests</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/tests/oas_test.html">ju.tests.oas_test</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/tests/pydantic_util_test.html">ju.tests.pydantic_util_test</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/tests/rjsf_test.html">ju.tests.rjsf_test</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/tests/traitlets_util_test.html">ju.tests.traitlets_util_test</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/traitlets_util.html">ju.traitlets_util</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/util.html">ju.util</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../module_docs/ju/viz.html">ju.viz</a></li>
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../index.html"><div class="brand">ju</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
+  
+  <span class="sidebar-brand-text">ju</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../api.html">API reference</a><input aria-label="Toggle navigation of API reference" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../_autosummary/ju.html">ju</a><input aria-label="Toggle navigation of ju" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../_autosummary/ju.json_schema.html">ju.json_schema</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../_autosummary/ju.oas.html">ju.oas</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../_autosummary/ju.pydantic_util.html">ju.pydantic_util</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../_autosummary/ju.rjsf.html">ju.rjsf</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../_autosummary/ju.traitlets_util.html">ju.traitlets_util</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../_autosummary/ju.util.html">ju.util</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../_autosummary/ju.viz.html">ju.viz</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 
-        </div>
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">ju</a>
-      </nav>
-
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">ju.json_schema</li>
-      <li class="wy-breadcrumbs-aside">
-      </li>
-  </ul>
-  <hr/>
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
-  <h1>Source code for ju.json_schema</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <h1>Source code for ju.json_schema</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""</span>
 <span class="sd">This module provides tools to transform Python functions to JSON schemas.</span>
 
 <span class="sd">The main function in this module is `signature_to_json_schema`, which takes a</span>
@@ -96,22 +255,23 @@
 <span class="sd">Example usage:</span>
 
 <span class="sd">&gt;&gt;&gt; def mercury(sweet: float, sour=True):</span>
-<span class="sd">...     &#39;&#39;&#39;Near the sun&#39;&#39;&#39;</span>
+<span class="sd">...     '''Near the sun'''</span>
 <span class="sd">...     return sweet * sour</span>
 <span class="sd">&gt;&gt;&gt;</span>
 <span class="sd">&gt;&gt;&gt; assert signature_to_json_schema(mercury) == {</span>
-<span class="sd">...         &#39;title&#39;: &#39;mercury&#39;,</span>
-<span class="sd">...         &#39;type&#39;: &#39;object&#39;,</span>
-<span class="sd">...         &#39;properties&#39;: {</span>
-<span class="sd">...             &#39;sweet&#39;: {&#39;type&#39;: &#39;number&#39;},</span>
-<span class="sd">...             &#39;sour&#39;: {&#39;type&#39;: &#39;boolean&#39;, &#39;default&#39;: True}},</span>
-<span class="sd">...          &#39;required&#39;: [&#39;sweet&#39;],</span>
-<span class="sd">...          &#39;description&#39;: &#39;Near the sun&#39;</span>
+<span class="sd">...         'title': 'mercury',</span>
+<span class="sd">...         'type': 'object',</span>
+<span class="sd">...         'properties': {</span>
+<span class="sd">...             'sweet': {'type': 'number'},</span>
+<span class="sd">...             'sour': {'type': 'boolean', 'default': True}},</span>
+<span class="sd">...          'required': ['sweet'],</span>
+<span class="sd">...          'description': 'Near the sun'</span>
 <span class="sd">... }</span>
 
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Callable</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">inspect</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parameter</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
@@ -122,7 +282,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">ju.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_type</span>
 
-<span class="n">DFLT_FUNC_TITLE</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="n">DFLT_FUNC_TITLE</span> <span class="o">=</span> <span class="s2">""</span>
 
 <span class="n">name_of_obj</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">_name_of_obj</span><span class="p">,</span> <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">DFLT_FUNC_TITLE</span><span class="p">)</span>
 
@@ -138,11 +298,11 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">pydantic_model_to_type_mapping</span><span class="p">(</span><span class="n">pydantic_model</span><span class="p">:</span> <span class="n">BaseModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="n">fields</span> <span class="o">=</span> <span class="n">pydantic_model</span><span class="o">.</span><span class="n">model_fields</span>
-    <span class="n">properties</span> <span class="o">=</span> <span class="n">pydantic_model</span><span class="o">.</span><span class="n">model_json_schema</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;properties&quot;</span><span class="p">)</span>
+    <span class="n">properties</span> <span class="o">=</span> <span class="n">pydantic_model</span><span class="o">.</span><span class="n">model_json_schema</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"properties"</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">gen</span><span class="p">():</span>
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
-            <span class="k">yield</span> <span class="n">fields</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">annotation</span><span class="p">,</span> <span class="n">properties</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s2">&quot;type&quot;</span><span class="p">]</span>
+            <span class="k">yield</span> <span class="n">fields</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">annotation</span><span class="p">,</span> <span class="n">properties</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s2">"type"</span><span class="p">]</span>
 
     <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">gen</span><span class="p">())</span>
 
@@ -151,26 +311,26 @@
 <span class="n">_DFLT_TYPE_MAPPING</span> <span class="o">=</span> <span class="n">pydantic_model_to_type_mapping</span><span class="p">(</span><span class="n">_BasicPythonTypes</span><span class="p">)</span>
 
 <span class="c1"># _DFLT_TYPE_MAPPING = {</span>
-<span class="c1">#     int: &#39;integer&#39;,</span>
-<span class="c1">#     float: &#39;number&#39;,</span>
-<span class="c1">#     str: &#39;string&#39;,</span>
-<span class="c1">#     bool: &#39;boolean&#39;,</span>
-<span class="c1">#     Sequence: &#39;array&#39;,</span>
-<span class="c1">#     Mapping: &#39;object&#39;,</span>
+<span class="c1">#     int: 'integer',</span>
+<span class="c1">#     float: 'number',</span>
+<span class="c1">#     str: 'string',</span>
+<span class="c1">#     bool: 'boolean',</span>
+<span class="c1">#     Sequence: 'array',</span>
+<span class="c1">#     Mapping: 'object',</span>
 <span class="c1"># }</span>
 
 <span class="c1"># Need to get a tuple of items to use type mapping as unmutable default.</span>
 <span class="n">DFLT_PY_JSON_TYPE_PAIRS</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">_DFLT_TYPE_MAPPING</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
 <span class="n">DFLT_JSON_PY_TYPE_PAIRS</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">((</span><span class="n">v</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">_DFLT_TYPE_MAPPING</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
 <span class="k">assert</span> <span class="nb">dict</span><span class="p">(</span><span class="n">DFLT_JSON_PY_TYPE_PAIRS</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">DFLT_JSON_PY_TYPE_PAIRS</span><span class="p">),</span> <span class="p">(</span>
-    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">DFLT_JSON_PY_TYPE_PAIRS</span><span class="si">=}</span><span class="s2">, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">DFLT_JSON_PY_TYPE_PAIRS</span><span class="p">)</span><span class="si">=}</span><span class="s2">&quot;</span>
-    <span class="s2">&quot; The mapping is not bijective. The ju devs will need to chose a unique python &quot;</span>
-    <span class="s2">&quot;type for each json type.&quot;</span>
+    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">DFLT_JSON_PY_TYPE_PAIRS</span><span class="si">=}</span><span class="s2">, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">DFLT_JSON_PY_TYPE_PAIRS</span><span class="p">)</span><span class="si">=}</span><span class="s2">"</span>
+    <span class="s2">" The mapping is not bijective. The ju devs will need to chose a unique python "</span>
+    <span class="s2">"type for each json type."</span>
 <span class="p">)</span>
 <span class="n">DFLT_TYPE_MAPPING</span> <span class="o">=</span> <span class="n">DFLT_PY_JSON_TYPE_PAIRS</span>  <span class="c1"># less verbose alias</span>
 
 
-<span class="n">DFLT_JSON_TYPE</span> <span class="o">=</span> <span class="s2">&quot;string&quot;</span>  <span class="c1"># TODO: &#39;string&#39; or &#39;object&#39;?</span>
+<span class="n">DFLT_JSON_TYPE</span> <span class="o">=</span> <span class="s2">"string"</span>  <span class="c1"># TODO: 'string' or 'object'?</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">parametrized_param_to_type</span><span class="p">(</span>
@@ -202,25 +362,25 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">print_schema</span><span class="p">(</span><span class="n">func_key</span><span class="p">,</span> <span class="n">store</span><span class="p">):</span>
-    <span class="n">print_dict</span><span class="p">(</span><span class="n">store</span><span class="p">[</span><span class="n">func_key</span><span class="p">][</span><span class="s2">&quot;rjsf&quot;</span><span class="p">][</span><span class="s2">&quot;schema&quot;</span><span class="p">])</span>
-    <span class="n">print_dict</span><span class="p">(</span><span class="n">store</span><span class="p">[</span><span class="n">func_key</span><span class="p">][</span><span class="s2">&quot;rjsf&quot;</span><span class="p">][</span><span class="s2">&quot;schema&quot;</span><span class="p">])</span>
+    <span class="n">print_dict</span><span class="p">(</span><span class="n">store</span><span class="p">[</span><span class="n">func_key</span><span class="p">][</span><span class="s2">"rjsf"</span><span class="p">][</span><span class="s2">"schema"</span><span class="p">])</span>
+    <span class="n">print_dict</span><span class="p">(</span><span class="n">store</span><span class="p">[</span><span class="n">func_key</span><span class="p">][</span><span class="s2">"rjsf"</span><span class="p">][</span><span class="s2">"schema"</span><span class="p">])</span>
 
 
 <span class="n">form_specs</span> <span class="o">=</span> <span class="kc">None</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">print_schema</span><span class="p">(</span><span class="n">func_key</span><span class="o">=</span><span class="s2">&quot;olab.objects.dpp.accuracy&quot;</span><span class="p">,</span> <span class="n">store</span><span class="o">=</span><span class="n">form_specs</span><span class="p">):</span>
-    <span class="n">print_dict</span><span class="p">(</span><span class="n">store</span><span class="p">[</span><span class="n">func_key</span><span class="p">][</span><span class="s2">&quot;rjsf&quot;</span><span class="p">][</span><span class="s2">&quot;schema&quot;</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">print_schema</span><span class="p">(</span><span class="n">func_key</span><span class="o">=</span><span class="s2">"olab.objects.dpp.accuracy"</span><span class="p">,</span> <span class="n">store</span><span class="o">=</span><span class="n">form_specs</span><span class="p">):</span>
+    <span class="n">print_dict</span><span class="p">(</span><span class="n">store</span><span class="p">[</span><span class="n">func_key</span><span class="p">][</span><span class="s2">"rjsf"</span><span class="p">][</span><span class="s2">"schema"</span><span class="p">])</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">wrap_schema_in_opus_spec</span><span class="p">(</span><span class="n">schema</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;rjsf&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;schema&quot;</span><span class="p">:</span> <span class="n">schema</span><span class="p">}}</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">"rjsf"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"schema"</span><span class="p">:</span> <span class="n">schema</span><span class="p">}}</span>
 
 
 <div class="viewcode-block" id="merge_with_defaults">
-<a class="viewcode-back" href="../../module_docs/ju/json_schema.html#ju.json_schema.merge_with_defaults">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/ju.json_schema.html#ju.json_schema.merge_with_defaults">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">merge_with_defaults</span><span class="p">(</span><span class="n">defaults</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">overwrites</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Returns a new dictionary that combines two dictionaries by using the keys</span>
 <span class="sd">    and order from the first dictionary (defaults) and overwriting its values</span>
 <span class="sd">    with those from the second dictionary (overwrites) when they exist.</span>
@@ -234,20 +394,20 @@
 
 <span class="sd">    Example:</span>
 
-<span class="sd">    &gt;&gt;&gt; defaults = {&#39;a&#39;: 1, &#39;b&#39;: 2, &#39;c&#39;: 3}</span>
-<span class="sd">    &gt;&gt;&gt; overwrites = {&#39;b&#39;: 4, &#39;c&#39;: 5, &#39;d&#39;: 6}  # note the extra key &#39;d&#39;, not in defaults</span>
+<span class="sd">    &gt;&gt;&gt; defaults = {'a': 1, 'b': 2, 'c': 3}</span>
+<span class="sd">    &gt;&gt;&gt; overwrites = {'b': 4, 'c': 5, 'd': 6}  # note the extra key 'd', not in defaults</span>
 <span class="sd">    &gt;&gt;&gt; merge_with_defaults(defaults, overwrites)</span>
-<span class="sd">    {&#39;a&#39;: 1, &#39;b&#39;: 4, &#39;c&#39;: 5}</span>
+<span class="sd">    {'a': 1, 'b': 4, 'c': 5}</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">return</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">overwrites</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">defaults</span><span class="p">[</span><span class="n">key</span><span class="p">])</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">defaults</span><span class="p">}</span></div>
 
 
 
 <div class="viewcode-block" id="pyname_to_title">
-<a class="viewcode-back" href="../../module_docs/ju/json_schema.html#ju.json_schema.pyname_to_title">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/ju.json_schema.html#ju.json_schema.pyname_to_title">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">pyname_to_title</span><span class="p">(</span><span class="n">pyname</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Converts a Python name to a title.</span>
 
 <span class="sd">    It does this by replacing underscores with spaces and capitalizing the first</span>
@@ -257,15 +417,15 @@
 <span class="sd">    A sort of (imperfect) inverse of `title_to_pyname`.</span>
 
 <span class="sd">    Example:</span>
-<span class="sd">    &gt;&gt;&gt; pyname_to_title(&#39;hello_world&#39;)</span>
-<span class="sd">    &#39;Hello World&#39;</span>
-<span class="sd">    &gt;&gt;&gt; pyname_to_title(&#39;helloWorld&#39;)</span>
-<span class="sd">    &#39;Hello World&#39;</span>
+<span class="sd">    &gt;&gt;&gt; pyname_to_title('hello_world')</span>
+<span class="sd">    'Hello World'</span>
+<span class="sd">    &gt;&gt;&gt; pyname_to_title('helloWorld')</span>
+<span class="sd">    'Hello World'</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># split camel case</span>
-    <span class="n">pyname</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;([a-z0-9])([A-Z])&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;\1 \2&quot;</span><span class="p">,</span> <span class="n">pyname</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">pyname</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">()</span></div>
+    <span class="n">pyname</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">"([a-z0-9])([A-Z])"</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"\1 \2"</span><span class="p">,</span> <span class="n">pyname</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pyname</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"_"</span><span class="p">,</span> <span class="s2">" "</span><span class="p">)</span><span class="o">.</span><span class="n">title</span><span class="p">()</span></div>
 
 
 
@@ -277,9 +437,9 @@
 
 
 <div class="viewcode-block" id="title_to_pyname">
-<a class="viewcode-back" href="../../module_docs/ju/json_schema.html#ju.json_schema.title_to_pyname">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/ju.json_schema.html#ju.json_schema.title_to_pyname">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">title_to_pyname</span><span class="p">(</span><span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">"""</span>
 <span class="sd">    Converts a title to a Python name.</span>
 
 <span class="sd">    A sort of (imperfect) inverse of `pyname_to_title`.</span>
@@ -289,31 +449,31 @@
 <span class="sd">    If the title contains camel case, it will be split into words.</span>
 
 <span class="sd">    Example:</span>
-<span class="sd">    &gt;&gt;&gt; title_to_pyname(&#39;Hello World&#39;)</span>
-<span class="sd">    &#39;hello_world&#39;</span>
-<span class="sd">    &gt;&gt;&gt; title_to_pyname(&#39;HelloWorld&#39;)</span>
-<span class="sd">    &#39;hello_world&#39;</span>
-<span class="sd">    &gt;&gt;&gt; title_to_pyname(&#39;3: Hello World&#39;)</span>
-<span class="sd">    &#39;_3_hello_world&#39;</span>
-<span class="sd">    &gt;&gt;&gt; title_to_pyname(&#39;   heL----lO  \n\t;; wo__rld&#39;)</span>
-<span class="sd">    &#39;_he_l_l_o_wo__rld&#39;</span>
+<span class="sd">    &gt;&gt;&gt; title_to_pyname('Hello World')</span>
+<span class="sd">    'hello_world'</span>
+<span class="sd">    &gt;&gt;&gt; title_to_pyname('HelloWorld')</span>
+<span class="sd">    'hello_world'</span>
+<span class="sd">    &gt;&gt;&gt; title_to_pyname('3: Hello World')</span>
+<span class="sd">    '_3_hello_world'</span>
+<span class="sd">    &gt;&gt;&gt; title_to_pyname('   heL----lO  \n\t;; wo__rld')</span>
+<span class="sd">    '_he_l_l_o_wo__rld'</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># if title begins with a digit, prepend an underscore</span>
     <span class="n">original_title</span> <span class="o">=</span> <span class="n">title</span>
     <span class="k">if</span> <span class="n">title</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">():</span>
-        <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">title</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="s2">"_"</span> <span class="o">+</span> <span class="n">title</span>
     <span class="c1"># split camel case</span>
-    <span class="n">title</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;([a-z0-9])([A-Z])&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;\1 \2&quot;</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">"([a-z0-9])([A-Z])"</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"\1 \2"</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
     <span class="c1"># remove non-alphanumeric characters, replacing them with a single space</span>
-    <span class="n">title</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\W+&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\W+"</span><span class="p">,</span> <span class="s2">" "</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
     <span class="c1"># replace any sequence of spaces with a single underscore</span>
-    <span class="n">title</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s+&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\s+"</span><span class="p">,</span> <span class="s2">"_"</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
     <span class="n">pyname</span> <span class="o">=</span> <span class="n">title</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>  <span class="c1"># TODO: Should we? Get control over this?</span>
     <span class="c1"># assert pyname is a valid Python identifier</span>
     <span class="k">assert</span> <span class="p">(</span>
         <span class="n">pyname</span><span class="o">.</span><span class="n">isidentifier</span><span class="p">()</span>
-    <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Invalid Python identifier: </span><span class="si">{</span><span class="n">pyname</span><span class="si">}</span><span class="s2">, computed from title: </span><span class="si">{</span><span class="n">original_title</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="p">),</span> <span class="sa">f</span><span class="s2">"Invalid Python identifier: </span><span class="si">{</span><span class="n">pyname</span><span class="si">}</span><span class="s2">, computed from title: </span><span class="si">{</span><span class="n">original_title</span><span class="si">}</span><span class="s2">"</span>
     <span class="k">return</span> <span class="n">pyname</span></div>
 
 
@@ -321,7 +481,7 @@
 <span class="c1"># -------------------------------------------------------------------------------------</span>
 <span class="c1"># The signature_to_json_schema function</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Sequence</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">operator</span><span class="w"> </span><span class="kn">import</span> <span class="n">attrgetter</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">i2</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sig</span><span class="p">,</span> <span class="n">sort_params</span>
@@ -330,65 +490,65 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">ju.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">FeatureSwitch</span><span class="p">,</span> <span class="n">Mapper</span><span class="p">,</span> <span class="n">ensure_callable_mapper</span>
 
 <span class="c1"># dflt_type_mapping = {</span>
-<span class="c1">#     int: {&#39;type&#39;: &#39;integer&#39;},</span>
-<span class="c1">#     float: {&#39;type&#39;: &#39;number&#39;},</span>
-<span class="c1">#     bool: {&#39;type&#39;: &#39;boolean&#39;},</span>
-<span class="c1">#     str: {&#39;type&#39;: &#39;string&#39;},</span>
+<span class="c1">#     int: {'type': 'integer'},</span>
+<span class="c1">#     float: {'type': 'number'},</span>
+<span class="c1">#     bool: {'type': 'boolean'},</span>
+<span class="c1">#     str: {'type': 'string'},</span>
 <span class="c1"># }</span>
 
 <span class="n">dflt_json_types</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="n">py_type</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">json_type</span><span class="p">}</span> <span class="k">for</span> <span class="n">py_type</span><span class="p">,</span> <span class="n">json_type</span> <span class="ow">in</span> <span class="n">DFLT_PY_JSON_TYPE_PAIRS</span>
+    <span class="n">py_type</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="n">json_type</span><span class="p">}</span> <span class="k">for</span> <span class="n">py_type</span><span class="p">,</span> <span class="n">json_type</span> <span class="ow">in</span> <span class="n">DFLT_PY_JSON_TYPE_PAIRS</span>
 <span class="p">}</span>
 
 
 <span class="n">type_feature_switch</span> <span class="o">=</span> <span class="n">FeatureSwitch</span><span class="p">(</span>
-    <span class="n">featurizer</span><span class="o">=</span><span class="n">attrgetter</span><span class="p">(</span><span class="s2">&quot;annotation&quot;</span><span class="p">),</span>
+    <span class="n">featurizer</span><span class="o">=</span><span class="n">attrgetter</span><span class="p">(</span><span class="s2">"annotation"</span><span class="p">),</span>
     <span class="n">feature_to_output_mapping</span><span class="o">=</span><span class="n">dflt_json_types</span><span class="p">,</span>
-    <span class="n">default</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;string&quot;</span><span class="p">},</span>
+    <span class="n">default</span><span class="o">=</span><span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"string"</span><span class="p">},</span>
 <span class="p">)</span>
 
 <span class="n">BASE_SCHEMA</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">DFLT_FUNC_TITLE</span><span class="p">,</span>
-    <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;object&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{},</span>
-    <span class="s2">&quot;required&quot;</span><span class="p">:</span> <span class="p">[],</span>
+    <span class="s2">"title"</span><span class="p">:</span> <span class="n">DFLT_FUNC_TITLE</span><span class="p">,</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"object"</span><span class="p">,</span>
+    <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{},</span>
+    <span class="s2">"required"</span><span class="p">:</span> <span class="p">[],</span>
 <span class="p">}</span>
 
 
 <span class="c1"># TODO: See rjsf _func_to_rjsf_schemas and merge with it</span>
 <div class="viewcode-block" id="signature_to_json_schema">
-<a class="viewcode-back" href="../../module_docs/ju/json_schema.html#ju.json_schema.signature_to_json_schema">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/ju.json_schema.html#ju.json_schema.signature_to_json_schema">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">signature_to_json_schema</span><span class="p">(</span>
     <span class="n">func</span><span class="p">:</span> <span class="n">ParamsAble</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
-    <span class="n">doc</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="n">name_of_obj</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">name_of_obj</span><span class="p">,</span>
+    <span class="n">doc</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">name_of_obj</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Any</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">name_of_obj</span><span class="p">,</span>
     <span class="n">pyname_to_title</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">DFLT_PYNAME_TO_TITLE</span><span class="p">,</span>
     <span class="n">param_to_prop_type</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">DFLT_PARAM_TO_TYPE</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Transforms a Python function to a JSON schema.</span>
 
 <span class="sd">    param func: The function to transform</span>
 <span class="sd">    return: The JSON schema (as a dict) for the function</span>
 
 <span class="sd">    &gt;&gt;&gt; def mercury(sweet: float, sour=True):</span>
-<span class="sd">    ...     &#39;&#39;&#39;Near the sun&#39;&#39;&#39;</span>
+<span class="sd">    ...     '''Near the sun'''</span>
 <span class="sd">    ...     return sweet * sour</span>
 <span class="sd">    &gt;&gt;&gt;</span>
 <span class="sd">    &gt;&gt;&gt; assert signature_to_json_schema(mercury) == {</span>
-<span class="sd">    ...         &#39;title&#39;: &#39;mercury&#39;,</span>
-<span class="sd">    ...         &#39;type&#39;: &#39;object&#39;,</span>
-<span class="sd">    ...         &#39;properties&#39;: {</span>
-<span class="sd">    ...             &#39;sweet&#39;: {&#39;type&#39;: &#39;number&#39;},</span>
-<span class="sd">    ...             &#39;sour&#39;: {&#39;type&#39;: &#39;boolean&#39;, &#39;default&#39;: True}},</span>
-<span class="sd">    ...          &#39;required&#39;: [&#39;sweet&#39;],</span>
-<span class="sd">    ...          &#39;description&#39;: &#39;Near the sun&#39;</span>
+<span class="sd">    ...         'title': 'mercury',</span>
+<span class="sd">    ...         'type': 'object',</span>
+<span class="sd">    ...         'properties': {</span>
+<span class="sd">    ...             'sweet': {'type': 'number'},</span>
+<span class="sd">    ...             'sour': {'type': 'boolean', 'default': True}},</span>
+<span class="sd">    ...          'required': ['sweet'],</span>
+<span class="sd">    ...          'description': 'Near the sun'</span>
 <span class="sd">    ... }</span>
 
 <span class="sd">    See https://github.com/i2mint/i2//blob/f547257c272433b7651d09276afdfb1bb7b2f67b/misc/i2.routing.ipynb#L17.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Fetch function metadata</span>
     <span class="n">sig</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
 
@@ -400,33 +560,33 @@
     <span class="n">parameters</span> <span class="o">=</span> <span class="n">sig</span><span class="o">.</span><span class="n">parameters</span>
 
     <span class="n">schema</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">BASE_SCHEMA</span><span class="p">)</span>
-    <span class="n">schema</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pyname_to_title</span><span class="p">(</span><span class="n">func_name</span><span class="p">)</span>
+    <span class="n">schema</span><span class="p">[</span><span class="s2">"title"</span><span class="p">]</span> <span class="o">=</span> <span class="n">pyname_to_title</span><span class="p">(</span><span class="n">func_name</span><span class="p">)</span>
 
-    <span class="n">schema</span><span class="p">[</span><span class="s2">&quot;properties&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_properties</span><span class="p">(</span>
+    <span class="n">schema</span><span class="p">[</span><span class="s2">"properties"</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_properties</span><span class="p">(</span>
         <span class="n">parameters</span><span class="p">,</span> <span class="n">param_to_prop_type</span><span class="o">=</span><span class="n">param_to_prop_type</span>
     <span class="p">)</span>
-    <span class="n">schema</span><span class="p">[</span><span class="s2">&quot;required&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_required</span><span class="p">(</span><span class="n">schema</span><span class="p">[</span><span class="s2">&quot;properties&quot;</span><span class="p">])</span>
+    <span class="n">schema</span><span class="p">[</span><span class="s2">"required"</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_required</span><span class="p">(</span><span class="n">schema</span><span class="p">[</span><span class="s2">"properties"</span><span class="p">])</span>
 
     <span class="k">if</span> <span class="n">doc</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
         <span class="c1"># if doc is True, use the function docstring</span>
         <span class="n">doc</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getdoc</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">doc</span><span class="p">:</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;doc must be a string, was: </span><span class="si">{</span><span class="n">doc</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="n">schema</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">doc</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span> <span class="sa">f</span><span class="s2">"doc must be a string, was: </span><span class="si">{</span><span class="n">doc</span><span class="si">}</span><span class="s2">"</span>
+        <span class="n">schema</span><span class="p">[</span><span class="s2">"description"</span><span class="p">]</span> <span class="o">=</span> <span class="n">doc</span>
 
     <span class="c1"># # Build the schema for each parameter</span>
     <span class="c1"># for name, param in parameters.items():</span>
     <span class="c1">#     field = type_feature_switch(param)</span>
 
-    <span class="c1">#     # If there&#39;s a default value, add it to the schema</span>
+    <span class="c1">#     # If there's a default value, add it to the schema</span>
     <span class="c1">#     if param.default is not Parameter.empty:</span>
-    <span class="c1">#         field[&#39;default&#39;] = param.default</span>
+    <span class="c1">#         field['default'] = param.default</span>
     <span class="c1">#     else:</span>
-    <span class="c1">#         schema[&#39;required&#39;].append(name)</span>
+    <span class="c1">#         schema['required'].append(name)</span>
 
     <span class="c1">#     # Add the field to the schema</span>
-    <span class="c1">#     schema[&#39;properties&#39;][name] = field</span>
+    <span class="c1">#     schema['properties'][name] = field</span>
 
     <span class="k">return</span> <span class="n">schema</span></div>
 
@@ -436,7 +596,7 @@
 
 
 <div class="viewcode-block" id="json_schema_to_signature">
-<a class="viewcode-back" href="../../module_docs/ju/json_schema.html#ju.json_schema.json_schema_to_signature">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/ju.json_schema.html#ju.json_schema.json_schema_to_signature">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">json_schema_to_signature</span><span class="p">(</span>
     <span class="n">json_schema</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
@@ -444,56 +604,56 @@
     <span class="n">default_default</span><span class="o">=</span><span class="n">Parameter</span><span class="o">.</span><span class="n">empty</span><span class="p">,</span>
     <span class="n">title_to_pyname</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">title_to_pyname</span><span class="p">,</span>
     <span class="n">default_annotation</span><span class="o">=</span><span class="n">Parameter</span><span class="o">.</span><span class="n">empty</span><span class="p">,</span>
-    <span class="n">default_description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">default_description</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Transforms a JSON schema or OpenAPI parameters list to a Python function signature.</span>
-<span class="sd">    Supports both JSON schema &#39;properties&#39; and OpenAPI &#39;parameters&#39;.</span>
+<span class="sd">    Supports both JSON schema 'properties' and OpenAPI 'parameters'.</span>
 
-<span class="sd">    &gt;&gt;&gt; schema = {&#39;title&#39;: &#39;earth&#39;,</span>
-<span class="sd">    ...  &#39;type&#39;: &#39;object&#39;,</span>
-<span class="sd">    ...  &#39;properties&#39;: {&#39;north&#39;: {&#39;type&#39;: &#39;string&#39;},</span>
-<span class="sd">    ...   &#39;south&#39;: {&#39;type&#39;: &#39;boolean&#39;},</span>
-<span class="sd">    ...   &#39;east&#39;: {&#39;type&#39;: &#39;integer&#39;, &#39;default&#39;: 1},</span>
-<span class="sd">    ...   &#39;west&#39;: {&#39;type&#39;: &#39;number&#39;, &#39;default&#39;: 2.0}},</span>
-<span class="sd">    ...  &#39;required&#39;: [&#39;north&#39;, &#39;south&#39;],</span>
-<span class="sd">    ...  &#39;description&#39;: &#39;Earth docs&#39;}</span>
+<span class="sd">    &gt;&gt;&gt; schema = {'title': 'earth',</span>
+<span class="sd">    ...  'type': 'object',</span>
+<span class="sd">    ...  'properties': {'north': {'type': 'string'},</span>
+<span class="sd">    ...   'south': {'type': 'boolean'},</span>
+<span class="sd">    ...   'east': {'type': 'integer', 'default': 1},</span>
+<span class="sd">    ...   'west': {'type': 'number', 'default': 2.0}},</span>
+<span class="sd">    ...  'required': ['north', 'south'],</span>
+<span class="sd">    ...  'description': 'Earth docs'}</span>
 <span class="sd">    &gt;&gt;&gt; sig = json_schema_to_signature(schema)</span>
 <span class="sd">    &gt;&gt;&gt; sig</span>
 <span class="sd">    &lt;Sig (north: str, south: bool, east: int = 1, west: float = 2.0)&gt;</span>
 <span class="sd">    &gt;&gt;&gt; sig.name</span>
-<span class="sd">    &#39;earth&#39;</span>
+<span class="sd">    'earth'</span>
 <span class="sd">    &gt;&gt;&gt; sig.docs</span>
-<span class="sd">    &#39;Earth docs&#39;</span>
+<span class="sd">    'Earth docs'</span>
 
 <span class="sd">    # --- OpenAPI parameters support ---</span>
 <span class="sd">    &gt;&gt;&gt; openapi_params = {</span>
-<span class="sd">    ...     &#39;title&#39;: &#39;get_thing&#39;,</span>
-<span class="sd">    ...     &#39;parameters&#39;: [</span>
-<span class="sd">    ...         {&#39;name&#39;: &#39;thing_id&#39;, &#39;in&#39;: &#39;path&#39;, &#39;required&#39;: True, &#39;schema&#39;: {&#39;type&#39;: &#39;string&#39;}},</span>
-<span class="sd">    ...         {&#39;name&#39;: &#39;detail&#39;, &#39;in&#39;: &#39;query&#39;, &#39;required&#39;: False, &#39;schema&#39;: {&#39;type&#39;: &#39;boolean&#39;, &#39;default&#39;: False}},</span>
-<span class="sd">    ...         {&#39;name&#39;: &#39;count&#39;, &#39;in&#39;: &#39;query&#39;, &#39;schema&#39;: {&#39;type&#39;: &#39;integer&#39;, &#39;default&#39;: 1}},</span>
+<span class="sd">    ...     'title': 'get_thing',</span>
+<span class="sd">    ...     'parameters': [</span>
+<span class="sd">    ...         {'name': 'thing_id', 'in': 'path', 'required': True, 'schema': {'type': 'string'}},</span>
+<span class="sd">    ...         {'name': 'detail', 'in': 'query', 'required': False, 'schema': {'type': 'boolean', 'default': False}},</span>
+<span class="sd">    ...         {'name': 'count', 'in': 'query', 'schema': {'type': 'integer', 'default': 1}},</span>
 <span class="sd">    ...     ],</span>
-<span class="sd">    ...     &#39;description&#39;: &#39;Get a thing by ID.&#39;</span>
+<span class="sd">    ...     'description': 'Get a thing by ID.'</span>
 <span class="sd">    ... }</span>
 <span class="sd">    &gt;&gt;&gt; sig2 = json_schema_to_signature(openapi_params)</span>
 <span class="sd">    &gt;&gt;&gt; sig2</span>
 <span class="sd">    &lt;Sig (thing_id: str, detail: bool = False, count: int = 1)&gt;</span>
 <span class="sd">    &gt;&gt;&gt; sig2.name</span>
-<span class="sd">    &#39;get_thing&#39;</span>
+<span class="sd">    'get_thing'</span>
 <span class="sd">    &gt;&gt;&gt; sig2.docs</span>
-<span class="sd">    &#39;Get a thing by ID.&#39;</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    'Get a thing by ID.'</span>
+<span class="sd">    """</span>
     <span class="n">type_mapper</span> <span class="o">=</span> <span class="n">ensure_callable_mapper</span><span class="p">(</span><span class="n">type_mapper</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">default_annotation</span><span class="p">)</span>
     <span class="n">params</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="c1"># Support OpenAPI &#39;parameters&#39; (list of dicts)</span>
-    <span class="k">if</span> <span class="s2">&quot;parameters&quot;</span> <span class="ow">in</span> <span class="n">json_schema</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">json_schema</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">json_schema</span><span class="p">[</span><span class="s2">&quot;parameters&quot;</span><span class="p">]:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="n">param</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+    <span class="c1"># Support OpenAPI 'parameters' (list of dicts)</span>
+    <span class="k">if</span> <span class="s2">"parameters"</span> <span class="ow">in</span> <span class="n">json_schema</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">json_schema</span><span class="p">[</span><span class="s2">"parameters"</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">json_schema</span><span class="p">[</span><span class="s2">"parameters"</span><span class="p">]:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">param</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]</span>
             <span class="c1"># Try to get type from schema/type, fallback to string</span>
-            <span class="n">py_type</span> <span class="o">=</span> <span class="n">type_mapper</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;schema&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="s2">&quot;string&quot;</span><span class="p">))</span>
-            <span class="n">default</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;schema&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">default_default</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;required&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+            <span class="n">py_type</span> <span class="o">=</span> <span class="n">type_mapper</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"schema"</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"type"</span><span class="p">,</span> <span class="s2">"string"</span><span class="p">))</span>
+            <span class="n">default</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"schema"</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"default"</span><span class="p">,</span> <span class="n">default_default</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"required"</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
                 <span class="n">default</span> <span class="o">=</span> <span class="n">Parameter</span><span class="o">.</span><span class="n">empty</span>
             <span class="n">params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">Parameter</span><span class="p">(</span>
@@ -503,12 +663,12 @@
                     <span class="n">kind</span><span class="o">=</span><span class="n">Parameter</span><span class="o">.</span><span class="n">POSITIONAL_OR_KEYWORD</span><span class="p">,</span>
                 <span class="p">)</span>
             <span class="p">)</span>
-    <span class="c1"># Support JSON schema &#39;properties&#39; (as before)</span>
-    <span class="k">elif</span> <span class="s2">&quot;properties&quot;</span> <span class="ow">in</span> <span class="n">json_schema</span><span class="p">:</span>
-        <span class="n">properties</span> <span class="o">=</span> <span class="n">json_schema</span><span class="p">[</span><span class="s2">&quot;properties&quot;</span><span class="p">]</span>
+    <span class="c1"># Support JSON schema 'properties' (as before)</span>
+    <span class="k">elif</span> <span class="s2">"properties"</span> <span class="ow">in</span> <span class="n">json_schema</span><span class="p">:</span>
+        <span class="n">properties</span> <span class="o">=</span> <span class="n">json_schema</span><span class="p">[</span><span class="s2">"properties"</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">properties</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">name</span> <span class="o">=</span> <span class="n">title_to_pyname</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">json_type</span> <span class="o">:=</span> <span class="n">field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">json_type</span> <span class="o">:=</span> <span class="n">field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"type"</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">json_type</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
                     <span class="n">py_type</span> <span class="o">=</span> <span class="n">type_mapper</span><span class="p">(</span><span class="n">json_type</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
@@ -516,7 +676,7 @@
                     <span class="n">py_type</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">json_types</span><span class="p">)]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">py_type</span> <span class="o">=</span> <span class="n">Parameter</span><span class="o">.</span><span class="n">empty</span>
-            <span class="n">default</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">default_default</span><span class="p">)</span>
+            <span class="n">default</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"default"</span><span class="p">,</span> <span class="n">default_default</span><span class="p">)</span>
             <span class="n">params</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="n">Parameter</span><span class="p">(</span>
                     <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
@@ -529,9 +689,9 @@
         <span class="c1"># Fallback: no parameters</span>
         <span class="n">params</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">sig</span> <span class="o">=</span> <span class="n">Sig</span><span class="p">(</span><span class="n">sort_params</span><span class="p">(</span><span class="n">params</span><span class="p">))</span>
-    <span class="k">if</span> <span class="n">title</span> <span class="o">:=</span> <span class="n">json_schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">title</span> <span class="o">:=</span> <span class="n">json_schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"title"</span><span class="p">):</span>
         <span class="n">sig</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">title_to_pyname</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
-    <span class="n">sig</span><span class="o">.</span><span class="n">docs</span> <span class="o">=</span> <span class="n">json_schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;description&quot;</span><span class="p">,</span> <span class="n">default_description</span><span class="p">)</span>
+    <span class="n">sig</span><span class="o">.</span><span class="n">docs</span> <span class="o">=</span> <span class="n">json_schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"description"</span><span class="p">,</span> <span class="n">default_description</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">sig</span></div>
 
 
@@ -542,44 +702,44 @@
 
 <span class="c1"># TODO: The loop body could be factored out</span>
 <div class="viewcode-block" id="get_properties">
-<a class="viewcode-back" href="../../module_docs/ju/json_schema.html#ju.json_schema.get_properties">[docs]</a>
+<a class="viewcode-back" href="../../_autosummary/ju.json_schema.html#ju.json_schema.get_properties">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_properties</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">param_to_prop_type</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">DFLT_PARAM_TO_TYPE</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Returns the properties dict for the JSON schema.</span>
 
 <span class="sd">    &gt;&gt;&gt; def foo(</span>
 <span class="sd">    ...     a_bool: bool,</span>
 <span class="sd">    ...     a_float=3.14,</span>
 <span class="sd">    ...     an_int=2,</span>
-<span class="sd">    ...     a_str: str = &#39;hello&#39;,</span>
+<span class="sd">    ...     a_str: str = 'hello',</span>
 <span class="sd">    ...     something_else=None</span>
 <span class="sd">    ... ):</span>
-<span class="sd">    ...     &#39;&#39;&#39;A Foo function&#39;&#39;&#39;</span>
+<span class="sd">    ...     '''A Foo function'''</span>
 <span class="sd">    &gt;&gt;&gt;</span>
 <span class="sd">    &gt;&gt;&gt; from ju.json_schema import DFLT_PARAM_TO_TYPE</span>
 <span class="sd">    &gt;&gt;&gt; parameters = inspect.signature(foo).parameters</span>
 <span class="sd">    &gt;&gt;&gt; assert (</span>
 <span class="sd">    ...     get_properties(parameters, param_to_prop_type=DFLT_PARAM_TO_TYPE)</span>
 <span class="sd">    ...     == {</span>
-<span class="sd">    ...         &#39;a_bool&#39;: {&#39;type&#39;: &#39;boolean&#39;},</span>
-<span class="sd">    ...         &#39;a_float&#39;: {&#39;type&#39;: &#39;number&#39;, &#39;default&#39;: 3.14},</span>
-<span class="sd">    ...         &#39;an_int&#39;: {&#39;type&#39;: &#39;integer&#39;, &#39;default&#39;: 2},</span>
-<span class="sd">    ...         &#39;a_str&#39;: {&#39;type&#39;: &#39;string&#39;, &#39;default&#39;: &#39;hello&#39;},</span>
-<span class="sd">    ...         &#39;something_else&#39;: {&#39;type&#39;: &#39;string&#39;, &#39;default&#39;: None}</span>
+<span class="sd">    ...         'a_bool': {'type': 'boolean'},</span>
+<span class="sd">    ...         'a_float': {'type': 'number', 'default': 3.14},</span>
+<span class="sd">    ...         'an_int': {'type': 'integer', 'default': 2},</span>
+<span class="sd">    ...         'a_str': {'type': 'string', 'default': 'hello'},</span>
+<span class="sd">    ...         'something_else': {'type': 'string', 'default': None}</span>
 <span class="sd">    ...     }</span>
 <span class="sd">    ... )</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Build the properties dict</span>
     <span class="n">properties</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
         <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="o">=</span> <span class="n">item</span>
         <span class="n">field</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">field</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">param_to_prop_type</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+        <span class="n">field</span><span class="p">[</span><span class="s2">"type"</span><span class="p">]</span> <span class="o">=</span> <span class="n">param_to_prop_type</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
 
-        <span class="c1"># If there&#39;s a default value, add it</span>
+        <span class="c1"># If there's a default value, add it</span>
         <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">default</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">inspect</span><span class="o">.</span><span class="n">Parameter</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
-            <span class="n">field</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">default</span>
+            <span class="n">field</span><span class="p">[</span><span class="s2">"default"</span><span class="p">]</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">default</span>
 
         <span class="c1"># Add the field to the schema</span>
         <span class="n">properties</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span>
@@ -589,34 +749,398 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">get_required</span><span class="p">(</span><span class="n">properties</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">properties</span> <span class="k">if</span> <span class="s2">&quot;default&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">[</span><span class="n">name</span><span class="p">]]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">properties</span> <span class="k">if</span> <span class="s2">"default"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">[</span><span class="n">name</span><span class="p">]]</span>
 </pre></div>
-
-           </div>
-          </div>
-          <footer>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>&#169; Copyright NO COPYRIGHT.</p>
-  </div>
-
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
-
-</footer>
-        </div>
+        </article>
       </div>
-    </section>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            Made with 
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
   </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
+</div><script src="../../_static/documentation_options.js?v=201c9933"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=fd10adb8"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
 
-</body>
+
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}";
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+let _lazyObserver = null;
+let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
+
+// Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
+// so this is safe to call both for the initial batch and for diagrams that
+// render lazily once they become visible.
+const addZoomToSvgs = (svgs) => {
+    svgs.each(function() {
+        if (this.getAttribute('data-zoom-applied') === 'true') return;
+        var svg = d3.select(this);
+        svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+        var inner = svg.select("g");
+        var zoom = d3.zoom().on("zoom", function(event) {
+            inner.attr("transform", event.transform);
+        });
+        svg.call(zoom);
+        this.setAttribute('data-zoom-applied', 'true');
+    });
+};
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        // Disconnect any previous lazy rendering observer
+        if (_lazyObserver) {
+            _lazyObserver.disconnect();
+            _lazyObserver = null;
+        }
+
+        all_mermaids.forEach((el) => {
+            el.removeAttribute('data-mermaid-deferred');
+            el.removeAttribute('data-mermaid-render-failed');
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+
+        // Separate visible and hidden elements. Mermaid's layout engine measures
+        // text dimensions via the DOM, which fails for elements hidden by a parent
+        // (e.g., Reveal.js non-active slides, sphinx-design unopened tabs),
+        // producing broken SVGs. Render visible elements now, defer hidden ones.
+        const visible = [];
+        const hidden = [];
+        all_mermaids.forEach((el) => {
+            // offsetParent is null for display:none ancestors.
+            // getClientRects().length > 0 catches position:fixed elements
+            // (which also have null offsetParent but are still visible).
+            if (el.offsetParent !== null || el.getClientRects().length > 0) {
+                visible.push(el);
+            } else {
+                hidden.push(el);
+                el.setAttribute('data-mermaid-deferred', 'true');
+            }
+        });
+
+        if (visible.length > 0) {
+            try {
+                await mermaid.run({ nodes: visible });
+            } catch (e) {
+                console.error("Mermaid rendering failed:", e);
+            }
+        }
+
+        // Lazily render hidden elements when they become visible.
+        // Uses a promise chain (_renderQueue) to serialize rendering,
+        // since IntersectionObserver may report multiple entries at once
+        // and mermaid.run() is not safe to call concurrently.
+        if (hidden.length > 0) {
+            if (typeof IntersectionObserver === 'undefined') {
+                console.warn("IntersectionObserver not available; hidden mermaid diagrams will not render.");
+            } else {
+                _renderQueue = Promise.resolve();
+                _lazyObserver = new IntersectionObserver((entries) => {
+                    for (const entry of entries) {
+                        if (entry.isIntersecting && entry.target.getAttribute("data-processed") !== "true") {
+                            _lazyObserver.unobserve(entry.target);
+                            const el = entry.target;
+                            _renderQueue = _renderQueue.then(async () => {
+                                try {
+                                    await mermaid.run({ nodes: [el] });
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    // Apply zoom to the now-rendered diagram, matching
+                                    // the decoration visible diagrams receive.
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
+                                    }
+                                } catch (e) {
+                                    console.error("Mermaid deferred rendering failed:", e);
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    el.setAttribute('data-mermaid-render-failed', 'true');
+                                }
+                            });
+                        }
+                    }
+                });
+                hidden.forEach((el) => _lazyObserver.observe(el));
+            }
+        }
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    // Exclude deferred (hidden) and render-failed elements from completion checks
+    const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
+    const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
+
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
+            // Wait until every active (visible) diagram has rendered. Deferred
+            // diagrams are excluded, so a fixed d3_node_count that counts a
+            // hidden diagram no longer loops forever waiting for its SVG.
+            if(mermaids_active.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            }
+            addZoomToSvgs(svgs);
+        }
+    } else if(mermaids_active.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if (!true) return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scrollX, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.display = 'block';
+
+                if (false) {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+
+
+const load = async () => {
+    initStyles();
+
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
+    </body>
 </html>

@@ -1,0 +1,12 @@
+ju.viz
+======
+
+.. automodule:: ju.viz
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      model_digraph
+   
