@@ -82,10 +82,23 @@ def is_type(param: Parameter, type_: SomeType):
     False
     >>> is_type(param, Union[int, List[int]])
     True
+
+    A parameterized generic built from an ``collections.abc`` type (e.g.
+    ``Sequence[str]``) is itself an instance of ``type`` -- unlike ``typing``
+    generics such as ``List[str]`` -- so it must still fall through to the
+    ``__origin__``-based branch below rather than being handed to
+    ``isinstance(param.default, type_)``, which raises ``TypeError`` for a
+    parameterized generic:
+
+    >>> from collections.abc import Sequence
+    >>> is_type(param, Sequence[int])
+    True
+    >>> is_type(param, Sequence[str])
+    False
     """
     if param.annotation is type_:
         return True
-    if isinstance(type_, type):
+    if isinstance(type_, type) and not hasattr(type_, "__origin__"):
         return isinstance(param.default, type_)
     if hasattr(type_, "__origin__"):
         origin = get_origin(type_)
