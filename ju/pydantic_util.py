@@ -72,7 +72,6 @@ from collections.abc import Iterable, Callable
 from pydantic import BaseModel, ValidationError, create_model, Field
 from i2 import ObjectClassifier
 
-
 # -------------------------------------------------------------------------------------
 # Misc utils
 from pydantic import ValidationError

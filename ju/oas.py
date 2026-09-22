@@ -9,7 +9,6 @@ from dataclasses import dataclass, field
 from dol import KvReader, cached_keys, path_get as _path_get
 from i2 import Sig
 
-
 http_methods = {"get", "post", "put", "delete", "patch", "options", "head"}
 
 

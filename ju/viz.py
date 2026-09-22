@@ -7,9 +7,7 @@ from pydantic import BaseModel
 
 # TODO: Handle ids and labels more carefully (e.g. what happens when the field names appear in different models?)
 # TODO: Test loops and recursion artifacts
-def model_digraph(
-    model: BaseModel | Iterable[BaseModel], *, dot=None, parent=None
-):
+def model_digraph(model: BaseModel | Iterable[BaseModel], *, dot=None, parent=None):
     r"""
     Visualize Pydantic models using Graphviz, showing the relationship between models
     and their fields.
