@@ -281,7 +281,6 @@ from ju.json_schema import json_schema_to_signature, title_to_pyname
 import operator as operations
 from functools import partial, update_wrapper
 import inspect
-import dill  # Optional: for advanced pickling, but not required for class-based approach
 
 OpenAPISpec = Union[str, dict]
 DFLT_SERVERS_URL = "http://localhost:8000"
