@@ -336,7 +336,7 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="ju.oas.ArrayOf">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ju.oas.</span></span><span class="sig-name descname"><span class="pre">ArrayOf</span></span><a class="reference internal" href="../_modules/ju/oas.html#ArrayOf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.oas.ArrayOf" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></p>
 <p>A class that is simply meant to mark the fact that some properties dict really
 represents an array of objects, and not just a single object.</p>
 </dd></dl>
@@ -344,14 +344,14 @@ represents an array of objects, and not just a single object.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="ju.oas.OpenApiFunc">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ju.oas.</span></span><span class="sig-name descname"><span class="pre">OpenApiFunc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_schema</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_response</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;function</span> <span class="pre">default_get_response&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response_egress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ju/oas.html#OpenApiFunc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.oas.OpenApiFunc" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Callable class for OpenAPI route functions, supporting introspection and pickling.</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="ju.oas.Route">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ju.oas.</span></span><span class="sig-name descname"><span class="pre">Route</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endpoint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(('array'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'list'&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">('integer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'int'&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">('object'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'dict'&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">('string'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'str'&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">('boolean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'bool'&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">('number'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'float'&gt;))</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ju/oas.html#Route"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.oas.Route" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Represents a route in an OpenAPI specification.</p>
 <p>Each route has a method (e.g., ‘get’, ‘post’), an endpoint (e.g., ‘/items’), and a spec, which is a dictionary
 containing the details of the route as specified in the OpenAPI document.</p>
@@ -463,7 +463,7 @@ In either case, this is followed by: for k, v in F.items(): D[k] = v</p>
 <dd><p>Default function name generator for OpenAPI routes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
 </dd>
 </dl>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">default_func_namer</span><span class="p">(</span><span class="s1">'get'</span><span class="p">,</span> <span class="s1">'/stores/</span><span class="si">{store_name}</span><span class="s1">/</span><span class="si">{key}</span><span class="s1">'</span><span class="p">)</span>
@@ -486,7 +486,7 @@ In either case, this is followed by: for k, v in F.items(): D[k] = v</p>
 </ul>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -519,11 +519,11 @@ file_format: ‘yaml’ or ‘json’ (used if openapi_spec is a dict)</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ju.oas.get_routes">
-<span class="sig-prename descclassname"><span class="pre">ju.oas.</span></span><span class="sig-name descname"><span class="pre">get_routes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_methods</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('post',</span> <span class="pre">'patch',</span> <span class="pre">'head',</span> <span class="pre">'put',</span> <span class="pre">'options',</span> <span class="pre">'delete',</span> <span class="pre">'get')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ju/oas.html#get_routes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.oas.get_routes" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">ju.oas.</span></span><span class="sig-name descname"><span class="pre">get_routes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_methods</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('post',</span> <span class="pre">'options',</span> <span class="pre">'head',</span> <span class="pre">'patch',</span> <span class="pre">'get',</span> <span class="pre">'put',</span> <span class="pre">'delete')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ju/oas.html#get_routes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.oas.get_routes" title="Link to this definition">¶</a></dt>
 <dd><p>Takes OpenAPI specification dict ‘d’ and returns the key-paths to all the endpoints.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -545,7 +545,7 @@ response_egress: function (method, uri) -&gt; callable to extract result from re
 Returns a generator yielding OpenApiFunc instances for each route in the OpenAPI spec.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterator" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterator</span></code></a>[<a class="reference internal" href="#ju.oas.OpenApiFunc" title="ju.oas.OpenApiFunc"><code class="xref py py-class docutils literal notranslate"><span class="pre">OpenApiFunc</span></code></a>]</span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterator" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterator</span></code></a>[<a class="reference internal" href="#ju.oas.OpenApiFunc" title="ju.oas.OpenApiFunc"><code class="xref py py-class docutils literal notranslate"><span class="pre">OpenApiFunc</span></code></a>]</span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -557,7 +557,7 @@ Returns a generator yielding OpenApiFunc instances for each route in the OpenAPI
 Uses func_namer for naming, and parameter schema from the OpenAPI spec.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterator" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterator</span></code></a>[<a class="reference internal" href="#ju.oas.OpenApiFunc" title="ju.oas.OpenApiFunc"><code class="xref py py-class docutils literal notranslate"><span class="pre">OpenApiFunc</span></code></a>]</span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterator" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterator</span></code></a>[<a class="reference internal" href="#ju.oas.OpenApiFunc" title="ju.oas.OpenApiFunc"><code class="xref py py-class docutils literal notranslate"><span class="pre">OpenApiFunc</span></code></a>]</span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -569,7 +569,7 @@ Uses func_namer for naming, and parameter schema from the OpenAPI spec.</p>
 that the schema is for an array of objects, and not just a single object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -581,12 +581,12 @@ that the schema is for an array of objects, and not just a single object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>open_api_spec</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span>) – The complete OpenAPI specification as a dictionary.</p></li>
-<li><p><strong>d</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span>) – The dictionary in which references need to be resolved.</p></li>
+<li><p><strong>open_api_spec</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span>) – The complete OpenAPI specification as a dictionary.</p></li>
+<li><p><strong>d</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span>) – The dictionary in which references need to be resolved.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The dictionary with all references resolved.</p>
@@ -689,7 +689,7 @@ This function is just for demonstration and should be removed in production code
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=201c9933"></script>
+</div><script src="../_static/documentation_options.js?v=895ced55"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

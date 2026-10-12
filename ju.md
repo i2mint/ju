@@ -1,4 +1,4 @@
-> built 2026-09-22 14:42 UTC from 0270dc2 (master) · ju 0.1.32. Details: build_info.json
+> built 2026-10-12 18:12 UTC from 825fa45 (master) · ju 0.1.33. Details: build_info.json
 
 # index.html.md
 
@@ -353,10 +353,23 @@ Returns the properties dict for the JSON schema.
 ... )
 ```
 
-### ju.json_schema.json_schema_to_signature(json_schema, \*, type_mapper=(('string', <class 'str'>), ('boolean', <class 'bool'>), ('integer', <class 'int'>), ('number', <class 'float'>), ('object', <class 'collections.abc.Mapping'>), ('array', collections.abc.Sequence[str])), default_default, title_to_pyname=<function title_to_pyname>, default_annotation, default_description='')
+### ju.json_schema.json_schema_to_signature(json_schema, \*, type_mapper=(('string', <class 'str'>), ('boolean', <class 'bool'>), ('integer', <class 'int'>), ('number', <class 'float'>), ('object', <class 'collections.abc.Mapping'>), ('array', collections.abc.Sequence[str])), default_default=None, title_to_pyname=<function title_to_pyname>, default_annotation, default_description='')
 
 Transforms a JSON schema or OpenAPI parameters list to a Python function signature.
 Supports both JSON schema ‘properties’ and OpenAPI ‘parameters’.
+
+Parameters named in the schema’s `required` list (or marked `required: true`,
+for OpenAPI parameters) have no default. All others get their schema `default`
+if they have one, else `default_default` (`None` unless you say otherwise;
+pass `Parameter.empty` to make them required anyway). Required parameters come
+first, optional ones after, each group keeping the schema’s order, so positional
+calls bind required parameters in schema order.
+
+A ‘properties’ schema with no `required` key at all keeps the legacy behavior
+(only properties with their own `default` are optional, `default_default` is
+not applied), so positional callers of such schemas are not re-bound. Say
+`'required': []` to make everything optional. A malformed `required`
+(not a list) raises `ValueError`.
 
 ```pycon
 >>> schema = {'title': 'earth',
@@ -395,6 +408,18 @@ Supports both JSON schema ‘properties’ and OpenAPI ‘parameters’.
 'get_thing'
 >>> sig2.docs
 'Get a thing by ID.'
+```
+
+Properties not in `required` are optional (`default_default`, i.e. `None`,
+unless they have their own default):
+
+```pycon
+>>> optional = {'properties': {'a': {'type': 'string'}, 'b': {'type': 'integer'}},
+...             'required': ['b']}
+>>> json_schema_to_signature(optional)
+<Sig (b: int, a: str = None)>
+>>> json_schema_to_signature(optional, default_default='')
+<Sig (b: int, a: str = '')>
 ```
 
 ### ju.json_schema.merge_with_defaults(defaults, overwrites)
@@ -694,7 +719,7 @@ file_format: ‘yaml’ or ‘json’ (used if openapi_spec is a dict)
 * **Returns:**
   imported client module
 
-### ju.oas.get_routes(d, include_methods=('get', 'options', 'post', 'head', 'delete', 'put', 'patch'))
+### ju.oas.get_routes(d, include_methods=('patch', 'post', 'head', 'options', 'delete', 'put', 'get'))
 
 Takes OpenAPI specification dict ‘d’ and returns the key-paths to all the endpoints.
 
@@ -2009,7 +2034,7 @@ See also the online tool: [https://navneethg.github.io/jsonschemaviewer/](https:
 
 # About this build
 
-This documentation was built on **2026-09-22 14:42 UTC** from commit <a href="https://github.com/i2mint/ju/commit/0270dc2eec1a06f12a95c806d27bdc0491768ff1"><code>0270dc2</code></a> on branch <code>master</code>, for **ju 0.1.32** (from <code>setup.cfg</code>).
+This documentation was built on **2026-10-12 18:12 UTC** from commit <a href="https://github.com/i2mint/ju/commit/825fa4532625da2b1afe8661454050b67dfa1c45"><code>825fa45</code></a> on branch <code>master</code>, for **ju 0.1.33** (from <code>setup.cfg</code>).
 
 #### NOTE
 Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
@@ -2018,9 +2043,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 |                     |                                                                                                                                                  |
 |---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/i2mint/ju/commit/0270dc2eec1a06f12a95c806d27bdc0491768ff1"><code>0270dc2eec1a06f12a95c806d27bdc0491768ff1</code></a> |
+| Commit              | <a href="https://github.com/i2mint/ju/commit/825fa4532625da2b1afe8661454050b67dfa1c45"><code>825fa4532625da2b1afe8661454050b67dfa1c45</code></a> |
 | Branch              | <code>master</code>                                                                                                                              |
-| Tags at this commit | <code>0.1.32</code>                                                                                                                              |
+| Tags at this commit | <code>0.1.33</code>                                                                                                                              |
 | Working tree        | clean                                                                                                                                            |
 | Remote              | <code>https://github.com/i2mint/ju</code>                                                                                                        |
 
@@ -2029,9 +2054,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>i2mint/ju</code>                                                                     |
-| Run          | <a href="https://github.com/i2mint/ju/actions/runs/35741989840">35741989840</a>            |
+| Run          | <a href="https://github.com/i2mint/ju/actions/runs/38289137358">38289137358</a>            |
 | Ref          | <code>refs/heads/master</code>                                                             |
-| Event commit | <code>5ee6394575d40873aad30086a2451dc2145f8f26</code> (in the history of the built commit) |
+| Event commit | <code>65a15c106e43cf2ab056f0b3c0a311f4debc00ce</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -2040,7 +2065,7 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 | epythet  | 0.2.12  |
 | Sphinx   | 9.1.0   |
 | docutils | 0.22.4  |
-| Python   | 3.12.14 |
+| Python   | 3.12.15 |
 
 ## Configuration as resolved
 
@@ -2056,13 +2081,13 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/ju/0.1.32/">0.1.32</a>, the same as the documented version.
+Latest release: <a href="https://pypi.org/project/ju/0.1.33/">0.1.33</a>, the same as the documented version.
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/i2mint/ju && cd ju
-git checkout 0270dc2eec1a06f12a95c806d27bdc0491768ff1
+git checkout 825fa4532625da2b1afe8661454050b67dfa1c45
 pip install "epythet==0.2.12"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```

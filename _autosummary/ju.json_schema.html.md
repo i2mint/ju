@@ -97,10 +97,23 @@ Returns the properties dict for the JSON schema.
 ... )
 ```
 
-### ju.json_schema.json_schema_to_signature(json_schema, \*, type_mapper=(('string', <class 'str'>), ('boolean', <class 'bool'>), ('integer', <class 'int'>), ('number', <class 'float'>), ('object', <class 'collections.abc.Mapping'>), ('array', collections.abc.Sequence[str])), default_default, title_to_pyname=<function title_to_pyname>, default_annotation, default_description='')
+### ju.json_schema.json_schema_to_signature(json_schema, \*, type_mapper=(('string', <class 'str'>), ('boolean', <class 'bool'>), ('integer', <class 'int'>), ('number', <class 'float'>), ('object', <class 'collections.abc.Mapping'>), ('array', collections.abc.Sequence[str])), default_default=None, title_to_pyname=<function title_to_pyname>, default_annotation, default_description='')
 
 Transforms a JSON schema or OpenAPI parameters list to a Python function signature.
 Supports both JSON schema ‘properties’ and OpenAPI ‘parameters’.
+
+Parameters named in the schema’s `required` list (or marked `required: true`,
+for OpenAPI parameters) have no default. All others get their schema `default`
+if they have one, else `default_default` (`None` unless you say otherwise;
+pass `Parameter.empty` to make them required anyway). Required parameters come
+first, optional ones after, each group keeping the schema’s order, so positional
+calls bind required parameters in schema order.
+
+A ‘properties’ schema with no `required` key at all keeps the legacy behavior
+(only properties with their own `default` are optional, `default_default` is
+not applied), so positional callers of such schemas are not re-bound. Say
+`'required': []` to make everything optional. A malformed `required`
+(not a list) raises `ValueError`.
 
 ```pycon
 >>> schema = {'title': 'earth',
@@ -139,6 +152,18 @@ Supports both JSON schema ‘properties’ and OpenAPI ‘parameters’.
 'get_thing'
 >>> sig2.docs
 'Get a thing by ID.'
+```
+
+Properties not in `required` are optional (`default_default`, i.e. `None`,
+unless they have their own default):
+
+```pycon
+>>> optional = {'properties': {'a': {'type': 'string'}, 'b': {'type': 'integer'}},
+...             'required': ['b']}
+>>> json_schema_to_signature(optional)
+<Sig (b: int, a: str = None)>
+>>> json_schema_to_signature(optional, default_default='')
+<Sig (b: int, a: str = '')>
 ```
 
 ### ju.json_schema.merge_with_defaults(defaults, overwrites)

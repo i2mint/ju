@@ -329,7 +329,7 @@ a form in a React application.</p>
 return: The JSON schema (as a dict) for the function</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
 </dd>
 </dl>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">mercury</span><span class="p">(</span><span class="n">sweet</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">sour</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -383,9 +383,20 @@ return: The JSON schema (as a dict) for the function</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ju.json_schema.json_schema_to_signature">
-<span class="sig-prename descclassname"><span class="pre">ju.json_schema.</span></span><span class="sig-name descname"><span class="pre">json_schema_to_signature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_schema</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_mapper</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(('string'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'str'&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">('boolean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'bool'&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">('integer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'int'&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">('number'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'float'&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">('object'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'collections.abc.Mapping'&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">('array'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">collections.abc.Sequence[str]))</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_default</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title_to_pyname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;function</span> <span class="pre">title_to_pyname&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_annotation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ju/json_schema.html#json_schema_to_signature"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.json_schema.json_schema_to_signature" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">ju.json_schema.</span></span><span class="sig-name descname"><span class="pre">json_schema_to_signature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_schema</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_mapper</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(('string'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'str'&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">('boolean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'bool'&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">('integer'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'int'&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">('number'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'float'&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">('object'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'collections.abc.Mapping'&gt;)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">('array'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">collections.abc.Sequence[str]))</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title_to_pyname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;function</span> <span class="pre">title_to_pyname&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_annotation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ju/json_schema.html#json_schema_to_signature"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.json_schema.json_schema_to_signature" title="Link to this definition">¶</a></dt>
 <dd><p>Transforms a JSON schema or OpenAPI parameters list to a Python function signature.
 Supports both JSON schema ‘properties’ and OpenAPI ‘parameters’.</p>
+<p>Parameters named in the schema’s <code class="docutils literal notranslate"><span class="pre">required</span></code> list (or marked <code class="docutils literal notranslate"><span class="pre">required:</span> <span class="pre">true</span></code>,
+for OpenAPI parameters) have no default. All others get their schema <code class="docutils literal notranslate"><span class="pre">default</span></code>
+if they have one, else <code class="docutils literal notranslate"><span class="pre">default_default</span></code> (<code class="docutils literal notranslate"><span class="pre">None</span></code> unless you say otherwise;
+pass <code class="docutils literal notranslate"><span class="pre">Parameter.empty</span></code> to make them required anyway). Required parameters come
+first, optional ones after, each group keeping the schema’s order, so positional
+calls bind required parameters in schema order.</p>
+<p>A ‘properties’ schema with no <code class="docutils literal notranslate"><span class="pre">required</span></code> key at all keeps the legacy behavior
+(only properties with their own <code class="docutils literal notranslate"><span class="pre">default</span></code> are optional, <code class="docutils literal notranslate"><span class="pre">default_default</span></code> is
+not applied), so positional callers of such schemas are not re-bound. Say
+<code class="docutils literal notranslate"><span class="pre">'required':</span> <span class="pre">[]</span></code> to make everything optional. A malformed <code class="docutils literal notranslate"><span class="pre">required</span></code>
+(not a list) raises <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">schema</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'title'</span><span class="p">:</span> <span class="s1">'earth'</span><span class="p">,</span>
 <span class="gp">... </span> <span class="s1">'type'</span><span class="p">:</span> <span class="s1">'object'</span><span class="p">,</span>
 <span class="gp">... </span> <span class="s1">'properties'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'north'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'type'</span><span class="p">:</span> <span class="s1">'string'</span><span class="p">},</span>
@@ -422,6 +433,16 @@ Supports both JSON schema ‘properties’ and OpenAPI ‘parameters’.</p>
 <span class="go">'Get a thing by ID.'</span>
 </pre></div>
 </div>
+<p>Properties not in <code class="docutils literal notranslate"><span class="pre">required</span></code> are optional (<code class="docutils literal notranslate"><span class="pre">default_default</span></code>, i.e. <code class="docutils literal notranslate"><span class="pre">None</span></code>,
+unless they have their own default):</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">optional</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'properties'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'a'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'type'</span><span class="p">:</span> <span class="s1">'string'</span><span class="p">},</span> <span class="s1">'b'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'type'</span><span class="p">:</span> <span class="s1">'integer'</span><span class="p">}},</span>
+<span class="gp">... </span>            <span class="s1">'required'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'b'</span><span class="p">]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">json_schema_to_signature</span><span class="p">(</span><span class="n">optional</span><span class="p">)</span>
+<span class="go">&lt;Sig (b: int, a: str = None)&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">json_schema_to_signature</span><span class="p">(</span><span class="n">optional</span><span class="p">,</span> <span class="n">default_default</span><span class="o">=</span><span class="s1">''</span><span class="p">)</span>
+<span class="go">&lt;Sig (b: int, a: str = '')&gt;</span>
+</pre></div>
+</div>
 <dl class="field-list simple">
 </dl>
 </dd></dl>
@@ -434,7 +455,7 @@ and order from the first dictionary (defaults) and overwriting its values
 with those from the second dictionary (overwrites) when they exist.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
 </dd>
 </dl>
 <p class="rubric">Parameters</p>
@@ -465,7 +486,7 @@ If the name contains camel case, it will be split into words.</p>
 <p>A sort of (imperfect) inverse of <code class="code docutils literal notranslate"><span class="pre">title_to_pyname</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -485,7 +506,7 @@ If the name contains camel case, it will be split into words.</p>
 return: The JSON schema (as a dict) for the function</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
 </dd>
 </dl>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">mercury</span><span class="p">(</span><span class="n">sweet</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">sour</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -516,7 +537,7 @@ letter of each word.
 If the title contains camel case, it will be split into words.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -604,7 +625,7 @@ If the title contains camel case, it will be split into words.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=201c9933"></script>
+</div><script src="../_static/documentation_options.js?v=895ced55"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
