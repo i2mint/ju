@@ -23,10 +23,26 @@ def test_properties_branch_empty_required_means_all_optional():
     sig.bind()  # no required argument
 
 
-def test_properties_branch_missing_required_key_means_all_optional():
-    """JSON Schema: no ``required`` keyword means nothing is required."""
-    schema = {"type": "object", "properties": {"a": {"type": "string"}}}
-    assert _defaults(json_schema_to_signature(schema)) == {"a": None}
+def test_properties_branch_missing_required_key_keeps_legacy_binding():
+    """No ``required`` key: unchanged from before, so positional callers don't re-bind."""
+    schema = {
+        "type": "object",
+        "properties": {
+            "a": {"type": "integer"},
+            "b": {"type": "integer", "default": 5},
+            "c": {"type": "integer"},
+        },
+    }
+    sig = json_schema_to_signature(schema)
+    assert list(sig.parameters) == ["a", "c", "b"]
+    assert sig.bind(1, 2).arguments == {"a": 1, "c": 2}
+
+
+@pytest.mark.parametrize("bad", ["a", True, {"a": 1}, None])
+def test_malformed_required_raises(bad):
+    schema = {"type": "object", "properties": {"a": {}}, "required": bad}
+    with pytest.raises(ValueError, match="required"):
+        json_schema_to_signature(schema)
 
 
 def test_properties_branch_required_stay_required_and_keep_positional_order():

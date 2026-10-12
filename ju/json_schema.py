@@ -356,6 +356,12 @@ def json_schema_to_signature(
     first, optional ones after, each group keeping the schema's order, so positional
     calls bind required parameters in schema order.
 
+    A 'properties' schema with no ``required`` key at all keeps the legacy behavior
+    (only properties with their own ``default`` are optional, ``default_default`` is
+    not applied), so positional callers of such schemas are not re-bound. Say
+    ``'required': []`` to make everything optional. A malformed ``required``
+    (not a list) raises ``ValueError``.
+
     >>> schema = {'title': 'earth',
     ...  'type': 'object',
     ...  'properties': {'north': {'type': 'string'},
@@ -422,9 +428,9 @@ def json_schema_to_signature(
     # Support JSON schema 'properties' (as before)
     elif "properties" in json_schema:
         properties = json_schema["properties"]
-        required = _required_names(json_schema)
+        required = _required_names(json_schema)  # None when there is no such key
         for name, field in properties.items():
-            is_required = name in required
+            is_required = required is not None and name in required
             name = title_to_pyname(name)
             if (json_type := field.get("type", None)) is not None:
                 if not isinstance(json_type, list):
@@ -434,11 +440,12 @@ def json_schema_to_signature(
                     py_type = Union[tuple(json_types)]
             else:
                 py_type = Parameter.empty
-            default = (
-                Parameter.empty
-                if is_required
-                else field.get("default", default_default)
-            )
+            if is_required:
+                default = Parameter.empty
+            elif required is None:  # legacy: no 'required' key, so no opinion
+                default = field.get("default", Parameter.empty)
+            else:
+                default = field.get("default", default_default)
             params.append(
                 Parameter(
                     name=name,
@@ -461,12 +468,16 @@ def json_schema_to_signature(
 # Utils
 
 
-def _required_names(json_schema: dict) -> frozenset:
-    """Names in the schema's top-level ``required`` list (none if absent/malformed)."""
-    required = json_schema.get("required", ())
-    if isinstance(required, (list, tuple, set, frozenset)):
-        return frozenset(required)
-    return frozenset()
+def _required_names(json_schema: dict):
+    """Names in the schema's top-level ``required`` list; None if there is no such key."""
+    if "required" not in json_schema:
+        return None
+    required = json_schema["required"]
+    if not isinstance(required, (list, tuple, set, frozenset)):
+        raise ValueError(
+            f"'required' must be a list of property names, got: {required!r}"
+        )
+    return frozenset(required)
 
 
 # TODO: The loop body could be factored out
