@@ -103,7 +103,12 @@ def test_parameters_branch_optional_without_default_is_optional():
     schema = {
         "parameters": [
             {"name": "x_role", "in": "header", "schema": {"type": "string"}},
-            {"name": "id", "in": "path", "required": True, "schema": {"type": "string"}},
+            {
+                "name": "id",
+                "in": "path",
+                "required": True,
+                "schema": {"type": "string"},
+            },
             {"name": "n", "in": "query", "schema": {"type": "integer"}},
         ]
     }
