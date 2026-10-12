@@ -340,7 +340,7 @@ def json_schema_to_signature(
     json_schema: dict,
     *,
     type_mapper: Mapper = DFLT_JSON_PY_TYPE_PAIRS,
-    default_default=Parameter.empty,
+    default_default=None,
     title_to_pyname: Callable[[str], str] = title_to_pyname,
     default_annotation=Parameter.empty,
     default_description: str = "",
@@ -348,6 +348,13 @@ def json_schema_to_signature(
     """
     Transforms a JSON schema or OpenAPI parameters list to a Python function signature.
     Supports both JSON schema 'properties' and OpenAPI 'parameters'.
+
+    Parameters named in the schema's ``required`` list (or marked ``required: true``,
+    for OpenAPI parameters) have no default. All others get their schema ``default``
+    if they have one, else ``default_default`` (``None`` unless you say otherwise;
+    pass ``Parameter.empty`` to make them required anyway). Required parameters come
+    first, optional ones after, each group keeping the schema's order, so positional
+    calls bind required parameters in schema order.
 
     >>> schema = {'title': 'earth',
     ...  'type': 'object',
@@ -382,6 +389,16 @@ def json_schema_to_signature(
     'get_thing'
     >>> sig2.docs
     'Get a thing by ID.'
+
+    Properties not in ``required`` are optional (``default_default``, i.e. ``None``,
+    unless they have their own default):
+
+    >>> optional = {'properties': {'a': {'type': 'string'}, 'b': {'type': 'integer'}},
+    ...             'required': ['b']}
+    >>> json_schema_to_signature(optional)
+    <Sig (b: int, a: str = None)>
+    >>> json_schema_to_signature(optional, default_default='')
+    <Sig (b: int, a: str = '')>
     """
     type_mapper = ensure_callable_mapper(type_mapper, default=default_annotation)
     params = []
@@ -405,7 +422,9 @@ def json_schema_to_signature(
     # Support JSON schema 'properties' (as before)
     elif "properties" in json_schema:
         properties = json_schema["properties"]
+        required = _required_names(json_schema)
         for name, field in properties.items():
+            is_required = name in required
             name = title_to_pyname(name)
             if (json_type := field.get("type", None)) is not None:
                 if not isinstance(json_type, list):
@@ -415,7 +434,11 @@ def json_schema_to_signature(
                     py_type = Union[tuple(json_types)]
             else:
                 py_type = Parameter.empty
-            default = field.get("default", default_default)
+            default = (
+                Parameter.empty
+                if is_required
+                else field.get("default", default_default)
+            )
             params.append(
                 Parameter(
                     name=name,
@@ -436,6 +459,14 @@ def json_schema_to_signature(
 
 # -------------------------------------------------------------------------------------
 # Utils
+
+
+def _required_names(json_schema: dict) -> frozenset:
+    """Names in the schema's top-level ``required`` list (none if absent/malformed)."""
+    required = json_schema.get("required", ())
+    if isinstance(required, (list, tuple, set, frozenset)):
+        return frozenset(required)
+    return frozenset()
 
 
 # TODO: The loop body could be factored out
