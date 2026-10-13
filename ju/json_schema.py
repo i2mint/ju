@@ -74,7 +74,18 @@ _DFLT_TYPE_MAPPING = pydantic_model_to_type_mapping(_BasicPythonTypes)
 # }
 
 # Need to get a tuple of items to use type mapping as unmutable default.
-DFLT_PY_JSON_TYPE_PAIRS = tuple(_DFLT_TYPE_MAPPING.items())
+# Order matters (first match wins): ``Sequence[str]`` only matches a sequence holding a
+# str, so a sequence of anything else (or an empty one) is caught by the plain
+# ``Sequence`` entry. ``str``/``bytes`` are Sequences too: ``str`` matched earlier, and
+# the byte types are pinned to 'string' before ``Sequence`` can claim them.
+_EXTRA_PY_JSON_TYPE_PAIRS = (
+    (bytes, "string"),
+    (bytearray, "string"),
+    (Sequence, "array"),
+)
+DFLT_PY_JSON_TYPE_PAIRS = (
+    tuple(_DFLT_TYPE_MAPPING.items()) + _EXTRA_PY_JSON_TYPE_PAIRS
+)
 DFLT_JSON_PY_TYPE_PAIRS = tuple((v, k) for k, v in _DFLT_TYPE_MAPPING.items())
 assert dict(DFLT_JSON_PY_TYPE_PAIRS) != len(DFLT_JSON_PY_TYPE_PAIRS), (
     f"{DFLT_JSON_PY_TYPE_PAIRS=}, {len(DFLT_JSON_PY_TYPE_PAIRS)=}"

@@ -138,3 +138,28 @@ def test_openapi_parameters_names_are_sanitised():
         "class_": "class",
         "id": "id",
     }
+
+
+@pytest.mark.parametrize(
+    "default, json_type",
+    [
+        ([1, 2, 3], "array"),  # ju#10: a Sequence holding no str
+        ([], "array"),
+        ((1.5, 2.5), "array"),
+        (["a", 1], "array"),
+        (range(3), "array"),
+        ("abc", "string"),  # a str is a Sequence but not an array
+        (b"abc", "string"),
+        (bytearray(b"abc"), "string"),
+        ({"a": 1}, "object"),
+        (True, "boolean"),
+        (3, "integer"),
+        (3.5, "number"),
+        (None, "string"),  # no information: falls back to the default
+    ],
+)
+def test_param_default_to_json_type(default, json_type):
+    from ju.json_schema import DFLT_PARAM_TO_TYPE
+
+    param = Parameter("p", Parameter.KEYWORD_ONLY, default=default)
+    assert DFLT_PARAM_TO_TYPE(param) == json_type
