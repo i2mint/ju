@@ -115,3 +115,26 @@ def test_parameters_branch_optional_without_default_is_optional():
     sig = json_schema_to_signature(schema)
     assert list(sig.parameters) == ["id", "x_role", "n"]
     assert _defaults(sig) == {"id": Parameter.empty, "x_role": None, "n": None}
+
+
+def test_openapi_parameters_names_are_sanitised():
+    """Parameter names that are not identifiers are renamed, with a way back (#13)."""
+    from ju.json_schema import json_schema_to_signature, schema_param_names
+
+    schema = {
+        "title": "op",
+        "parameters": [
+            {"name": "X-MS-API-ROLE", "in": "header", "schema": {"type": "string"}},
+            {"name": "camelCase", "in": "query", "schema": {"type": "integer"}},
+            {"name": "class", "in": "query"},
+            {"name": "id", "in": "path", "required": True},
+        ],
+    }
+    sig = json_schema_to_signature(schema)
+    assert list(sig.names) == ["id", "x_ms_api_role", "camelCase", "class_"]
+    assert schema_param_names(schema) == {
+        "x_ms_api_role": "X-MS-API-ROLE",
+        "camelCase": "camelCase",
+        "class_": "class",
+        "id": "id",
+    }

@@ -28,6 +28,7 @@ from collections.abc import Mapping, Sequence, Callable
 from inspect import Parameter
 from functools import partial
 import re
+import keyword
 from copy import deepcopy
 
 from pydantic import BaseModel
@@ -344,6 +345,54 @@ def signature_to_json_schema(
 function_to_json_schema = signature_to_json_schema  # backwards compatibility
 
 
+def schema_param_names(
+    json_schema: dict,
+    *,
+    title_to_pyname: Callable[[str], str] = title_to_pyname,
+) -> dict[str, str]:
+    """Map the Python parameter names `json_schema_to_signature` gives to the original
+    names in the schema (the SSOT for the renaming, so callers can build requests
+    with the original names).
+
+    OpenAPI ``parameters`` names that already are valid identifiers are kept as is;
+    others (e.g. ``X-MS-API-ROLE``) are sanitised with ``title_to_pyname``. Names of
+    ``properties`` are always passed through ``title_to_pyname``. Clashes get a
+    numeric suffix.
+
+    >>> schema = {'parameters': [
+    ...     {'name': 'X-MS-API-ROLE', 'in': 'header', 'schema': {'type': 'string'}},
+    ...     {'name': 'thingId', 'in': 'path', 'required': True},
+    ...     {'name': 'x_ms_api_role', 'in': 'query'}]}
+    >>> schema_param_names(schema)
+    {'x_ms_api_role': 'X-MS-API-ROLE', 'thingId': 'thingId', 'x_ms_api_role_2': 'x_ms_api_role'}
+    """
+    if "parameters" in json_schema and isinstance(json_schema["parameters"], list):
+        originals = [param["name"] for param in json_schema["parameters"]]
+        keep_valid = True
+    elif "properties" in json_schema:
+        originals = list(json_schema["properties"])
+        keep_valid = False
+    else:
+        return {}
+    names = {}  # pyname -> original
+    for original in originals:
+        if keep_valid and original.isidentifier() and not keyword.iskeyword(original):
+            pyname = original
+        else:
+            try:
+                pyname = title_to_pyname(original)
+            except (AssertionError, IndexError):  # e.g. '' or only symbols
+                pyname = "_"
+            if keyword.iskeyword(pyname):
+                pyname += "_"
+        candidate, i = pyname, 1
+        while candidate in names:
+            i += 1
+            candidate = f"{pyname}_{i}"
+        names[candidate] = original
+    return names
+
+
 def json_schema_to_signature(
     json_schema: dict,
     *,
@@ -416,10 +465,12 @@ def json_schema_to_signature(
     """
     type_mapper = ensure_callable_mapper(type_mapper, default=default_annotation)
     params = []
+    # pyname -> original name, in schema order (the SSOT for the renaming)
+    pynames = iter(schema_param_names(json_schema, title_to_pyname=title_to_pyname))
     # Support OpenAPI 'parameters' (list of dicts)
     if "parameters" in json_schema and isinstance(json_schema["parameters"], list):
         for param in json_schema["parameters"]:
-            name = param["name"]
+            name = next(pynames)
             # Try to get type from schema/type, fallback to string
             py_type = type_mapper(param.get("schema", {}).get("type", "string"))
             default = param.get("schema", {}).get("default", default_default)
@@ -439,7 +490,7 @@ def json_schema_to_signature(
         required = _required_names(json_schema)  # None when there is no such key
         for name, field in properties.items():
             is_required = required is not None and name in required
-            name = title_to_pyname(name)
+            name = next(pynames)
             if (json_type := field.get("type", None)) is not None:
                 if not isinstance(json_type, list):
                     py_type = type_mapper(json_type)
