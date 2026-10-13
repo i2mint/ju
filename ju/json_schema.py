@@ -309,7 +309,13 @@ def signature_to_json_schema(
     schema["properties"] = get_properties(
         parameters, param_to_prop_type=param_to_prop_type
     )
-    schema["required"] = get_required(schema["properties"])
+    # (not get_required(properties): a default dropped for having no JSON form must
+    # not turn its parameter into a required one)
+    schema["required"] = [
+        name
+        for name in schema["properties"]
+        if parameters[name].default is Parameter.empty
+    ]
 
     if doc is True:
         # if doc is True, use the function docstring
@@ -502,6 +508,16 @@ def _json_safe(value):
         return _json_safe(value.value)
     if isinstance(value, (datetime.date, datetime.time)):  # incl. datetime
         return True, value.isoformat()
+    if isinstance(value, (list, tuple)) and not isinstance(value, str):
+        items = [_json_safe(v) for v in value]
+        if not all(ok for ok, _ in items):
+            return False, None
+        return True, type(value)(v for _, v in items) if type(value) in (list, tuple) else value
+    if isinstance(value, dict):
+        items = {k: _json_safe(v) for k, v in value.items()}
+        if not all(ok for ok, _ in items.values()):
+            return False, None
+        return True, {k: v for k, (_, v) in items.items()} if type(value) is dict else value
     try:
         json.dumps(value)
     except (TypeError, ValueError):  # not serializable (or circular)
@@ -551,10 +567,24 @@ def get_properties(parameters, *, param_to_prop_type: Callable = DFLT_PARAM_TO_T
             ok, default = _json_safe(param.default)
             if ok:
                 field["default"] = default
-            if isinstance(param.default, enum.Enum):
+            if ok and isinstance(param.default, enum.Enum):
                 allowed = [_json_safe(m) for m in type(param.default)]
-                if all(ok for ok, _ in allowed):
-                    field["enum"] = [v for _, v in allowed]
+                values = [v for _, v in allowed]
+                # (Flag members can be combined, so their members don't list the
+                # allowed values.)
+                if all(ok for ok, _ in allowed) and not isinstance(
+                    param.default, enum.Flag
+                ):
+                    field["enum"] = values
+                # the annotation may not say what the enum's values are
+                if isinstance(default, bool):
+                    field["type"] = "boolean"
+                elif isinstance(default, int):
+                    field["type"] = "integer"
+                elif isinstance(default, float):
+                    field["type"] = "number"
+                elif isinstance(default, str):
+                    field["type"] = "string"
 
         # Add the field to the schema
         properties[name] = field
