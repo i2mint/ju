@@ -358,6 +358,13 @@ def signature_to_json_schema(
 function_to_json_schema = signature_to_json_schema  # backwards compatibility
 
 
+#: Keys of a `properties` entry that stand for an OpenAPI parameter or body property
+#: whose own name was taken by another (``id`` in the query and in a header): the
+#: entry is keyed by a distinct name, and these record the spec's name and place.
+OAS_NAME_KEY = "x-oas-name"
+OAS_IN_KEY = "x-oas-in"
+
+
 def schema_param_names(
     json_schema: dict,
     *,
@@ -370,7 +377,8 @@ def schema_param_names(
     OpenAPI ``parameters`` names that already are valid identifiers are kept as is;
     others (e.g. ``X-MS-API-ROLE``) are sanitised with ``title_to_pyname``. Names of
     ``properties`` are always passed through ``title_to_pyname``. Clashes get a
-    numeric suffix.
+    numeric suffix. A ``properties`` entry carrying ``x-oas-name`` (see ``Route.params``)
+    maps to that name, not to its key.
 
     >>> schema = {'parameters': [
     ...     {'name': 'X-MS-API-ROLE', 'in': 'header', 'schema': {'type': 'string'}},
@@ -378,13 +386,23 @@ def schema_param_names(
     ...     {'name': 'x_ms_api_role', 'in': 'query'}]}
     >>> schema_param_names(schema)
     {'x_ms_api_role': 'X-MS-API-ROLE', 'thingId': 'thingId', 'x_ms_api_role_2': 'x_ms_api_role'}
+
+    >>> schema = {'properties': {'id': {}, 'id_header': {'x-oas-name': 'id'}}}
+    >>> schema_param_names(schema)
+    {'id': 'id', 'id_header': 'id'}
     """
+    sent_as = {}  # property key -> the spec's name for it, when it is not the key
     if "parameters" in json_schema and isinstance(json_schema["parameters"], list):
         originals = [param["name"] for param in json_schema["parameters"]]
         keep_valid = True
     elif "properties" in json_schema:
         originals = list(json_schema["properties"])
         keep_valid = False
+        sent_as = {
+            key: prop[OAS_NAME_KEY]
+            for key, prop in json_schema["properties"].items()
+            if isinstance(prop, Mapping) and OAS_NAME_KEY in prop
+        }
     else:
         return {}
     names = {}  # pyname -> original
@@ -402,7 +420,7 @@ def schema_param_names(
         while candidate in names:
             i += 1
             candidate = f"{pyname}_{i}"
-        names[candidate] = original
+        names[candidate] = sent_as.get(original, original)
     return names
 
 

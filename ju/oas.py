@@ -9,6 +9,8 @@ from dataclasses import dataclass, field
 from dol import KvReader, cached_keys, path_get as _path_get
 from i2 import Sig
 
+from ju.json_schema import OAS_NAME_KEY, OAS_IN_KEY
+
 http_methods = {"get", "post", "put", "delete", "patch", "options", "head"}
 
 
@@ -125,6 +127,40 @@ def properties_of_schema(schema: dict) -> dict:
         return path_get(schema, "properties")
 
 
+#: The `OAS_IN_KEY` of a property that comes from the request body.
+BODY_IN = "body"
+
+
+def _param_id(param: dict) -> tuple:
+    """What identifies an OpenAPI parameter: its name *and* where it goes."""
+    return param.get("name"), param.get("in")
+
+
+def merge_parameters(path_item_params, operation_params) -> list:
+    """The parameters of an operation: those its path item declares for all its
+    operations, overridden (same name and `in`) or extended by its own.
+
+    >>> merge_parameters(
+    ...     [{'name': 'id', 'in': 'path'}, {'name': 'q', 'in': 'query', 'x': 1}],
+    ...     [{'name': 'q', 'in': 'query', 'x': 2}, {'name': 'q', 'in': 'header'}],
+    ... )
+    [{'name': 'id', 'in': 'path'}, {'name': 'q', 'in': 'query', 'x': 2}, {'name': 'q', 'in': 'header'}]
+    """
+    merged = {_param_id(p): p for p in path_item_params}
+    merged.update((_param_id(p), p) for p in operation_params)
+    return list(merged.values())
+
+
+def _distinct_key(name: str, place: str, taken) -> str:
+    """A property key for `name` sent in `place`, not in `taken`."""
+    key = f"{name}_{place}"
+    candidate, i = key, 1
+    while candidate in taken:
+        i += 1
+        candidate = f"{key}_{i}"
+    return candidate
+
+
 @dataclass
 class Route:
     """
@@ -177,10 +213,21 @@ class Route:
     @cached_property
     def method_data(self):
         method, endpoint = self.method, self.endpoint
-        method_data = self.spec.get("paths", {}).get(endpoint, {}).get(method, None)
+        path_item = self.spec.get("paths", {}).get(endpoint, {})
+        method_data = path_item.get(method, None)
         if method_data is None:
             raise KeyError(f"Endpoint '{endpoint}' has no method '{method}'")
-        return resolve_refs(self.spec, method_data)
+        method_data = resolve_refs(self.spec, method_data)
+        # Parameters the path item declares are shared by all its operations
+        shared = resolve_refs(self.spec, path_item.get("parameters", []))
+        if shared:
+            method_data = {
+                **method_data,
+                "parameters": merge_parameters(
+                    shared, method_data.get("parameters", [])
+                ),
+            }
+        return method_data
 
     @cached_property
     def input_specs(self):
@@ -201,14 +248,31 @@ class Route:
         """
         schema = {"type": "object", "properties": {}, "required": []}
 
+        # A property is keyed by the parameter's name; when that is taken (the
+        # same name in another place -- ``id`` in the query and in a header, a
+        # query ``name`` and a body ``name``), by a distinct key that also records
+        # the spec's name and place (OAS_NAME_KEY, OAS_IN_KEY).
+        def add(name, place, prop_schema, required):
+            key = name
+            if key in schema["properties"]:
+                key = _distinct_key(name, place, schema["properties"])
+                prop_schema = {
+                    **prop_schema,
+                    OAS_NAME_KEY: name,
+                    OAS_IN_KEY: place,
+                }
+            schema["properties"][key] = prop_schema
+            if required:
+                schema["required"].append(key)
+
         # Process query and path parameters
         for param in self.method_data.get("parameters", []):
-            # Add each parameter to the properties
-            schema["properties"][param["name"]] = param.get("schema", {})
-
-            # Mark as required if specified
-            if param.get("required", False):
-                schema["required"].append(param["name"])
+            add(
+                param["name"],
+                param.get("in"),
+                param.get("schema", {}),
+                param.get("required", False),
+            )
         # list(t['content']['application/json']['schema']['items']['properties'])
         # Process requestBody
         request_body = self.method_data.get("requestBody", {})
@@ -216,10 +280,14 @@ class Route:
         if "schema" in content:
             # Merge the requestBody schema with the existing properties
             body_schema = content["schema"]
-            schema["properties"].update(properties_of_schema(body_schema))
-            # Add required properties from requestBody
-            if "required" in body_schema:
-                schema["required"].extend(body_schema["required"])
+            body_required = body_schema.get("required", [])
+            body_properties = properties_of_schema(body_schema)
+            for name, prop_schema in body_properties.items():
+                add(name, BODY_IN, prop_schema, name in body_required)
+            # Required names the body declares without a property of their own
+            schema["required"].extend(
+                name for name in body_required if name not in body_properties
+            )
 
         return schema
 

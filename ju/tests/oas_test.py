@@ -135,3 +135,106 @@ def test_routes(openapi_spec):
         },
         "required": [],
     }
+
+
+# ---------------------------------------------------------------------------
+# Path-item parameters and same-name parameters (i2mint/ju#20)
+
+_SHARED_PARAMS_SPEC = """
+openapi: 3.0.3
+paths:
+  /items/{id}:
+    parameters:
+      - {in: path, name: id, required: true, schema: {type: integer}}
+      - {in: query, name: fields, schema: {type: string}}
+      - $ref: '#/components/parameters/Trace'
+    get:
+      parameters:
+        - {in: query, name: fields, required: true, schema: {type: array}}
+      responses: {'200': {description: ok}}
+    delete:
+      responses: {'204': {description: gone}}
+  /plain:
+    get:
+      responses: {'200': {description: ok}}
+components:
+  parameters:
+    Trace:
+      {in: header, name: X-Trace, schema: {type: string}}
+"""
+
+
+def test_path_item_parameters_are_those_of_every_operation():
+    from yaml import safe_load
+
+    routes = Routes(safe_load(_SHARED_PARAMS_SPEC))
+    get, delete = routes["get", "/items/{id}"], routes["delete", "/items/{id}"]
+    assert [(p["name"], p["in"]) for p in delete.input_specs["parameters"]] == [
+        ("id", "path"),
+        ("fields", "query"),
+        ("X-Trace", "header"),
+    ]
+    # the operation's own parameter wins over the path item's on (name, in)
+    assert [(p["name"], p.get("required")) for p in get.input_specs["parameters"]] == [
+        ("id", True),
+        ("fields", True),
+        ("X-Trace", None),
+    ]
+    assert get.params["properties"]["id"] == {"type": "integer"}
+    assert get.params["properties"]["fields"] == {"type": "array"}
+    assert get.params["required"] == ["id", "fields"]
+
+
+def test_a_route_without_any_parameters_gets_no_parameters_key():
+    from yaml import safe_load
+
+    route = Routes(safe_load(_SHARED_PARAMS_SPEC))["get", "/plain"]
+    assert "parameters" not in route.method_data
+    assert route.input_specs["parameters"] == []
+
+
+def test_same_name_in_two_places_stay_two_properties():
+    from yaml import safe_load
+
+    spec = safe_load(
+        """
+openapi: 3.0.3
+paths:
+  /things:
+    post:
+      parameters:
+        - {in: query, name: id, required: true, schema: {type: string}}
+        - {in: header, name: id, schema: {type: integer}}
+        - {in: query, name: name, schema: {type: string}}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, other]
+              properties:
+                name: {type: boolean}
+                other: {type: string}
+"""
+    )
+    props = Routes(spec)["post", "/things"].params
+    assert props["properties"] == {
+        "id": {"type": "string"},
+        "id_header": {"type": "integer", "x-oas-name": "id", "x-oas-in": "header"},
+        "name": {"type": "string"},
+        "name_body": {"type": "boolean", "x-oas-name": "name", "x-oas-in": "body"},
+        "other": {"type": "string"},
+    }
+    assert props["required"] == ["id", "name_body", "other"]
+    from ju.json_schema import json_schema_to_signature, schema_param_names
+
+    assert schema_param_names(props) == {
+        "id": "id",
+        "id_header": "id",
+        "name": "name",
+        "name_body": "name",
+        "other": "other",
+    }
+    assert list(json_schema_to_signature(props).names) == [
+        "id", "name_body", "other", "id_header", "name",
+    ]
