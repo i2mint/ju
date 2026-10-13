@@ -512,12 +512,16 @@ def _json_safe(value):
         items = [_json_safe(v) for v in value]
         if not all(ok for ok, _ in items):
             return False, None
-        return True, type(value)(v for _, v in items) if type(value) in (list, tuple) else value
+        return True, (
+            type(value)(v for _, v in items) if type(value) in (list, tuple) else value
+        )
     if isinstance(value, dict):
         items = {k: _json_safe(v) for k, v in value.items()}
         if not all(ok for ok, _ in items.values()):
             return False, None
-        return True, {k: v for k, (_, v) in items.items()} if type(value) is dict else value
+        return True, (
+            {k: v for k, (_, v) in items.items()} if type(value) is dict else value
+        )
     try:
         json.dumps(value)
     except (TypeError, ValueError):  # not serializable (or circular)

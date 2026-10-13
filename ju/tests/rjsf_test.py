@@ -122,8 +122,7 @@ def test_non_json_defaults_are_serializable():
         o: object = object(),
         keep=3,
         none=None,
-    ):
-        ...
+    ): ...
 
     spec = func_to_form_spec(f, nest_under_field=None)
     json.dumps(spec)  # does not raise
@@ -151,9 +150,15 @@ def test_dropped_default_keeps_param_optional():
         R = 1
         W = 2
 
-    def f(a, o=object(), td=datetime.timedelta(1), lst=[object()], p: P = P.x,
-          perm: Perm = Perm.R | Perm.W, ok=[datetime.date(2020, 1, 2)]):
-        ...
+    def f(
+        a,
+        o=object(),
+        td=datetime.timedelta(1),
+        lst=[object()],
+        p: P = P.x,
+        perm: Perm = Perm.R | Perm.W,
+        ok=[datetime.date(2020, 1, 2)],
+    ): ...
 
     schema = func_to_form_spec(f, nest_under_field=None)["schema"]
     props = schema["properties"]
