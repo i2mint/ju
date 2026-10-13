@@ -266,6 +266,9 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">defaultdict</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">types</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenericAlias</span><span class="p">,</span> <span class="n">UnionType</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">builtins</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">typing</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">inspect</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parameter</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">i2</span><span class="w"> </span><span class="kn">import</span> <span class="n">mk_sentinel</span>
@@ -302,14 +305,43 @@
     <span class="k">return</span> <span class="n">get_origin</span><span class="p">(</span><span class="n">tp</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="n">Union</span><span class="p">,</span> <span class="n">UnionType</span><span class="p">)</span>
 
 
+<span class="k">def</span><span class="w"> </span><span class="nf">_strip_wrappers</span><span class="p">(</span><span class="n">annotation</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Peels the wrappers that don't change what a value *is* off an annotation:</span>
+<span class="sd">    ``Annotated[T, ...]`` (to ``T``), ``NewType`` (to its supertype) and a ``type``</span>
+<span class="sd">    statement alias (to its value). Unions are handled by `unwrap_optional`.</span>
+
+<span class="sd">    &gt;&gt;&gt; from typing import Annotated, NewType</span>
+<span class="sd">    &gt;&gt;&gt; _strip_wrappers(Annotated[list[int], "meta"])</span>
+<span class="sd">    list[int]</span>
+<span class="sd">    &gt;&gt;&gt; UserId = NewType("UserId", int)</span>
+<span class="sd">    &gt;&gt;&gt; _strip_wrappers(Annotated[UserId, "meta"])</span>
+<span class="sd">    &lt;class 'int'&gt;</span>
+<span class="sd">    """</span>
+    <span class="n">seen</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># (aliases can refer to each other: don't loop)</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">annotation</span> <span class="ow">is</span> <span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">annotation</span>
+        <span class="n">seen</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">annotation</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">get_origin</span><span class="p">(</span><span class="n">annotation</span><span class="p">)</span> <span class="ow">is</span> <span class="n">typing</span><span class="o">.</span><span class="n">Annotated</span><span class="p">:</span>
+            <span class="n">annotation</span> <span class="o">=</span> <span class="n">get_args</span><span class="p">(</span><span class="n">annotation</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">annotation</span><span class="p">,</span> <span class="s2">"__supertype__"</span><span class="p">):</span>  <span class="c1"># NewType</span>
+            <span class="n">annotation</span> <span class="o">=</span> <span class="n">annotation</span><span class="o">.</span><span class="n">__supertype__</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">annotation</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">typing</span><span class="p">,</span> <span class="s2">"TypeAliasType"</span><span class="p">,</span> <span class="p">())):</span>
+            <span class="n">annotation</span> <span class="o">=</span> <span class="n">annotation</span><span class="o">.</span><span class="n">__value__</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">annotation</span>
+
+
 <div class="viewcode-block" id="unwrap_optional">
 <a class="viewcode-back" href="../../_autosummary/ju.util.html#ju.util.unwrap_optional">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">unwrap_optional</span><span class="p">(</span><span class="n">annotation</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Strips ``None`` out of an ``Optional``/union annotation; returns the annotation</span>
 <span class="sd">    unchanged if it is not a union, and the single remaining member if there is one.</span>
+<span class="sd">    ``Annotated`` and ``NewType`` wrappers are peeled off too (also on the members).</span>
 
-<span class="sd">    &gt;&gt;&gt; from typing import Optional</span>
+<span class="sd">    &gt;&gt;&gt; from typing import Optional, Annotated, NewType</span>
 <span class="sd">    &gt;&gt;&gt; unwrap_optional(Optional[list[int]])</span>
 <span class="sd">    list[int]</span>
 <span class="sd">    &gt;&gt;&gt; unwrap_optional(int | None)</span>
@@ -318,13 +350,78 @@
 <span class="sd">    typing.Union[int, str]</span>
 <span class="sd">    &gt;&gt;&gt; unwrap_optional(list[int])</span>
 <span class="sd">    list[int]</span>
+<span class="sd">    &gt;&gt;&gt; unwrap_optional(Annotated[Optional[list[int]], "meta"])</span>
+<span class="sd">    list[int]</span>
+<span class="sd">    &gt;&gt;&gt; unwrap_optional(Optional[NewType("UserId", int)])</span>
+<span class="sd">    &lt;class 'int'&gt;</span>
 <span class="sd">    """</span>
+    <span class="n">annotation</span> <span class="o">=</span> <span class="n">_strip_wrappers</span><span class="p">(</span><span class="n">annotation</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">_is_union</span><span class="p">(</span><span class="n">annotation</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">annotation</span>
-    <span class="n">members</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">get_args</span><span class="p">(</span><span class="n">annotation</span><span class="p">)</span> <span class="k">if</span> <span class="n">a</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">))</span>
+    <span class="n">members</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+        <span class="n">_strip_wrappers</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">get_args</span><span class="p">(</span><span class="n">annotation</span><span class="p">)</span> <span class="k">if</span> <span class="n">a</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+    <span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">members</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">members</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">unwrap_optional</span><span class="p">(</span><span class="n">members</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">Union</span><span class="p">[</span><span class="n">members</span><span class="p">]</span> <span class="k">if</span> <span class="n">members</span> <span class="k">else</span> <span class="n">annotation</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_annotation_target</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""The function whose globals/``__annotations__`` describe ``func``'s signature."""</span>
+    <span class="k">while</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">partial</span><span class="p">):</span>
+        <span class="n">func</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">func</span>
+    <span class="k">if</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">func</span><span class="o">.</span><span class="fm">__init__</span> <span class="ow">is</span> <span class="nb">object</span><span class="o">.</span><span class="fm">__init__</span> <span class="ow">and</span> <span class="n">func</span><span class="o">.</span><span class="fm">__new__</span> <span class="ow">is</span> <span class="ow">not</span> <span class="nb">object</span><span class="o">.</span><span class="fm">__new__</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">func</span><span class="o">.</span><span class="fm">__new__</span>  <span class="c1"># (only a ``__new__`` describes its signature)</span>
+        <span class="k">return</span> <span class="n">func</span><span class="o">.</span><span class="fm">__init__</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">isroutine</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="s2">"__wrapped__"</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">func</span><span class="p">),</span> <span class="s2">"__call__"</span><span class="p">,</span> <span class="n">func</span><span class="p">)</span>  <span class="c1"># a callable instance</span>
+    <span class="k">return</span> <span class="n">func</span>
+
+
+<div class="viewcode-block" id="resolve_annotations">
+<a class="viewcode-back" href="../../_autosummary/ju.util.html#ju.util.resolve_annotations">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">resolve_annotations</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">parameters</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Returns ``parameters`` (a mapping or iterable of `Parameter`) with the string</span>
+<span class="sd">    annotations of ``func`` evaluated -- all of them under</span>
+<span class="sd">    ``from __future__ import annotations``. An annotation that can't be resolved</span>
+<span class="sd">    (e.g. a name only imported under ``TYPE_CHECKING``) is left as it was.</span>
+
+<span class="sd">    &gt;&gt;&gt; def f(a: "int", b: "list[float]" = None, c: "Nope" = 1): ...</span>
+<span class="sd">    &gt;&gt;&gt; sig = inspect.signature(f)</span>
+<span class="sd">    &gt;&gt;&gt; [(n, p.annotation) for n, p in resolve_annotations(f, sig.parameters).items()]</span>
+<span class="sd">    [('a', &lt;class 'int'&gt;), ('b', list[float]), ('c', 'Nope')]</span>
+<span class="sd">    """</span>
+    <span class="n">as_mapping</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">)</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span> <span class="k">if</span> <span class="n">as_mapping</span> <span class="k">else</span> <span class="p">{</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">}</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">annotation</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">values</span><span class="p">()):</span>
+        <span class="k">return</span> <span class="n">parameters</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="n">_annotation_target</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">hints</span> <span class="o">=</span> <span class="n">typing</span><span class="o">.</span><span class="n">get_type_hints</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">include_extras</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>  <span class="c1"># one unresolvable annotation spoils the lot: go one by one</span>
+        <span class="n">hints</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">globalns</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="o">**</span><span class="nb">vars</span><span class="p">(</span><span class="n">builtins</span><span class="p">),</span>
+            <span class="o">**</span><span class="nb">getattr</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">unwrap</span><span class="p">(</span><span class="n">target</span><span class="p">),</span> <span class="s2">"__globals__"</span><span class="p">,</span> <span class="p">{}),</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">annotation</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">hints</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">annotation</span><span class="p">,</span> <span class="n">globalns</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                    <span class="k">pass</span>
+    <span class="n">resolved</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">name</span><span class="p">:</span> <span class="p">(</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">annotation</span><span class="o">=</span><span class="n">hints</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">annotation</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">hints</span>
+            <span class="k">else</span> <span class="n">p</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">resolved</span> <span class="k">if</span> <span class="n">as_mapping</span> <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="n">resolved</span><span class="o">.</span><span class="n">values</span><span class="p">())</span></div>
 
 
 
@@ -820,7 +917,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=6264e773"></script>
+</div><script src="../../_static/documentation_options.js?v=cb249315"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>

@@ -293,13 +293,16 @@
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mk_function_returning</span></code>(_obj)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ju.util.switch_case" title="ju.util.switch_case"><code class="xref py py-obj docutils literal notranslate"><span class="pre">switch_case</span></code></a>(mapping, default)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ju.util.resolve_annotations" title="ju.util.resolve_annotations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resolve_annotations</span></code></a>(func, parameters)</p></td>
+<td><p>Returns <code class="docutils literal notranslate"><span class="pre">parameters</span></code> (a mapping or iterable of <code class="code docutils literal notranslate"><span class="pre">Parameter</span></code>) with the string annotations of <code class="docutils literal notranslate"><span class="pre">func</span></code> evaluated -- all of them under <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">__future__</span> <span class="pre">import</span> <span class="pre">annotations</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ju.util.switch_case" title="ju.util.switch_case"><code class="xref py py-obj docutils literal notranslate"><span class="pre">switch_case</span></code></a>(mapping, default)</p></td>
 <td><p>Returns a function that switches between cases based on a feature</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ju.util.truncate_dict_values" title="ju.util.truncate_dict_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">truncate_dict_values</span></code></a>(d, *[, max_list_size, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ju.util.truncate_dict_values" title="ju.util.truncate_dict_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">truncate_dict_values</span></code></a>(d, *[, max_list_size, ...])</p></td>
 <td><p>Returns a new dictionary with the same nested keys structure, where:</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ju.util.unwrap_optional" title="ju.util.unwrap_optional"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unwrap_optional</span></code></a>(annotation)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ju.util.unwrap_optional" title="ju.util.unwrap_optional"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unwrap_optional</span></code></a>(annotation)</p></td>
 <td><p>Strips <code class="docutils literal notranslate"><span class="pre">None</span></code> out of an <code class="docutils literal notranslate"><span class="pre">Optional</span></code>/union annotation; returns the annotation unchanged if it is not a union, and the single remaining member if there is one.</p></td>
 </tr>
 </tbody>
@@ -512,6 +515,21 @@ parameterized generic:</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="ju.util.resolve_annotations">
+<span class="sig-prename descclassname"><span class="pre">ju.util.</span></span><span class="sig-name descname"><span class="pre">resolve_annotations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ju/util.html#resolve_annotations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.util.resolve_annotations" title="Link to this definition">¶</a></dt>
+<dd><p>Returns <code class="docutils literal notranslate"><span class="pre">parameters</span></code> (a mapping or iterable of <code class="code docutils literal notranslate"><span class="pre">Parameter</span></code>) with the string
+annotations of <code class="docutils literal notranslate"><span class="pre">func</span></code> evaluated – all of them under
+<code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">__future__</span> <span class="pre">import</span> <span class="pre">annotations</span></code>. An annotation that can’t be resolved
+(e.g. a name only imported under <code class="docutils literal notranslate"><span class="pre">TYPE_CHECKING</span></code>) is left as it was.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="s2">"int"</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="s2">"list[float]"</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="s2">"Nope"</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span> <span class="o">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sig</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[(</span><span class="n">n</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">annotation</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">resolve_annotations</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">sig</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+<span class="go">[('a', &lt;class 'int'&gt;), ('b', list[float]), ('c', 'Nope')]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="ju.util.switch_case">
 <span class="sig-prename descclassname"><span class="pre">ju.util.</span></span><span class="sig-name descname"><span class="pre">switch_case</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ju/util.html#switch_case"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.util.switch_case" title="Link to this definition">¶</a></dt>
 <dd><p>Returns a function that switches between cases based on a feature</p>
@@ -558,8 +576,9 @@ but printing/logging it takes too much space.</p>
 <dt class="sig sig-object py" id="ju.util.unwrap_optional">
 <span class="sig-prename descclassname"><span class="pre">ju.util.</span></span><span class="sig-name descname"><span class="pre">unwrap_optional</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">annotation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ju/util.html#unwrap_optional"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.util.unwrap_optional" title="Link to this definition">¶</a></dt>
 <dd><p>Strips <code class="docutils literal notranslate"><span class="pre">None</span></code> out of an <code class="docutils literal notranslate"><span class="pre">Optional</span></code>/union annotation; returns the annotation
-unchanged if it is not a union, and the single remaining member if there is one.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+unchanged if it is not a union, and the single remaining member if there is one.
+<code class="docutils literal notranslate"><span class="pre">Annotated</span></code> and <code class="docutils literal notranslate"><span class="pre">NewType</span></code> wrappers are peeled off too (also on the members).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Annotated</span><span class="p">,</span> <span class="n">NewType</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">unwrap_optional</span><span class="p">(</span><span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]])</span>
 <span class="go">list[int]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">unwrap_optional</span><span class="p">(</span><span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span>
@@ -568,6 +587,10 @@ unchanged if it is not a union, and the single remaining member if there is one.
 <span class="go">typing.Union[int, str]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">unwrap_optional</span><span class="p">(</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span>
 <span class="go">list[int]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">unwrap_optional</span><span class="p">(</span><span class="n">Annotated</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span> <span class="s2">"meta"</span><span class="p">])</span>
+<span class="go">list[int]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">unwrap_optional</span><span class="p">(</span><span class="n">Optional</span><span class="p">[</span><span class="n">NewType</span><span class="p">(</span><span class="s2">"UserId"</span><span class="p">,</span> <span class="nb">int</span><span class="p">)])</span>
+<span class="go">&lt;class 'int'&gt;</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -635,6 +658,7 @@ unchanged if it is not a union, and the single remaining member if there is one.
 <li><a class="reference internal" href="#ju.util.feature_similarity_search"><code class="docutils literal notranslate"><span class="pre">feature_similarity_search()</span></code></a></li>
 <li><a class="reference internal" href="#ju.util.feature_switch"><code class="docutils literal notranslate"><span class="pre">feature_switch()</span></code></a></li>
 <li><a class="reference internal" href="#ju.util.is_type"><code class="docutils literal notranslate"><span class="pre">is_type()</span></code></a></li>
+<li><a class="reference internal" href="#ju.util.resolve_annotations"><code class="docutils literal notranslate"><span class="pre">resolve_annotations()</span></code></a></li>
 <li><a class="reference internal" href="#ju.util.switch_case"><code class="docutils literal notranslate"><span class="pre">switch_case()</span></code></a></li>
 <li><a class="reference internal" href="#ju.util.truncate_dict_values"><code class="docutils literal notranslate"><span class="pre">truncate_dict_values()</span></code></a></li>
 <li><a class="reference internal" href="#ju.util.unwrap_optional"><code class="docutils literal notranslate"><span class="pre">unwrap_optional()</span></code></a></li>
@@ -649,7 +673,7 @@ unchanged if it is not a union, and the single remaining member if there is one.
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=6264e773"></script>
+</div><script src="../_static/documentation_options.js?v=cb249315"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

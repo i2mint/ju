@@ -19,6 +19,7 @@ ju.util
       is_jsonable
       is_type
       mk_function_returning
+      resolve_annotations
       switch_case
       truncate_dict_values
       unwrap_optional

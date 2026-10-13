@@ -4,21 +4,22 @@ Ju base utils.
 
 ### Functions
 
-| [`apply`](#ju.util.apply)(func, obj)                                  | Calls a function to an object, returing the result                                                                                                           |
-|----------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `asis`(obj)                                                                                        |                                                                                                                                                              |
-| `display_dag_of_code`(func, \*args, \*\*kwargs)                                                    |                                                                                                                                                              |
-| [`ensure_callable_mapper`](#ju.util.ensure_callable_mapper)(mapper, \*[, default])     | Will return a CallableMapper from the specification of a Mapper, which could be a Mapping itself, a callable, or (key, value) pairs.                         |
-| [`ensure_mapping_mapper`](#ju.util.ensure_mapping_mapper)(mapper, \*[, default])      | Will return a MappingMapper (a dict really) from the specification of a Mapper, which could be a Mapping itself, a callable, or (key, value) pairs.          |
-| [`feature_based_search`](#ju.util.feature_based_search)(...)                         | Returns a function that searches for a feature in a list of feature_processor_pairs                                                                          |
-| [`feature_similarity_search`](#ju.util.feature_similarity_search)(obj, \*, ...[, ...])    | Returns the output of a feature based on a featurizer and a list of feature_output_pairs                                                                     |
-| [`feature_switch`](#ju.util.feature_switch)(obj, \*, featurizer, ...)          | Returns the output of a feature based on a featurizer and a mapping                                                                                          |
-| `is_jsonable`(x)                                                                                   |                                                                                                                                                              |
-| [`is_type`](#ju.util.is_type)(param, type_)                             | Checks if the type of a parameter's default value or its annotation matches a given type.                                                                    |
-| `mk_function_returning`(_obj)                                                                      |                                                                                                                                                              |
-| [`switch_case`](#ju.util.switch_case)(mapping, default)                     | Returns a function that switches between cases based on a feature                                                                                            |
-| [`truncate_dict_values`](#ju.util.truncate_dict_values)(d, \*[, max_list_size, ...]) | Returns a new dictionary with the same nested keys structure, where:                                                                                         |
-| [`unwrap_optional`](#ju.util.unwrap_optional)(annotation)                       | Strips `None` out of an `Optional`/union annotation; returns the annotation unchanged if it is not a union, and the single remaining member if there is one. |
+| [`apply`](#ju.util.apply)(func, obj)                                  | Calls a function to an object, returing the result                                                                                                                     |
+|----------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `asis`(obj)                                                                                        |                                                                                                                                                                        |
+| `display_dag_of_code`(func, \*args, \*\*kwargs)                                                    |                                                                                                                                                                        |
+| [`ensure_callable_mapper`](#ju.util.ensure_callable_mapper)(mapper, \*[, default])     | Will return a CallableMapper from the specification of a Mapper, which could be a Mapping itself, a callable, or (key, value) pairs.                                   |
+| [`ensure_mapping_mapper`](#ju.util.ensure_mapping_mapper)(mapper, \*[, default])      | Will return a MappingMapper (a dict really) from the specification of a Mapper, which could be a Mapping itself, a callable, or (key, value) pairs.                    |
+| [`feature_based_search`](#ju.util.feature_based_search)(...)                         | Returns a function that searches for a feature in a list of feature_processor_pairs                                                                                    |
+| [`feature_similarity_search`](#ju.util.feature_similarity_search)(obj, \*, ...[, ...])    | Returns the output of a feature based on a featurizer and a list of feature_output_pairs                                                                               |
+| [`feature_switch`](#ju.util.feature_switch)(obj, \*, featurizer, ...)          | Returns the output of a feature based on a featurizer and a mapping                                                                                                    |
+| `is_jsonable`(x)                                                                                   |                                                                                                                                                                        |
+| [`is_type`](#ju.util.is_type)(param, type_)                             | Checks if the type of a parameter's default value or its annotation matches a given type.                                                                              |
+| `mk_function_returning`(_obj)                                                                      |                                                                                                                                                                        |
+| [`resolve_annotations`](#ju.util.resolve_annotations)(func, parameters)             | Returns `parameters` (a mapping or iterable of `Parameter`) with the string annotations of `func` evaluated -- all of them under `from __future__ import annotations`. |
+| [`switch_case`](#ju.util.switch_case)(mapping, default)                     | Returns a function that switches between cases based on a feature                                                                                                      |
+| [`truncate_dict_values`](#ju.util.truncate_dict_values)(d, \*[, max_list_size, ...]) | Returns a new dictionary with the same nested keys structure, where:                                                                                                   |
+| [`unwrap_optional`](#ju.util.unwrap_optional)(annotation)                       | Strips `None` out of an `Optional`/union annotation; returns the annotation unchanged if it is not a union, and the single remaining member if there is one.           |
 
 ### Classes
 
@@ -208,6 +209,20 @@ False
 True
 ```
 
+### ju.util.resolve_annotations(func, parameters)
+
+Returns `parameters` (a mapping or iterable of `Parameter`) with the string
+annotations of `func` evaluated – all of them under
+`from __future__ import annotations`. An annotation that can’t be resolved
+(e.g. a name only imported under `TYPE_CHECKING`) is left as it was.
+
+```pycon
+>>> def f(a: "int", b: "list[float]" = None, c: "Nope" = 1): ...
+>>> sig = inspect.signature(f)
+>>> [(n, p.annotation) for n, p in resolve_annotations(f, sig.parameters).items()]
+[('a', <class 'int'>), ('b', list[float]), ('c', 'Nope')]
+```
+
 ### ju.util.switch_case(mapping, default)
 
 Returns a function that switches between cases based on a feature
@@ -257,9 +272,10 @@ You can use `None` to indicate “no max”:
 
 Strips `None` out of an `Optional`/union annotation; returns the annotation
 unchanged if it is not a union, and the single remaining member if there is one.
+`Annotated` and `NewType` wrappers are peeled off too (also on the members).
 
 ```pycon
->>> from typing import Optional
+>>> from typing import Optional, Annotated, NewType
 >>> unwrap_optional(Optional[list[int]])
 list[int]
 >>> unwrap_optional(int | None)
@@ -268,4 +284,8 @@ list[int]
 typing.Union[int, str]
 >>> unwrap_optional(list[int])
 list[int]
+>>> unwrap_optional(Annotated[Optional[list[int]], "meta"])
+list[int]
+>>> unwrap_optional(Optional[NewType("UserId", int)])
+<class 'int'>
 ```

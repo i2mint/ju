@@ -1,4 +1,4 @@
-> built 2026-10-13 14:19 UTC from d6c811a (master) · ju 0.1.40. Details: build_info.json
+> built 2026-10-13 15:45 UTC from 902b466 (master) · ju 0.1.41. Details: build_info.json
 
 # index.html.md
 
@@ -823,7 +823,7 @@ file_format: ‘yaml’ or ‘json’ (used if openapi_spec is a dict)
 * **Returns:**
   imported client module
 
-### ju.oas.get_routes(d, include_methods=('put', 'get', 'patch', 'delete', 'post', 'head', 'options'))
+### ju.oas.get_routes(d, include_methods=('get', 'put', 'post', 'patch', 'head', 'options', 'delete'))
 
 Takes OpenAPI specification dict ‘d’ and returns the key-paths to all the endpoints.
 
@@ -1849,21 +1849,22 @@ Ju base utils.
 
 ### Functions
 
-| [`apply`](_autosummary/ju.util.html.md#ju.util.apply)(func, obj)                                  | Calls a function to an object, returing the result                                                                                                           |
-|----------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `asis`(obj)                                                                                        |                                                                                                                                                              |
-| `display_dag_of_code`(func, \*args, \*\*kwargs)                                                    |                                                                                                                                                              |
-| [`ensure_callable_mapper`](_autosummary/ju.util.html.md#ju.util.ensure_callable_mapper)(mapper, \*[, default])     | Will return a CallableMapper from the specification of a Mapper, which could be a Mapping itself, a callable, or (key, value) pairs.                         |
-| [`ensure_mapping_mapper`](_autosummary/ju.util.html.md#ju.util.ensure_mapping_mapper)(mapper, \*[, default])      | Will return a MappingMapper (a dict really) from the specification of a Mapper, which could be a Mapping itself, a callable, or (key, value) pairs.          |
-| [`feature_based_search`](_autosummary/ju.util.html.md#ju.util.feature_based_search)(...)                         | Returns a function that searches for a feature in a list of feature_processor_pairs                                                                          |
-| [`feature_similarity_search`](_autosummary/ju.util.html.md#ju.util.feature_similarity_search)(obj, \*, ...[, ...])    | Returns the output of a feature based on a featurizer and a list of feature_output_pairs                                                                     |
-| [`feature_switch`](_autosummary/ju.util.html.md#ju.util.feature_switch)(obj, \*, featurizer, ...)          | Returns the output of a feature based on a featurizer and a mapping                                                                                          |
-| `is_jsonable`(x)                                                                                   |                                                                                                                                                              |
-| [`is_type`](_autosummary/ju.util.html.md#ju.util.is_type)(param, type_)                             | Checks if the type of a parameter's default value or its annotation matches a given type.                                                                    |
-| `mk_function_returning`(_obj)                                                                      |                                                                                                                                                              |
-| [`switch_case`](_autosummary/ju.util.html.md#ju.util.switch_case)(mapping, default)                     | Returns a function that switches between cases based on a feature                                                                                            |
-| [`truncate_dict_values`](_autosummary/ju.util.html.md#ju.util.truncate_dict_values)(d, \*[, max_list_size, ...]) | Returns a new dictionary with the same nested keys structure, where:                                                                                         |
-| [`unwrap_optional`](_autosummary/ju.util.html.md#ju.util.unwrap_optional)(annotation)                       | Strips `None` out of an `Optional`/union annotation; returns the annotation unchanged if it is not a union, and the single remaining member if there is one. |
+| [`apply`](_autosummary/ju.util.html.md#ju.util.apply)(func, obj)                                  | Calls a function to an object, returing the result                                                                                                                     |
+|----------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `asis`(obj)                                                                                        |                                                                                                                                                                        |
+| `display_dag_of_code`(func, \*args, \*\*kwargs)                                                    |                                                                                                                                                                        |
+| [`ensure_callable_mapper`](_autosummary/ju.util.html.md#ju.util.ensure_callable_mapper)(mapper, \*[, default])     | Will return a CallableMapper from the specification of a Mapper, which could be a Mapping itself, a callable, or (key, value) pairs.                                   |
+| [`ensure_mapping_mapper`](_autosummary/ju.util.html.md#ju.util.ensure_mapping_mapper)(mapper, \*[, default])      | Will return a MappingMapper (a dict really) from the specification of a Mapper, which could be a Mapping itself, a callable, or (key, value) pairs.                    |
+| [`feature_based_search`](_autosummary/ju.util.html.md#ju.util.feature_based_search)(...)                         | Returns a function that searches for a feature in a list of feature_processor_pairs                                                                                    |
+| [`feature_similarity_search`](_autosummary/ju.util.html.md#ju.util.feature_similarity_search)(obj, \*, ...[, ...])    | Returns the output of a feature based on a featurizer and a list of feature_output_pairs                                                                               |
+| [`feature_switch`](_autosummary/ju.util.html.md#ju.util.feature_switch)(obj, \*, featurizer, ...)          | Returns the output of a feature based on a featurizer and a mapping                                                                                                    |
+| `is_jsonable`(x)                                                                                   |                                                                                                                                                                        |
+| [`is_type`](_autosummary/ju.util.html.md#ju.util.is_type)(param, type_)                             | Checks if the type of a parameter's default value or its annotation matches a given type.                                                                              |
+| `mk_function_returning`(_obj)                                                                      |                                                                                                                                                                        |
+| [`resolve_annotations`](_autosummary/ju.util.html.md#ju.util.resolve_annotations)(func, parameters)             | Returns `parameters` (a mapping or iterable of `Parameter`) with the string annotations of `func` evaluated -- all of them under `from __future__ import annotations`. |
+| [`switch_case`](_autosummary/ju.util.html.md#ju.util.switch_case)(mapping, default)                     | Returns a function that switches between cases based on a feature                                                                                                      |
+| [`truncate_dict_values`](_autosummary/ju.util.html.md#ju.util.truncate_dict_values)(d, \*[, max_list_size, ...]) | Returns a new dictionary with the same nested keys structure, where:                                                                                                   |
+| [`unwrap_optional`](_autosummary/ju.util.html.md#ju.util.unwrap_optional)(annotation)                       | Strips `None` out of an `Optional`/union annotation; returns the annotation unchanged if it is not a union, and the single remaining member if there is one.           |
 
 ### Classes
 
@@ -2053,6 +2054,20 @@ False
 True
 ```
 
+### ju.util.resolve_annotations(func, parameters)
+
+Returns `parameters` (a mapping or iterable of `Parameter`) with the string
+annotations of `func` evaluated – all of them under
+`from __future__ import annotations`. An annotation that can’t be resolved
+(e.g. a name only imported under `TYPE_CHECKING`) is left as it was.
+
+```pycon
+>>> def f(a: "int", b: "list[float]" = None, c: "Nope" = 1): ...
+>>> sig = inspect.signature(f)
+>>> [(n, p.annotation) for n, p in resolve_annotations(f, sig.parameters).items()]
+[('a', <class 'int'>), ('b', list[float]), ('c', 'Nope')]
+```
+
 ### ju.util.switch_case(mapping, default)
 
 Returns a function that switches between cases based on a feature
@@ -2102,9 +2117,10 @@ You can use `None` to indicate “no max”:
 
 Strips `None` out of an `Optional`/union annotation; returns the annotation
 unchanged if it is not a union, and the single remaining member if there is one.
+`Annotated` and `NewType` wrappers are peeled off too (also on the members).
 
 ```pycon
->>> from typing import Optional
+>>> from typing import Optional, Annotated, NewType
 >>> unwrap_optional(Optional[list[int]])
 list[int]
 >>> unwrap_optional(int | None)
@@ -2113,6 +2129,10 @@ list[int]
 typing.Union[int, str]
 >>> unwrap_optional(list[int])
 list[int]
+>>> unwrap_optional(Annotated[Optional[list[int]], "meta"])
+list[int]
+>>> unwrap_optional(Optional[NewType("UserId", int)])
+<class 'int'>
 ```
 
 
@@ -2192,7 +2212,7 @@ See also the online tool: [https://navneethg.github.io/jsonschemaviewer/](https:
 
 # About this build
 
-This documentation was built on **2026-10-13 14:19 UTC** from commit <a href="https://github.com/i2mint/ju/commit/d6c811a3c4173b5a4e3ae443a717864119238214"><code>d6c811a</code></a> on branch <code>master</code>, for **ju 0.1.40** (from <code>setup.cfg</code>).
+This documentation was built on **2026-10-13 15:45 UTC** from commit <a href="https://github.com/i2mint/ju/commit/902b4662ff0d6d173032c3c9be6a54436fb55462"><code>902b466</code></a> on branch <code>master</code>, for **ju 0.1.41** (from <code>setup.cfg</code>).
 
 #### NOTE
 Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
@@ -2201,9 +2221,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 |                     |                                                                                                                                                  |
 |---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/i2mint/ju/commit/d6c811a3c4173b5a4e3ae443a717864119238214"><code>d6c811a3c4173b5a4e3ae443a717864119238214</code></a> |
+| Commit              | <a href="https://github.com/i2mint/ju/commit/902b4662ff0d6d173032c3c9be6a54436fb55462"><code>902b4662ff0d6d173032c3c9be6a54436fb55462</code></a> |
 | Branch              | <code>master</code>                                                                                                                              |
-| Tags at this commit | <code>0.1.40</code>                                                                                                                              |
+| Tags at this commit | <code>0.1.41</code>                                                                                                                              |
 | Working tree        | clean                                                                                                                                            |
 | Remote              | <code>https://github.com/i2mint/ju</code>                                                                                                        |
 
@@ -2212,15 +2232,15 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>i2mint/ju</code>                                                                     |
-| Run          | <a href="https://github.com/i2mint/ju/actions/runs/38412068090">38412068090</a>            |
+| Run          | <a href="https://github.com/i2mint/ju/actions/runs/38424550537">38424550537</a>            |
 | Ref          | <code>refs/heads/master</code>                                                             |
-| Event commit | <code>329e9eafb9dbfb665a14b655e7d914f9551cff02</code> (in the history of the built commit) |
+| Event commit | <code>78b8a1696c85d7c8ab30e10ce6c9c8e4ae70103e</code> (in the history of the built commit) |
 
 ## Tools
 
 |          |         |
 |----------|---------|
-| epythet  | 0.2.15  |
+| epythet  | 0.2.16  |
 | Sphinx   | 9.1.0   |
 | docutils | 0.22.4  |
 | Python   | 3.12.15 |
@@ -2239,14 +2259,14 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/ju/0.1.40/">0.1.40</a>, the same as the documented version.
+Latest release: <a href="https://pypi.org/project/ju/0.1.41/">0.1.41</a>, the same as the documented version.
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/i2mint/ju && cd ju
-git checkout d6c811a3c4173b5a4e3ae443a717864119238214
-pip install "epythet==0.2.15"
+git checkout 902b4662ff0d6d173032c3c9be6a54436fb55462
+pip install "epythet==0.2.16"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```
 
