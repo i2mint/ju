@@ -136,6 +136,41 @@ BODY_IN = "body"
 PARAM_IN = "param"
 
 
+def _media_type(media_type: str) -> str:
+    """A media type without its parameters, lower-cased.
+
+    >>> _media_type('Application/JSON; charset=utf-8')
+    'application/json'
+    """
+    return media_type.split(";")[0].strip().lower()
+
+
+def _preferred_media_type(media_types):
+    """The media type to read a request body from: plain JSON, any other JSON
+    (``application/vnd.api+json``), then form-urlencoded, then multipart.
+
+    >>> _preferred_media_type(['application/json-patch+json', 'application/json'])
+    'application/json'
+    >>> _preferred_media_type(['text/plain', 'Multipart/Form-Data'])
+    'Multipart/Form-Data'
+    >>> _preferred_media_type(['application/x-ndjson']) is None
+    True
+    """
+    by_type = {}
+    for media_type in media_types:
+        by_type.setdefault(_media_type(media_type), media_type)
+    if "application/json" in by_type:
+        return by_type["application/json"]
+    for normalized, media_type in by_type.items():
+        subtype = normalized.partition("/")[2]
+        if subtype == "json" or subtype.endswith("+json"):
+            return media_type
+    for normalized in BODY_MEDIA_TYPES:
+        if normalized in by_type:
+            return by_type[normalized]
+    return None
+
+
 def _param_id(param: dict) -> tuple:
     """What identifies an OpenAPI parameter: its name *and* where it goes."""
     return param.get("name"), param.get("in")
@@ -260,14 +295,11 @@ class Route:
         >>> route.body_content_type, list(route.params['properties'])
         ('multipart/form-data', ['a'])
         """
-        content = self.method_data.get("requestBody", {}).get("content", {})
-        for media_type in content:
-            if media_type.split(";")[0].strip().lower().endswith("json"):
-                return media_type
-        for media_type in BODY_MEDIA_TYPES:
-            if media_type in content:
-                return media_type
-        return None
+        content = (self.method_data.get("requestBody") or {}).get("content") or {}
+        with_schema = [
+            m for m, v in content.items() if isinstance(v, dict) and v.get("schema")
+        ]
+        return _preferred_media_type(with_schema) or _preferred_media_type(content)
 
     @cached_property
     def output_specs(self):
@@ -282,8 +314,8 @@ class Route:
         schema = {"type": "object", "properties": {}, "required": []}
 
         parameters = self.method_data.get("parameters", [])
-        request_body = self.method_data.get("requestBody", {})
-        content = request_body.get("content", {}).get(self.body_content_type, {})
+        request_body = self.method_data.get("requestBody") or {}
+        content = (request_body.get("content") or {}).get(self.body_content_type) or {}
         body_schema = content.get("schema")
         body_properties = properties_of_schema(body_schema) if body_schema else {}
 

@@ -292,3 +292,41 @@ paths:
     assert b.body_content_type == "application/json"
     assert list(b.params["properties"]) == ["j"]
     assert c.body_content_type is None and c.params["properties"] == {}
+
+
+@pytest.mark.parametrize(
+    "content, expected",
+    [
+        (  # plain JSON beats other JSON types, whatever the order
+            ["application/json-patch+json", "application/json", "text/json"],
+            "application/json",
+        ),
+        (["application/vnd.api+json; charset=utf-8", "text/plain"], "application/vnd.api+json; charset=utf-8"),
+        (["application/x-ndjson", "application/notjson"], None),
+        (["application/X-WWW-Form-Urlencoded; charset=utf-8"], "application/X-WWW-Form-Urlencoded; charset=utf-8"),
+        (["Multipart/Form-Data"], "Multipart/Form-Data"),
+        (["text/plain", "*/*"], None),
+    ],
+)
+def test_body_content_type_preference(content, expected):
+    from ju.oas import _preferred_media_type
+
+    assert _preferred_media_type(content) == expected
+
+
+def test_a_media_type_with_a_schema_beats_one_without():
+    from yaml import safe_load
+
+    spec = safe_load(
+        """
+paths:
+  /a: {post: {requestBody: {content: {application/json: {},
+         application/x-www-form-urlencoded: {schema: {properties: {f: {}}}}}}}}
+  /b: {post: {requestBody: {content: }}}
+  /c: {post: {requestBody: }}
+"""
+    )
+    routes = Routes(spec)
+    assert list(routes["post", "/a"].params["properties"]) == ["f"]
+    assert routes["post", "/b"].params["properties"] == {}  # content: null
+    assert routes["post", "/c"].body_content_type is None
