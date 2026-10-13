@@ -127,6 +127,9 @@ def properties_of_schema(schema: dict) -> dict:
         return path_get(schema, "properties")
 
 
+#: Non-JSON request body media types `Route.params` reads, in order of preference.
+BODY_MEDIA_TYPES = ("application/x-www-form-urlencoded", "multipart/form-data")
+
 #: The `OAS_IN_KEY` of a property that comes from the request body.
 BODY_IN = "body"
 #: The `OAS_IN_KEY` of a parameter that does not say where it goes (invalid OpenAPI).
@@ -239,6 +242,34 @@ class Route:
         }
 
     @cached_property
+    def body_content_type(self):
+        """The media type of the request body `params` reads, or None for no body.
+
+        JSON is preferred; then form-urlencoded, then multipart.
+
+        >>> from yaml import safe_load
+        >>> spec = safe_load('''
+        ... paths:
+        ...   /f:
+        ...     post:
+        ...       requestBody:
+        ...         content:
+        ...           multipart/form-data: {schema: {properties: {a: {type: string}}}}
+        ... ''')
+        >>> route = Route('post', '/f', spec)
+        >>> route.body_content_type, list(route.params['properties'])
+        ('multipart/form-data', ['a'])
+        """
+        content = self.method_data.get("requestBody", {}).get("content", {})
+        for media_type in content:
+            if media_type.split(";")[0].strip().lower().endswith("json"):
+                return media_type
+        for media_type in BODY_MEDIA_TYPES:
+            if media_type in content:
+                return media_type
+        return None
+
+    @cached_property
     def output_specs(self):
         return self.method_data.get("responses", {})
 
@@ -252,7 +283,7 @@ class Route:
 
         parameters = self.method_data.get("parameters", [])
         request_body = self.method_data.get("requestBody", {})
-        content = path_get(request_body, "content.application/json")
+        content = request_body.get("content", {}).get(self.body_content_type, {})
         body_schema = content.get("schema")
         body_properties = properties_of_schema(body_schema) if body_schema else {}
 

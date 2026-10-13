@@ -270,3 +270,25 @@ paths:
         "other": ("other", "query"),
         "other_cookie": ("other", "cookie"),
     }
+
+
+def test_form_and_multipart_bodies_are_read_and_json_is_preferred():
+    from yaml import safe_load
+
+    spec = safe_load(
+        """
+paths:
+  /a: {post: {requestBody: {content: {application/x-www-form-urlencoded:
+         {schema: {required: [f], properties: {f: {type: string}}}}}}}}
+  /b: {post: {requestBody: {content: {multipart/form-data: {schema: {properties: {m: {}}}},
+         application/json: {schema: {properties: {j: {}}}}}}}}
+  /c: {post: {responses: {}}}
+"""
+    )
+    routes = Routes(spec)
+    a, b, c = (routes["post", p] for p in ("/a", "/b", "/c"))
+    assert a.body_content_type == "application/x-www-form-urlencoded"
+    assert list(a.params["properties"]) == ["f"] and a.params["required"] == ["f"]
+    assert b.body_content_type == "application/json"
+    assert list(b.params["properties"]) == ["j"]
+    assert c.body_content_type is None and c.params["properties"] == {}
