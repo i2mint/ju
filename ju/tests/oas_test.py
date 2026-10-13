@@ -275,16 +275,14 @@ paths:
 def test_form_and_multipart_bodies_are_read_and_json_is_preferred():
     from yaml import safe_load
 
-    spec = safe_load(
-        """
+    spec = safe_load("""
 paths:
   /a: {post: {requestBody: {content: {application/x-www-form-urlencoded:
          {schema: {required: [f], properties: {f: {type: string}}}}}}}}
   /b: {post: {requestBody: {content: {multipart/form-data: {schema: {properties: {m: {}}}},
          application/json: {schema: {properties: {j: {}}}}}}}}
   /c: {post: {responses: {}}}
-"""
-    )
+""")
     routes = Routes(spec)
     a, b, c = (routes["post", p] for p in ("/a", "/b", "/c"))
     assert a.body_content_type == "application/x-www-form-urlencoded"
@@ -301,9 +299,15 @@ paths:
             ["application/json-patch+json", "application/json", "text/json"],
             "application/json",
         ),
-        (["application/vnd.api+json; charset=utf-8", "text/plain"], "application/vnd.api+json; charset=utf-8"),
+        (
+            ["application/vnd.api+json; charset=utf-8", "text/plain"],
+            "application/vnd.api+json; charset=utf-8",
+        ),
         (["application/x-ndjson", "application/notjson"], None),
-        (["application/X-WWW-Form-Urlencoded; charset=utf-8"], "application/X-WWW-Form-Urlencoded; charset=utf-8"),
+        (
+            ["application/X-WWW-Form-Urlencoded; charset=utf-8"],
+            "application/X-WWW-Form-Urlencoded; charset=utf-8",
+        ),
         (["Multipart/Form-Data"], "Multipart/Form-Data"),
         (["text/plain", "*/*"], None),
     ],
@@ -317,15 +321,13 @@ def test_body_content_type_preference(content, expected):
 def test_a_media_type_with_a_schema_beats_one_without():
     from yaml import safe_load
 
-    spec = safe_load(
-        """
+    spec = safe_load("""
 paths:
   /a: {post: {requestBody: {content: {application/json: {},
          application/x-www-form-urlencoded: {schema: {properties: {f: {}}}}}}}}
   /b: {post: {requestBody: {content: }}}
   /c: {post: {requestBody: }}
-"""
-    )
+""")
     routes = Routes(spec)
     assert list(routes["post", "/a"].params["properties"]) == ["f"]
     assert routes["post", "/b"].params["properties"] == {}  # content: null
