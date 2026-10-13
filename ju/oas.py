@@ -127,10 +127,48 @@ def properties_of_schema(schema: dict) -> dict:
         return path_get(schema, "properties")
 
 
+#: Non-JSON request body media types `Route.params` reads, in order of preference.
+BODY_MEDIA_TYPES = ("application/x-www-form-urlencoded", "multipart/form-data")
+
 #: The `OAS_IN_KEY` of a property that comes from the request body.
 BODY_IN = "body"
 #: The `OAS_IN_KEY` of a parameter that does not say where it goes (invalid OpenAPI).
 PARAM_IN = "param"
+
+
+def _media_type(media_type: str) -> str:
+    """A media type without its parameters, lower-cased.
+
+    >>> _media_type('Application/JSON; charset=utf-8')
+    'application/json'
+    """
+    return media_type.split(";")[0].strip().lower()
+
+
+def _preferred_media_type(media_types):
+    """The media type to read a request body from: plain JSON, any other JSON
+    (``application/vnd.api+json``), then form-urlencoded, then multipart.
+
+    >>> _preferred_media_type(['application/json-patch+json', 'application/json'])
+    'application/json'
+    >>> _preferred_media_type(['text/plain', 'Multipart/Form-Data'])
+    'Multipart/Form-Data'
+    >>> _preferred_media_type(['application/x-ndjson']) is None
+    True
+    """
+    by_type = {}
+    for media_type in media_types:
+        by_type.setdefault(_media_type(media_type), media_type)
+    if "application/json" in by_type:
+        return by_type["application/json"]
+    for normalized, media_type in by_type.items():
+        subtype = normalized.partition("/")[2]
+        if subtype == "json" or subtype.endswith("+json"):
+            return media_type
+    for normalized in BODY_MEDIA_TYPES:
+        if normalized in by_type:
+            return by_type[normalized]
+    return None
 
 
 def _param_id(param: dict) -> tuple:
@@ -239,6 +277,31 @@ class Route:
         }
 
     @cached_property
+    def body_content_type(self):
+        """The media type of the request body `params` reads, or None for no body.
+
+        JSON is preferred; then form-urlencoded, then multipart.
+
+        >>> from yaml import safe_load
+        >>> spec = safe_load('''
+        ... paths:
+        ...   /f:
+        ...     post:
+        ...       requestBody:
+        ...         content:
+        ...           multipart/form-data: {schema: {properties: {a: {type: string}}}}
+        ... ''')
+        >>> route = Route('post', '/f', spec)
+        >>> route.body_content_type, list(route.params['properties'])
+        ('multipart/form-data', ['a'])
+        """
+        content = (self.method_data.get("requestBody") or {}).get("content") or {}
+        with_schema = [
+            m for m, v in content.items() if isinstance(v, dict) and v.get("schema")
+        ]
+        return _preferred_media_type(with_schema) or _preferred_media_type(content)
+
+    @cached_property
     def output_specs(self):
         return self.method_data.get("responses", {})
 
@@ -251,8 +314,8 @@ class Route:
         schema = {"type": "object", "properties": {}, "required": []}
 
         parameters = self.method_data.get("parameters", [])
-        request_body = self.method_data.get("requestBody", {})
-        content = path_get(request_body, "content.application/json")
+        request_body = self.method_data.get("requestBody") or {}
+        content = (request_body.get("content") or {}).get(self.body_content_type) or {}
         body_schema = content.get("schema")
         body_properties = properties_of_schema(body_schema) if body_schema else {}
 
