@@ -552,9 +552,13 @@ class OpenApiFunc:
             p["name"]: p.get("in") for p in schema.get("_oas_parameters") or ()
         }
         places = {}
-        for (pyname, name), prop in zip(
-            schema_param_names(schema).items(), schema["properties"].values()
-        ):
+        # A schema made of an OpenAPI `parameters` list (the generated-client
+        # route) has no `properties`: its names come from the list itself.
+        if isinstance(schema.get("parameters"), list):
+            props = [{OAS_IN_KEY: p.get("in")} for p in schema["parameters"]]
+        else:
+            props = list(schema.get("properties", {}).values())
+        for (pyname, name), prop in zip(schema_param_names(schema).items(), props):
             place = prop.get(OAS_IN_KEY) or in_by_name.get(name)
             if place in (None, PARAM_IN):
                 if f"{{{name}}}" in self.uri:
@@ -572,7 +576,10 @@ class OpenApiFunc:
         body_is_array = bool(oas_request_body) and oas_request_body.get("type") == (
             "array"
         )
-        body = {} if oas_request_body and not body_is_array else None
+        body_is_object = bool(oas_request_body) and (
+            oas_request_body.get("type") == "object"
+        )
+        body = {} if body_is_object else None
         sent_by = {"path": path_params, "query": query_params}
         for pyname, (name, place) in self._places().items():
             if pyname not in _kwargs:
@@ -585,7 +592,7 @@ class OpenApiFunc:
                     {"header": headers, "cookie": cookies}[place][name] = str(value)
             elif place == BODY_IN and body_is_array:
                 body = value
-            elif place == BODY_IN:
+            elif place == BODY_IN and body_is_object:
                 body[name] = value
         url = self.base_url + self.uri.format(**path_params)
         extra = {k: v for k, v in (("headers", headers), ("cookies", cookies)) if v}
