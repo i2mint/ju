@@ -2,20 +2,18 @@
 
 # About this build
 
-This documentation was built on **2026-10-13 12:13 UTC** from commit <a href="https://github.com/i2mint/ju/commit/6cadf23617939d45d271128aed71ed18d148d2fa"><code>6cadf23</code></a> on branch <code>master</code>, for **ju 0.1.38** (from <code>setup.cfg</code>).
+This documentation was built on **2026-10-13 12:21 UTC** from commit <a href="https://github.com/i2mint/ju/commit/25e04e1e7d7f642c53e9d9e0385ea3098e07fbc0"><code>25e04e1</code></a> on branch <code>master</code>, for **ju 0.1.39** (from <code>setup.cfg</code>).
 
-#### WARNING
-The documentation and the package may be misaligned:
-
-- The documented version (0.1.38) is ahead of the latest release on PyPI (0.1.37): these docs describe unreleased code.
+#### NOTE
+Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
 
 ## Source
 
 |                     |                                                                                                                                                  |
 |---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/i2mint/ju/commit/6cadf23617939d45d271128aed71ed18d148d2fa"><code>6cadf23617939d45d271128aed71ed18d148d2fa</code></a> |
+| Commit              | <a href="https://github.com/i2mint/ju/commit/25e04e1e7d7f642c53e9d9e0385ea3098e07fbc0"><code>25e04e1e7d7f642c53e9d9e0385ea3098e07fbc0</code></a> |
 | Branch              | <code>master</code>                                                                                                                              |
-| Tags at this commit | <code>0.1.38</code>                                                                                                                              |
+| Tags at this commit | <code>0.1.39</code>                                                                                                                              |
 | Working tree        | clean                                                                                                                                            |
 | Remote              | <code>https://github.com/i2mint/ju</code>                                                                                                        |
 
@@ -24,9 +22,9 @@ The documentation and the package may be misaligned:
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>i2mint/ju</code>                                                                     |
-| Run          | <a href="https://github.com/i2mint/ju/actions/runs/38395543082">38395543082</a>            |
+| Run          | <a href="https://github.com/i2mint/ju/actions/runs/38396440884">38396440884</a>            |
 | Ref          | <code>refs/heads/master</code>                                                             |
-| Event commit | <code>86b06cd2e394448dbca7a5c2989ce19c7fc28742</code> (in the history of the built commit) |
+| Event commit | <code>9d91946bbf77537ce91294fc24b1a198a425e63c</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -51,13 +49,13 @@ The documentation and the package may be misaligned:
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/ju/0.1.37/">0.1.37</a>, older than the documented version (0.1.38).
+Latest release: <a href="https://pypi.org/project/ju/0.1.39/">0.1.39</a>, the same as the documented version.
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/i2mint/ju && cd ju
-git checkout 6cadf23617939d45d271128aed71ed18d148d2fa
+git checkout 25e04e1e7d7f642c53e9d9e0385ea3098e07fbc0
 pip install "epythet==0.2.15"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```

@@ -1,4 +1,4 @@
-> built 2026-10-13 12:13 UTC from 6cadf23 (master) · ju 0.1.38. Details: build_info.json
+> built 2026-10-13 12:21 UTC from 25e04e1 (master) · ju 0.1.39. Details: build_info.json
 
 # index.html.md
 
@@ -583,8 +583,9 @@ OpenAPI specification tools.
 
 ### Functions
 
-| `compare_modules_to_missing_funcs`()                                                              |                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| [`add_property`](_autosummary/ju.oas.html.md#ju.oas.add_property)(schema, sent_as, spec_names, ...)   | Add the parameter or body property `name`, sent in `place`, to the object `schema`, keyed by its name; when that is taken (the same name in another place -- `id` in the query and in a header, a query `name` and a body `name`), by a distinct key.                                                                                                                                                                               |
 |---------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `compare_modules_to_missing_funcs`()                                                              |                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | `compare_modules_to_operationids`()                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | [`default_func_namer`](_autosummary/ju.oas.html.md#ju.oas.default_func_namer)(method, path[, details, ...]) | Default function name generator for OpenAPI routes.                                                                                                                                                                                                                                                                                                                                                                                 |
 | `default_get_response`(method, url, \*\*kwargs)                                                   |                                                                                                                                                                                                                                                                                                                                                                                                                                     |
@@ -757,6 +758,26 @@ In either case, this is followed by: for k, v in F.items(): D[k] = v
 
 Updates the \_keys_cache by deleting the attribute
 
+### ju.oas.add_property(schema, sent_as, spec_names, name, place, prop_schema, required)
+
+Add the parameter or body property `name`, sent in `place`, to the object
+`schema`, keyed by its name; when that is taken (the same name in another
+place – `id` in the query and in a header, a query `name` and a body
+`name`), by a distinct key. Both then record the spec’s name and place
+(OAS_NAME_KEY, OAS_IN_KEY), so a consumer can tell which is which. No distinct
+key is a name in `spec_names`. `sent_as` (key -> (name, place)) is the state
+to carry between calls.
+
+```pycon
+>>> schema, sent_as = {'properties': {}, 'required': []}, {}
+>>> add_property(schema, sent_as, {'id'}, 'id', 'query', {'type': 'string'}, True)
+>>> add_property(schema, sent_as, {'id'}, 'id', 'header', {'type': 'integer'}, False)
+>>> sorted(schema['properties'])
+['id', 'id_header']
+>>> schema['properties']['id_header']['x-oas-in'], schema['required']
+('header', ['id'])
+```
+
 ### ju.oas.default_func_namer(method, path, details=None, , favor_operation_id=False)
 
 Default function name generator for OpenAPI routes.
@@ -802,7 +823,7 @@ file_format: ‘yaml’ or ‘json’ (used if openapi_spec is a dict)
 * **Returns:**
   imported client module
 
-### ju.oas.get_routes(d, include_methods=('delete', 'head', 'post', 'options', 'put', 'patch', 'get'))
+### ju.oas.get_routes(d, include_methods=('get', 'post', 'head', 'put', 'delete', 'options', 'patch'))
 
 Takes OpenAPI specification dict ‘d’ and returns the key-paths to all the endpoints.
 
@@ -2133,20 +2154,18 @@ See also the online tool: [https://navneethg.github.io/jsonschemaviewer/](https:
 
 # About this build
 
-This documentation was built on **2026-10-13 12:13 UTC** from commit <a href="https://github.com/i2mint/ju/commit/6cadf23617939d45d271128aed71ed18d148d2fa"><code>6cadf23</code></a> on branch <code>master</code>, for **ju 0.1.38** (from <code>setup.cfg</code>).
+This documentation was built on **2026-10-13 12:21 UTC** from commit <a href="https://github.com/i2mint/ju/commit/25e04e1e7d7f642c53e9d9e0385ea3098e07fbc0"><code>25e04e1</code></a> on branch <code>master</code>, for **ju 0.1.39** (from <code>setup.cfg</code>).
 
-#### WARNING
-The documentation and the package may be misaligned:
-
-- The documented version (0.1.38) is ahead of the latest release on PyPI (0.1.37): these docs describe unreleased code.
+#### NOTE
+Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
 
 ## Source
 
 |                     |                                                                                                                                                  |
 |---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/i2mint/ju/commit/6cadf23617939d45d271128aed71ed18d148d2fa"><code>6cadf23617939d45d271128aed71ed18d148d2fa</code></a> |
+| Commit              | <a href="https://github.com/i2mint/ju/commit/25e04e1e7d7f642c53e9d9e0385ea3098e07fbc0"><code>25e04e1e7d7f642c53e9d9e0385ea3098e07fbc0</code></a> |
 | Branch              | <code>master</code>                                                                                                                              |
-| Tags at this commit | <code>0.1.38</code>                                                                                                                              |
+| Tags at this commit | <code>0.1.39</code>                                                                                                                              |
 | Working tree        | clean                                                                                                                                            |
 | Remote              | <code>https://github.com/i2mint/ju</code>                                                                                                        |
 
@@ -2155,9 +2174,9 @@ The documentation and the package may be misaligned:
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>i2mint/ju</code>                                                                     |
-| Run          | <a href="https://github.com/i2mint/ju/actions/runs/38395543082">38395543082</a>            |
+| Run          | <a href="https://github.com/i2mint/ju/actions/runs/38396440884">38396440884</a>            |
 | Ref          | <code>refs/heads/master</code>                                                             |
-| Event commit | <code>86b06cd2e394448dbca7a5c2989ce19c7fc28742</code> (in the history of the built commit) |
+| Event commit | <code>9d91946bbf77537ce91294fc24b1a198a425e63c</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -2182,13 +2201,13 @@ The documentation and the package may be misaligned:
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/ju/0.1.37/">0.1.37</a>, older than the documented version (0.1.38).
+Latest release: <a href="https://pypi.org/project/ju/0.1.39/">0.1.39</a>, the same as the documented version.
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/i2mint/ju && cd ju
-git checkout 6cadf23617939d45d271128aed71ed18d148d2fa
+git checkout 25e04e1e7d7f642c53e9d9e0385ea3098e07fbc0
 pip install "epythet==0.2.15"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```

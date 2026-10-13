@@ -16,6 +16,7 @@ ju.oas
 
    .. autosummary::
    
+      add_property
       compare_modules_to_missing_funcs
       compare_modules_to_operationids
       default_func_namer

@@ -11,8 +11,9 @@ OpenAPI specification tools.
 
 ### Functions
 
-| `compare_modules_to_missing_funcs`()                                                              |                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| [`add_property`](#ju.oas.add_property)(schema, sent_as, spec_names, ...)   | Add the parameter or body property `name`, sent in `place`, to the object `schema`, keyed by its name; when that is taken (the same name in another place -- `id` in the query and in a header, a query `name` and a body `name`), by a distinct key.                                                                                                                                                                               |
 |---------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `compare_modules_to_missing_funcs`()                                                              |                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | `compare_modules_to_operationids`()                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | [`default_func_namer`](#ju.oas.default_func_namer)(method, path[, details, ...]) | Default function name generator for OpenAPI routes.                                                                                                                                                                                                                                                                                                                                                                                 |
 | `default_get_response`(method, url, \*\*kwargs)                                                   |                                                                                                                                                                                                                                                                                                                                                                                                                                     |
@@ -185,6 +186,26 @@ In either case, this is followed by: for k, v in F.items(): D[k] = v
 
 Updates the \_keys_cache by deleting the attribute
 
+### ju.oas.add_property(schema, sent_as, spec_names, name, place, prop_schema, required)
+
+Add the parameter or body property `name`, sent in `place`, to the object
+`schema`, keyed by its name; when that is taken (the same name in another
+place – `id` in the query and in a header, a query `name` and a body
+`name`), by a distinct key. Both then record the spec’s name and place
+(OAS_NAME_KEY, OAS_IN_KEY), so a consumer can tell which is which. No distinct
+key is a name in `spec_names`. `sent_as` (key -> (name, place)) is the state
+to carry between calls.
+
+```pycon
+>>> schema, sent_as = {'properties': {}, 'required': []}, {}
+>>> add_property(schema, sent_as, {'id'}, 'id', 'query', {'type': 'string'}, True)
+>>> add_property(schema, sent_as, {'id'}, 'id', 'header', {'type': 'integer'}, False)
+>>> sorted(schema['properties'])
+['id', 'id_header']
+>>> schema['properties']['id_header']['x-oas-in'], schema['required']
+('header', ['id'])
+```
+
 ### ju.oas.default_func_namer(method, path, details=None, , favor_operation_id=False)
 
 Default function name generator for OpenAPI routes.
@@ -230,7 +251,7 @@ file_format: ‘yaml’ or ‘json’ (used if openapi_spec is a dict)
 * **Returns:**
   imported client module
 
-### ju.oas.get_routes(d, include_methods=('delete', 'head', 'post', 'options', 'put', 'patch', 'get'))
+### ju.oas.get_routes(d, include_methods=('get', 'post', 'head', 'put', 'delete', 'options', 'patch'))
 
 Takes OpenAPI specification dict ‘d’ and returns the key-paths to all the endpoints.
 
