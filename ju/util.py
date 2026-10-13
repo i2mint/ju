@@ -151,7 +151,10 @@ def resolve_annotations(func, parameters):
         hints = typing.get_type_hints(target, include_extras=True)
     except Exception:  # one unresolvable annotation spoils the lot: go one by one
         hints = {}
-        globalns = {**vars(builtins), **getattr(inspect.unwrap(target), "__globals__", {})}
+        globalns = {
+            **vars(builtins),
+            **getattr(inspect.unwrap(target), "__globals__", {}),
+        }
         for name, p in params.items():
             if isinstance(p.annotation, str):
                 try:

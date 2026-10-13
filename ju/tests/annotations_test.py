@@ -36,7 +36,9 @@ def test_string_annotations_are_resolved():
 
 
 def test_annotated_and_newtype():
-    def f(a: Annotated[list[int], "m"], b: UserId, c: Tags, d: Annotated[UserId, 1]): ...
+    def f(
+        a: Annotated[list[int], "m"], b: UserId, c: Tags, d: Annotated[UserId, 1]
+    ): ...
 
     assert _props(f) == {
         "a": {"type": "array", "items": {"type": "integer"}},
@@ -72,7 +74,9 @@ def test_partial_and_callable_instance_and_method():
 
         def meth(self, z: bool): ...
 
-    assert _props(partial(g, 1)) == {"b": {"type": "array", "items": {"type": "number"}}}
+    assert _props(partial(g, 1)) == {
+        "b": {"type": "array", "items": {"type": "number"}}
+    }
     assert _props(Callme()) == {
         "x": {"type": "number"},
         "ys": {"type": "array", "items": {"type": "integer"}},

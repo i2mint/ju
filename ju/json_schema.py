@@ -678,9 +678,7 @@ def _value_schema(
     )
     schema = {"type": param_to_prop_type(param)}
     if schema["type"] == "array":
-        items = _array_items(
-            annotation, default, param_to_prop_type, name, depth=depth
-        )
+        items = _array_items(annotation, default, param_to_prop_type, name, depth=depth)
         if items is not None:
             schema["items"] = items
     return schema
