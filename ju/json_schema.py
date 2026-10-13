@@ -35,7 +35,7 @@ from copy import deepcopy
 from pydantic import BaseModel
 from i2 import name_of_obj as _name_of_obj
 
-from ju.util import is_type, unwrap_optional
+from ju.util import is_type, unwrap_optional, resolve_annotations
 
 DFLT_FUNC_TITLE = ""
 
@@ -316,6 +316,8 @@ def signature_to_json_schema(
         func_name = name_of_obj(func)
 
     parameters = sig.parameters
+    if callable(func):  # (``from __future__ import annotations`` -> strings)
+        parameters = resolve_annotations(func, parameters)
 
     schema = deepcopy(BASE_SCHEMA)
     schema["title"] = pyname_to_title(func_name)
@@ -611,7 +613,9 @@ def _json_safe(value):
     return True, value
 
 
-def _array_items(annotation, default, param_to_prop_type: Callable) -> dict | None:
+def _array_items(
+    annotation, default, param_to_prop_type: Callable, name: str = "_"
+) -> dict | None:
     """
     The JSON schema of an array parameter's items, or ``None`` if there is no telling.
 
@@ -635,25 +639,28 @@ def _array_items(annotation, default, param_to_prop_type: Callable) -> dict | No
     args = get_args(unwrap_optional(annotation)) if annotation is not empty else ()
     args = tuple(a for a in args if a is not Ellipsis)
     if len(args) == 1:  # list[int], tuple[int, ...]; not tuple[int, str]
-        return _value_schema(args[0], empty, param_to_prop_type)
+        return _value_schema(args[0], empty, param_to_prop_type, name)
     if args:
         return None
     if isinstance(default, (list, tuple)) and default:
-        schemas = [_value_schema(empty, d, param_to_prop_type) for d in default]
+        schemas = [_value_schema(empty, d, param_to_prop_type, name) for d in default]
         if all(schema == schemas[0] for schema in schemas):
             return schemas[0]
     return None
 
 
-def _value_schema(annotation, default, param_to_prop_type: Callable) -> dict:
+def _value_schema(
+    annotation, default, param_to_prop_type: Callable, name: str = "_"
+) -> dict:
     """``{"type": ..., "items": ...}`` for a value described by an annotation and/or a
-    default."""
+    default. ``name`` is that of the parameter the value belongs to (so a custom
+    ``param_to_prop_type`` sees it, not a placeholder)."""
     param = Parameter(
-        "_", Parameter.KEYWORD_ONLY, annotation=annotation, default=default
+        name, Parameter.KEYWORD_ONLY, annotation=annotation, default=default
     )
     schema = {"type": param_to_prop_type(param)}
     if schema["type"] == "array":
-        items = _array_items(annotation, default, param_to_prop_type)
+        items = _array_items(annotation, default, param_to_prop_type, name)
         if items is not None:
             schema["items"] = items
     return schema
@@ -693,7 +700,9 @@ def get_properties(parameters, *, param_to_prop_type: Callable = DFLT_PARAM_TO_T
         field = {}
         field["type"] = param_to_prop_type(param)
         if field["type"] == "array":
-            items = _array_items(param.annotation, param.default, param_to_prop_type)
+            items = _array_items(
+                param.annotation, param.default, param_to_prop_type, name
+            )
             if items is not None:
                 field["items"] = items
 

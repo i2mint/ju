@@ -19,6 +19,9 @@ from collections.abc import Mapping, Callable, Sequence
 from collections import defaultdict
 from dataclasses import dataclass
 from types import GenericAlias, UnionType
+import inspect
+import builtins
+import typing
 from inspect import Parameter
 
 from i2 import mk_sentinel
@@ -55,12 +58,37 @@ def _is_union(tp) -> bool:
     return get_origin(tp) in (Union, UnionType)
 
 
+def _strip_wrappers(annotation):
+    """
+    Peels the wrappers that don't change what a value *is* off an annotation:
+    ``Annotated[T, ...]`` (to ``T``), ``NewType`` (to its supertype) and a ``type``
+    statement alias (to its value). Unions are handled by `unwrap_optional`.
+
+    >>> from typing import Annotated, NewType
+    >>> _strip_wrappers(Annotated[list[int], "meta"])
+    list[int]
+    >>> UserId = NewType("UserId", int)
+    >>> _strip_wrappers(Annotated[UserId, "meta"])
+    <class 'int'>
+    """
+    while True:
+        if get_origin(annotation) is typing.Annotated:
+            annotation = get_args(annotation)[0]
+        elif hasattr(annotation, "__supertype__"):  # NewType
+            annotation = annotation.__supertype__
+        elif isinstance(annotation, getattr(typing, "TypeAliasType", ())):
+            annotation = annotation.__value__
+        else:
+            return annotation
+
+
 def unwrap_optional(annotation):
     """
     Strips ``None`` out of an ``Optional``/union annotation; returns the annotation
     unchanged if it is not a union, and the single remaining member if there is one.
+    ``Annotated`` and ``NewType`` wrappers are peeled off too (also on the members).
 
-    >>> from typing import Optional
+    >>> from typing import Optional, Annotated, NewType
     >>> unwrap_optional(Optional[list[int]])
     list[int]
     >>> unwrap_optional(int | None)
@@ -69,13 +97,70 @@ def unwrap_optional(annotation):
     typing.Union[int, str]
     >>> unwrap_optional(list[int])
     list[int]
+    >>> unwrap_optional(Annotated[Optional[list[int]], "meta"])
+    list[int]
+    >>> unwrap_optional(Optional[NewType("UserId", int)])
+    <class 'int'>
     """
+    annotation = _strip_wrappers(annotation)
     if not _is_union(annotation):
         return annotation
-    members = tuple(a for a in get_args(annotation) if a is not type(None))
+    members = tuple(
+        _strip_wrappers(a) for a in get_args(annotation) if a is not type(None)
+    )
     if len(members) == 1:
-        return members[0]
+        return unwrap_optional(members[0])
     return Union[members] if members else annotation
+
+
+def _annotation_target(func):
+    """The function whose globals/``__annotations__`` describe ``func``'s signature."""
+    while isinstance(func, partial):
+        func = func.func
+    if inspect.isclass(func):
+        return func.__init__
+    if not (inspect.isroutine(func) or hasattr(func, "__wrapped__")):
+        return getattr(type(func), "__call__", func)  # a callable instance
+    return func
+
+
+def resolve_annotations(func, parameters):
+    """
+    Returns ``parameters`` (a mapping or iterable of `Parameter`) with the string
+    annotations of ``func`` evaluated -- all of them under
+    ``from __future__ import annotations``. An annotation that can't be resolved
+    (e.g. a name only imported under ``TYPE_CHECKING``) is left as it was.
+
+    >>> def f(a: "int", b: "list[float]" = None, c: "Nope" = 1): ...
+    >>> sig = inspect.signature(f)
+    >>> [(n, p.annotation) for n, p in resolve_annotations(f, sig.parameters).items()]
+    [('a', <class 'int'>), ('b', list[float]), ('c', 'Nope')]
+    """
+    as_mapping = isinstance(parameters, Mapping)
+    params = dict(parameters) if as_mapping else {p.name: p for p in parameters}
+    if not any(isinstance(p.annotation, str) for p in params.values()):
+        return parameters
+    target = _annotation_target(func)
+    try:
+        hints = typing.get_type_hints(target, include_extras=True)
+    except Exception:  # one unresolvable annotation spoils the lot: go one by one
+        hints = {}
+        globalns = {**vars(builtins), **getattr(inspect.unwrap(target), "__globals__", {})}
+        for name, p in params.items():
+            if isinstance(p.annotation, str):
+                try:
+                    hints[name] = eval(p.annotation, globalns)
+                except Exception:
+                    pass
+    resolved = {
+        name: (
+            p.replace(annotation=hints[name])
+            if isinstance(p.annotation, str) and name in hints
+            else p
+        )
+        for name, p in params.items()
+    }
+    return resolved if as_mapping else list(resolved.values())
 
 
 def _annotation_matches(annotation, type_) -> bool:
