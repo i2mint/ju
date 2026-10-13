@@ -166,3 +166,77 @@ def test_param_default_to_json_type(default, json_type):
 
     param = Parameter("p", Parameter.KEYWORD_ONLY, default=default)
     assert DFLT_PARAM_TO_TYPE(param) == json_type
+
+
+@pytest.mark.parametrize(
+    "annotation, default, expected",
+    [
+        (list, Parameter.empty, {"type": "array"}),
+        (list[int], Parameter.empty, {"type": "array", "items": {"type": "integer"}}),
+        (
+            "tuple[int, ...]",
+            Parameter.empty,
+            {"type": "array", "items": {"type": "integer"}},
+        ),
+        (
+            list[list[str]],
+            Parameter.empty,
+            {"type": "array", "items": {"type": "array", "items": {"type": "string"}}},
+        ),
+        (
+            list[float] | None,
+            Parameter.empty,
+            {"type": "array", "items": {"type": "number"}},
+        ),
+        (
+            Parameter.empty,
+            [1, 2, 3],
+            {"type": "array", "items": {"type": "integer"}, "default": [1, 2, 3]},
+        ),
+        (
+            Parameter.empty,
+            ["a", "b"],
+            {"type": "array", "items": {"type": "string"}, "default": ["a", "b"]},
+        ),
+        # the annotation wins over the default's elements
+        (
+            list[float],
+            [1, 2],
+            {"type": "array", "items": {"type": "number"}, "default": [1, 2]},
+        ),
+        # no telling: heterogeneous, empty or fixed-length tuples
+        (Parameter.empty, [1, "a"], {"type": "array", "default": [1, "a"]}),
+        (Parameter.empty, [], {"type": "array", "default": []}),
+        (tuple[int, str], Parameter.empty, {"type": "array"}),
+        (dict[str, int], Parameter.empty, {"type": "object"}),
+        (str, Parameter.empty, {"type": "string"}),
+    ],
+)
+def test_array_params_from_annotation_and_default(annotation, default, expected):
+    from ju.json_schema import get_properties
+
+    if annotation == "tuple[int, ...]":
+        annotation = tuple[int, ...]
+    param = Parameter(
+        "p", Parameter.KEYWORD_ONLY, annotation=annotation, default=default
+    )
+    assert get_properties({"p": param}) == {"p": expected}
+
+
+def test_annotated_list_params_in_signature_schema():
+    from ju.json_schema import signature_to_json_schema
+
+    def f(xs: list[int], names: list = None, ys=(1.5, 2.5)): ...
+
+    props = signature_to_json_schema(f)["properties"]
+    assert props["xs"] == {"type": "array", "items": {"type": "integer"}}
+    assert props["names"]["type"] == "array" and "items" not in props["names"]
+    assert props["ys"]["items"] == {"type": "number"}
+
+
+@pytest.mark.parametrize("annotation", [bytes, bytearray, memoryview, UserString, str])
+def test_bytes_like_and_str_annotations_stay_string(annotation):
+    from ju.json_schema import DFLT_PARAM_TO_TYPE
+
+    param = Parameter("p", Parameter.KEYWORD_ONLY, annotation=annotation)
+    assert DFLT_PARAM_TO_TYPE(param) == "string"
