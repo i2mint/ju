@@ -332,3 +332,92 @@ paths:
     assert list(routes["post", "/a"].params["properties"]) == ["f"]
     assert routes["post", "/b"].params["properties"] == {}  # content: null
     assert routes["post", "/c"].body_content_type is None
+
+
+def test_openapi_funcs_send_each_argument_where_the_spec_says():
+    from yaml import safe_load
+    from ju.oas import openapi_to_funcs
+
+    spec = safe_load(
+        """
+openapi: 3.0.3
+servers: [{url: 'http://e.com'}]
+paths:
+  /things/{id}:
+    parameters:
+      - {in: path, name: id, required: true, schema: {type: string}}
+    post:
+      parameters:
+        - {in: query, name: name, schema: {type: string}}
+        - {in: header, name: X-Role, schema: {type: string}}
+        - {in: header, name: id, schema: {type: integer}}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties: {name: {type: string}, size: {type: integer}}
+  /list:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema: {type: array, title: Rows, items: {type: object}}
+"""
+    )
+    sent = []
+
+    def get_response(method, url, **kwargs):
+        sent.append((method, url, kwargs))
+        return type("R", (), {"json": lambda self: {}})()
+
+    funcs = {f.__name__: f for f in openapi_to_funcs(spec, get_response=get_response)}
+    func = funcs["post_things__id"]
+    func(id="7", name="Q", x_role="admin", id_header=3, name_body="B", size=2)
+    (method, url, kwargs), = sent
+    assert url == "http://e.com/things/7"
+    assert kwargs["params"] == {"name": "Q"}
+    assert kwargs["headers"] == {"X-Role": "admin", "id": "3"}
+    assert kwargs["json"] == {"name": "B", "size": 2}
+
+    funcs["post_list"](rows=[{"a": 1}])
+    assert sent[-1][2]["json"] == [{"a": 1}] and "headers" not in sent[-1][2]
+
+
+def test_openapi_funcs_with_a_parameters_list_schema_and_non_object_bodies():
+    from ju.oas import OpenApiFunc
+
+    sent = []
+
+    def get_response(method, url, **kwargs):
+        sent.append((url, kwargs))
+        return type("R", (), {"json": lambda self: {}})()
+
+    # the shape the generated-client route builds: a `parameters` list, no `properties`
+    schema = {
+        "title": "f",
+        "parameters": [
+            {"name": "thingId", "in": "path", "required": True},
+            {"name": "q", "in": "query"},
+        ],
+    }
+    func = OpenApiFunc(
+        method="get", uri="/t/{thingId}", base_url="http://e.com",
+        param_schema=schema, get_response=get_response,
+    )
+    func("7", q="x")
+    assert sent[0] == ("http://e.com/t/7", {"params": {"q": "x"}})
+
+    # a string body is not an object: nothing to assemble, so no `{}` body
+    schema = {
+        "title": "g", "type": "object", "required": [],
+        "properties": {"a": {"type": "string"}},
+        "_oas_parameters": [], "_oas_request_body": {"type": "string"},
+    }
+    func = OpenApiFunc(
+        method="post", uri="/s", base_url="http://e.com",
+        param_schema=schema, get_response=get_response,
+    )
+    func(a="v")
+    assert sent[1][1]["json"] is None
