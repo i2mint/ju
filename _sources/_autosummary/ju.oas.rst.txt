@@ -4,6 +4,13 @@ ju.oas
 .. automodule:: ju.oas
 
    
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      BODY_IN
+      PARAM_IN
+   
    .. rubric:: Functions
 
    .. autosummary::
@@ -17,6 +24,7 @@ ju.oas
       generate_and_import_openapi_client
       generate_openapi_client
       get_routes
+      merge_parameters
       merge_request_body_json_schema
       openapi_to_funcs
       openapi_to_generated_funcs

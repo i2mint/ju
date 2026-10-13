@@ -1,34 +1,34 @@
 {
   "schema_version": 1,
-  "built_at": "2026-10-13T09:12:34Z",
+  "built_at": "2026-10-13T11:28:48Z",
   "package": {
     "name": "ju",
-    "version": "0.1.36",
+    "version": "0.1.37",
     "display_name": "ju",
     "source": "setup.cfg"
   },
   "git": {
     "available": true,
-    "commit": "414ba9e9c1dffa7f326143ebf50806fe84e25711",
-    "short_commit": "414ba9e",
+    "commit": "84f69d4250d8008820b0e1a55c72d15411883479",
+    "short_commit": "84f69d4",
     "branch": "master",
     "tags": [
-      "0.1.36"
+      "0.1.37"
     ],
     "dirty": false,
     "remote_url": "https://github.com/i2mint/ju",
-    "commit_url": "https://github.com/i2mint/ju/commit/414ba9e9c1dffa7f326143ebf50806fe84e25711",
+    "commit_url": "https://github.com/i2mint/ju/commit/84f69d4250d8008820b0e1a55c72d15411883479",
     "error": null
   },
   "ci": {
     "provider": "github",
     "repository": "i2mint/ju",
-    "sha": "48df87839d723fb3a8413bf76c891b59a1ece0c7",
+    "sha": "7bbbc9240dfd720e68a88f08c7e85775d31e8278",
     "sha_in_history": true,
     "ref": "refs/heads/master",
     "ref_name": "master",
-    "run_id": "38374458959",
-    "run_url": "https://github.com/i2mint/ju/actions/runs/38374458959",
+    "run_id": "38390270364",
+    "run_url": "https://github.com/i2mint/ju/actions/runs/38390270364",
     "server_url": "https://github.com"
   },
   "tools": {
@@ -58,20 +58,18 @@
   },
   "site": {
     "modules_documented": 8,
-    "objects_documented": 74
+    "objects_documented": 78
   },
   "pypi": {
     "checked": true,
-    "latest": "0.1.35",
-    "relation": "ahead",
+    "latest": "0.1.37",
+    "relation": "same",
     "error": null
   },
-  "reproduce": "git clone https://github.com/i2mint/ju && cd ju\ngit checkout 414ba9e9c1dffa7f326143ebf50806fe84e25711\npip install \"epythet==0.2.15\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
+  "reproduce": "git clone https://github.com/i2mint/ju && cd ju\ngit checkout 84f69d4250d8008820b0e1a55c72d15411883479\npip install \"epythet==0.2.15\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
   "warnings": [],
   "alignment": {
-    "aligned": false,
-    "notes": [
-      "The documented version (0.1.36) is ahead of the latest release on PyPI (0.1.35): these docs describe unreleased code."
-    ]
+    "aligned": true,
+    "notes": []
   }
 }

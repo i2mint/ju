@@ -4,6 +4,12 @@ ju.json\_schema
 .. automodule:: ju.json_schema
 
    
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      OAS_NAME_KEY
+   
    .. rubric:: Functions
 
    .. autosummary::

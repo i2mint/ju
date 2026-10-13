@@ -256,6 +256,8 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">dol</span><span class="w"> </span><span class="kn">import</span> <span class="n">KvReader</span><span class="p">,</span> <span class="n">cached_keys</span><span class="p">,</span> <span class="n">path_get</span> <span class="k">as</span> <span class="n">_path_get</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">i2</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sig</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">ju.json_schema</span><span class="w"> </span><span class="kn">import</span> <span class="n">OAS_NAME_KEY</span><span class="p">,</span> <span class="n">OAS_IN_KEY</span>
+
 <span class="n">http_methods</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"get"</span><span class="p">,</span> <span class="s2">"post"</span><span class="p">,</span> <span class="s2">"put"</span><span class="p">,</span> <span class="s2">"delete"</span><span class="p">,</span> <span class="s2">"patch"</span><span class="p">,</span> <span class="s2">"options"</span><span class="p">,</span> <span class="s2">"head"</span><span class="p">}</span>
 
 
@@ -384,6 +386,45 @@
 
 
 
+<span class="c1">#: The `OAS_IN_KEY` of a property that comes from the request body.</span>
+<span class="n">BODY_IN</span> <span class="o">=</span> <span class="s2">"body"</span>
+<span class="c1">#: The `OAS_IN_KEY` of a parameter that does not say where it goes (invalid OpenAPI).</span>
+<span class="n">PARAM_IN</span> <span class="o">=</span> <span class="s2">"param"</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_param_id</span><span class="p">(</span><span class="n">param</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""What identifies an OpenAPI parameter: its name *and* where it goes."""</span>
+    <span class="k">return</span> <span class="n">param</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"name"</span><span class="p">),</span> <span class="n">param</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"in"</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="merge_parameters">
+<a class="viewcode-back" href="../../_autosummary/ju.oas.html#ju.oas.merge_parameters">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">merge_parameters</span><span class="p">(</span><span class="n">path_item_params</span><span class="p">,</span> <span class="n">operation_params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""The parameters of an operation: those its path item declares for all its</span>
+<span class="sd">    operations, overridden (same name and `in`) or extended by its own.</span>
+
+<span class="sd">    &gt;&gt;&gt; merge_parameters(</span>
+<span class="sd">    ...     [{'name': 'id', 'in': 'path'}, {'name': 'q', 'in': 'query', 'x': 1}],</span>
+<span class="sd">    ...     [{'name': 'q', 'in': 'query', 'x': 2}, {'name': 'q', 'in': 'header'}],</span>
+<span class="sd">    ... )</span>
+<span class="sd">    [{'name': 'id', 'in': 'path'}, {'name': 'q', 'in': 'query', 'x': 2}, {'name': 'q', 'in': 'header'}]</span>
+<span class="sd">    """</span>
+    <span class="n">merged</span> <span class="o">=</span> <span class="p">{</span><span class="n">_param_id</span><span class="p">(</span><span class="n">p</span><span class="p">):</span> <span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">path_item_params</span><span class="p">}</span>
+    <span class="n">merged</span><span class="o">.</span><span class="n">update</span><span class="p">((</span><span class="n">_param_id</span><span class="p">(</span><span class="n">p</span><span class="p">),</span> <span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">operation_params</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">merged</span><span class="o">.</span><span class="n">values</span><span class="p">())</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_distinct_key</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">place</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">taken</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""A property key for `name` sent in `place`, not in `taken`."""</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">place</span><span class="si">}</span><span class="s2">"</span>
+    <span class="n">candidate</span><span class="p">,</span> <span class="n">i</span> <span class="o">=</span> <span class="n">key</span><span class="p">,</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="n">candidate</span> <span class="ow">in</span> <span class="n">taken</span><span class="p">:</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">candidate</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span>
+    <span class="k">return</span> <span class="n">candidate</span>
+
+
 <div class="viewcode-block" id="Route">
 <a class="viewcode-back" href="../../_autosummary/ju.oas.html#ju.oas.Route">[docs]</a>
 <span class="nd">@dataclass</span>
@@ -438,10 +479,21 @@
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">method_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">method</span><span class="p">,</span> <span class="n">endpoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">endpoint</span>
-        <span class="n">method_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"paths"</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">path_item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"paths"</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="n">method_data</span> <span class="o">=</span> <span class="n">path_item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">method_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Endpoint '</span><span class="si">{</span><span class="n">endpoint</span><span class="si">}</span><span class="s2">' has no method '</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">resolve_refs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="p">,</span> <span class="n">method_data</span><span class="p">)</span>
+        <span class="n">method_data</span> <span class="o">=</span> <span class="n">resolve_refs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="p">,</span> <span class="n">method_data</span><span class="p">)</span>
+        <span class="c1"># Parameters the path item declares are shared by all its operations</span>
+        <span class="n">shared</span> <span class="o">=</span> <span class="n">resolve_refs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="p">,</span> <span class="n">path_item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"parameters"</span><span class="p">,</span> <span class="p">[]))</span>
+        <span class="k">if</span> <span class="n">shared</span><span class="p">:</span>
+            <span class="n">method_data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="o">**</span><span class="n">method_data</span><span class="p">,</span>
+                <span class="s2">"parameters"</span><span class="p">:</span> <span class="n">merge_parameters</span><span class="p">(</span>
+                    <span class="n">shared</span><span class="p">,</span> <span class="n">method_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"parameters"</span><span class="p">,</span> <span class="p">[])</span>
+                <span class="p">),</span>
+            <span class="p">}</span>
+        <span class="k">return</span> <span class="n">method_data</span>
 
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">input_specs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -462,25 +514,53 @@
 <span class="sd">        """</span>
         <span class="n">schema</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"object"</span><span class="p">,</span> <span class="s2">"properties"</span><span class="p">:</span> <span class="p">{},</span> <span class="s2">"required"</span><span class="p">:</span> <span class="p">[]}</span>
 
-        <span class="c1"># Process query and path parameters</span>
-        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"parameters"</span><span class="p">,</span> <span class="p">[]):</span>
-            <span class="c1"># Add each parameter to the properties</span>
-            <span class="n">schema</span><span class="p">[</span><span class="s2">"properties"</span><span class="p">][</span><span class="n">param</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]]</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"schema"</span><span class="p">,</span> <span class="p">{})</span>
-
-            <span class="c1"># Mark as required if specified</span>
-            <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"required"</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
-                <span class="n">schema</span><span class="p">[</span><span class="s2">"required"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param</span><span class="p">[</span><span class="s2">"name"</span><span class="p">])</span>
-        <span class="c1"># list(t['content']['application/json']['schema']['items']['properties'])</span>
-        <span class="c1"># Process requestBody</span>
+        <span class="n">parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"parameters"</span><span class="p">,</span> <span class="p">[])</span>
         <span class="n">request_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"requestBody"</span><span class="p">,</span> <span class="p">{})</span>
         <span class="n">content</span> <span class="o">=</span> <span class="n">path_get</span><span class="p">(</span><span class="n">request_body</span><span class="p">,</span> <span class="s2">"content.application/json"</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s2">"schema"</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
-            <span class="c1"># Merge the requestBody schema with the existing properties</span>
-            <span class="n">body_schema</span> <span class="o">=</span> <span class="n">content</span><span class="p">[</span><span class="s2">"schema"</span><span class="p">]</span>
-            <span class="n">schema</span><span class="p">[</span><span class="s2">"properties"</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">properties_of_schema</span><span class="p">(</span><span class="n">body_schema</span><span class="p">))</span>
-            <span class="c1"># Add required properties from requestBody</span>
-            <span class="k">if</span> <span class="s2">"required"</span> <span class="ow">in</span> <span class="n">body_schema</span><span class="p">:</span>
-                <span class="n">schema</span><span class="p">[</span><span class="s2">"required"</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">body_schema</span><span class="p">[</span><span class="s2">"required"</span><span class="p">])</span>
+        <span class="n">body_schema</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"schema"</span><span class="p">)</span>
+        <span class="n">body_properties</span> <span class="o">=</span> <span class="n">properties_of_schema</span><span class="p">(</span><span class="n">body_schema</span><span class="p">)</span> <span class="k">if</span> <span class="n">body_schema</span> <span class="k">else</span> <span class="p">{}</span>
+
+        <span class="c1"># A property is keyed by the parameter's name; when that is taken (the</span>
+        <span class="c1"># same name in another place -- ``id`` in the query and in a header, a</span>
+        <span class="c1"># query ``name`` and a body ``name``), by a distinct key. Both then record</span>
+        <span class="c1"># the spec's name and place (OAS_NAME_KEY, OAS_IN_KEY), so a consumer can</span>
+        <span class="c1"># tell which is which. No distinct key is a name the spec itself uses.</span>
+        <span class="n">spec_names</span> <span class="o">=</span> <span class="p">{</span><span class="n">p</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">}</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">body_properties</span><span class="p">)</span>
+        <span class="n">sent_as</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># property key -&gt; (spec name, place)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">place</span><span class="p">,</span> <span class="n">prop_schema</span><span class="p">,</span> <span class="n">required</span><span class="p">):</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">name</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">schema</span><span class="p">[</span><span class="s2">"properties"</span><span class="p">]:</span>
+                <span class="n">first_name</span><span class="p">,</span> <span class="n">first_place</span> <span class="o">=</span> <span class="n">sent_as</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                <span class="n">schema</span><span class="p">[</span><span class="s2">"properties"</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="o">**</span><span class="n">schema</span><span class="p">[</span><span class="s2">"properties"</span><span class="p">][</span><span class="n">key</span><span class="p">],</span>
+                    <span class="n">OAS_NAME_KEY</span><span class="p">:</span> <span class="n">first_name</span><span class="p">,</span>
+                    <span class="n">OAS_IN_KEY</span><span class="p">:</span> <span class="n">first_place</span><span class="p">,</span>
+                <span class="p">}</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="n">_distinct_key</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">place</span><span class="p">,</span> <span class="n">spec_names</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">schema</span><span class="p">[</span><span class="s2">"properties"</span><span class="p">]))</span>
+                <span class="n">prop_schema</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">prop_schema</span><span class="p">,</span> <span class="n">OAS_NAME_KEY</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="n">OAS_IN_KEY</span><span class="p">:</span> <span class="n">place</span><span class="p">}</span>
+            <span class="n">sent_as</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">place</span><span class="p">)</span>
+            <span class="n">schema</span><span class="p">[</span><span class="s2">"properties"</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">prop_schema</span>
+            <span class="k">if</span> <span class="n">required</span><span class="p">:</span>
+                <span class="n">schema</span><span class="p">[</span><span class="s2">"required"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+        <span class="c1"># Process query and path parameters</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">parameters</span><span class="p">:</span>
+            <span class="n">add</span><span class="p">(</span>
+                <span class="n">param</span><span class="p">[</span><span class="s2">"name"</span><span class="p">],</span>
+                <span class="n">param</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"in"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">PARAM_IN</span><span class="p">,</span>
+                <span class="n">param</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"schema"</span><span class="p">,</span> <span class="p">{}),</span>
+                <span class="n">param</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"required"</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+            <span class="p">)</span>
+        <span class="c1"># Process requestBody (list(t['content']['application/json']['schema']['items']['properties']))</span>
+        <span class="k">if</span> <span class="n">body_schema</span><span class="p">:</span>
+            <span class="n">body_required</span> <span class="o">=</span> <span class="n">body_schema</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"required"</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">prop_schema</span> <span class="ow">in</span> <span class="n">body_properties</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">add</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">BODY_IN</span><span class="p">,</span> <span class="n">prop_schema</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">body_required</span><span class="p">)</span>
+            <span class="c1"># Required names the body declares without a property of their own</span>
+            <span class="n">schema</span><span class="p">[</span><span class="s2">"required"</span><span class="p">]</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                <span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">body_required</span> <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">body_properties</span>
+            <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">schema</span>
 
@@ -1190,7 +1270,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=e88e4268"></script>
+</div><script src="../../_static/documentation_options.js?v=41ce360e"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>

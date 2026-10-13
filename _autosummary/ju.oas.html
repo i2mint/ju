@@ -256,6 +256,19 @@
           <section id="module-ju.oas">
 <span id="ju-oas"></span><h1>ju.oas<a class="headerlink" href="#module-ju.oas" title="Link to this heading">¶</a></h1>
 <p>OpenAPI specification tools.</p>
+<p class="rubric">Module Attributes</p>
+<div class="table-wrapper autosummary longtable docutils container">
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ju.oas.BODY_IN" title="ju.oas.BODY_IN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BODY_IN</span></code></a></p></td>
+<td><p>The <code class="code docutils literal notranslate"><span class="pre">OAS_IN_KEY</span></code> of a property that comes from the request body.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ju.oas.PARAM_IN" title="ju.oas.PARAM_IN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PARAM_IN</span></code></a></p></td>
+<td><p>The <code class="code docutils literal notranslate"><span class="pre">OAS_IN_KEY</span></code> of a parameter that does not say where it goes (invalid OpenAPI).</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 <p class="rubric">Functions</p>
 <div class="table-wrapper autosummary longtable docutils container">
 <table class="autosummary longtable docutils align-default">
@@ -287,28 +300,31 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#ju.oas.get_routes" title="ju.oas.get_routes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_routes</span></code></a>(d[, include_methods])</p></td>
 <td><p>Takes OpenAPI specification dict 'd' and returns the key-paths to all the endpoints.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ju.oas.merge_request_body_json_schema" title="ju.oas.merge_request_body_json_schema"><code class="xref py py-obj docutils literal notranslate"><span class="pre">merge_request_body_json_schema</span></code></a>(details, ...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ju.oas.merge_parameters" title="ju.oas.merge_parameters"><code class="xref py py-obj docutils literal notranslate"><span class="pre">merge_parameters</span></code></a>(path_item_params, ...)</p></td>
+<td><p>The parameters of an operation: those its path item declares for all its operations, overridden (same name and <code class="code docutils literal notranslate"><span class="pre">in</span></code>) or extended by its own.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ju.oas.merge_request_body_json_schema" title="ju.oas.merge_request_body_json_schema"><code class="xref py py-obj docutils literal notranslate"><span class="pre">merge_request_body_json_schema</span></code></a>(details, ...)</p></td>
 <td><p>If the operation has a requestBody with a JSON schema, merge its properties and required fields into param_schema.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ju.oas.openapi_to_funcs" title="ju.oas.openapi_to_funcs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">openapi_to_funcs</span></code></a>(spec, *[, base_url, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ju.oas.openapi_to_funcs" title="ju.oas.openapi_to_funcs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">openapi_to_funcs</span></code></a>(spec, *[, base_url, ...])</p></td>
 <td><p>spec: dict or str (YAML/JSON string or file path) base_url: override the spec's server URL default_servers_url: default URL to use if no servers are specified in the spec get_response: function to get the response object (default: requests.request) response_egress: function (method, uri) -&gt; callable to extract result from response Returns a generator yielding OpenApiFunc instances for each route in the OpenAPI spec.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ju.oas.openapi_to_generated_funcs" title="ju.oas.openapi_to_generated_funcs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">openapi_to_generated_funcs</span></code></a>(spec, *[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ju.oas.openapi_to_generated_funcs" title="ju.oas.openapi_to_generated_funcs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">openapi_to_generated_funcs</span></code></a>(spec, *[, ...])</p></td>
 <td><p>Like openapi_to_funcs, but yields OpenApiFunc objects for each route, using the generated client for requests.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_generated_modules</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_generated_modules</span></code>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ju.oas.properties_of_schema" title="ju.oas.properties_of_schema"><code class="xref py py-obj docutils literal notranslate"><span class="pre">properties_of_schema</span></code></a>(schema)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ju.oas.properties_of_schema" title="ju.oas.properties_of_schema"><code class="xref py py-obj docutils literal notranslate"><span class="pre">properties_of_schema</span></code></a>(schema)</p></td>
 <td><p>Returns the properties of the given schema, encapsulating in ArrayOf to indicate that the schema is for an array of objects, and not just a single object.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ju.oas.resolve_refs" title="ju.oas.resolve_refs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resolve_refs</span></code></a>(open_api_spec, d)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ju.oas.resolve_refs" title="ju.oas.resolve_refs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resolve_refs</span></code></a>(open_api_spec, d)</p></td>
 <td><p>Recursively resolves all references in 'd' using 'open_api_spec'.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">return_empty_dict_on_error</span></code>(e)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">return_empty_dict_on_error</span></code>(e)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ju.oas.validate_openapi_to_generated_funcs_alignment" title="ju.oas.validate_openapi_to_generated_funcs_alignment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_openapi_to_generated_funcs_alignment</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ju.oas.validate_openapi_to_generated_funcs_alignment" title="ju.oas.validate_openapi_to_generated_funcs_alignment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_openapi_to_generated_funcs_alignment</span></code></a>()</p></td>
 <td><p>Example usage of openapi_to_generated_funcs.</p></td>
 </tr>
 </tbody>
@@ -341,11 +357,23 @@
 represents an array of objects, and not just a single object.</p>
 </dd></dl>
 
+<dl class="py data">
+<dt class="sig sig-object py" id="ju.oas.BODY_IN">
+<span class="sig-prename descclassname"><span class="pre">ju.oas.</span></span><span class="sig-name descname"><span class="pre">BODY_IN</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'body'</span></span><a class="headerlink" href="#ju.oas.BODY_IN" title="Link to this definition">¶</a></dt>
+<dd><p>The <code class="code docutils literal notranslate"><span class="pre">OAS_IN_KEY</span></code> of a property that comes from the request body.</p>
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="ju.oas.OpenApiFunc">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ju.oas.</span></span><span class="sig-name descname"><span class="pre">OpenApiFunc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_schema</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_response</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;function</span> <span class="pre">default_get_response&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response_egress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ju/oas.html#OpenApiFunc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.oas.OpenApiFunc" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Callable class for OpenAPI route functions, supporting introspection and pickling.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="ju.oas.PARAM_IN">
+<span class="sig-prename descclassname"><span class="pre">ju.oas.</span></span><span class="sig-name descname"><span class="pre">PARAM_IN</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'param'</span></span><a class="headerlink" href="#ju.oas.PARAM_IN" title="Link to this definition">¶</a></dt>
+<dd><p>The <code class="code docutils literal notranslate"><span class="pre">OAS_IN_KEY</span></code> of a parameter that does not say where it goes (invalid OpenAPI).</p>
 </dd></dl>
 
 <dl class="py class">
@@ -519,13 +547,32 @@ file_format: ‘yaml’ or ‘json’ (used if openapi_spec is a dict)</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="ju.oas.get_routes">
-<span class="sig-prename descclassname"><span class="pre">ju.oas.</span></span><span class="sig-name descname"><span class="pre">get_routes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_methods</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('get',</span> <span class="pre">'options',</span> <span class="pre">'put',</span> <span class="pre">'head',</span> <span class="pre">'patch',</span> <span class="pre">'delete',</span> <span class="pre">'post')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ju/oas.html#get_routes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.oas.get_routes" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">ju.oas.</span></span><span class="sig-name descname"><span class="pre">get_routes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_methods</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">('patch',</span> <span class="pre">'post',</span> <span class="pre">'get',</span> <span class="pre">'delete',</span> <span class="pre">'put',</span> <span class="pre">'head',</span> <span class="pre">'options')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ju/oas.html#get_routes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.oas.get_routes" title="Link to this definition">¶</a></dt>
 <dd><p>Takes OpenAPI specification dict ‘d’ and returns the key-paths to all the endpoints.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</span></p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ju.oas.merge_parameters">
+<span class="sig-prename descclassname"><span class="pre">ju.oas.</span></span><span class="sig-name descname"><span class="pre">merge_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_item_params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operation_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ju/oas.html#merge_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.oas.merge_parameters" title="Link to this definition">¶</a></dt>
+<dd><p>The parameters of an operation: those its path item declares for all its
+operations, overridden (same name and <code class="code docutils literal notranslate"><span class="pre">in</span></code>) or extended by its own.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a></span></p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">merge_parameters</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">[{</span><span class="s1">'name'</span><span class="p">:</span> <span class="s1">'id'</span><span class="p">,</span> <span class="s1">'in'</span><span class="p">:</span> <span class="s1">'path'</span><span class="p">},</span> <span class="p">{</span><span class="s1">'name'</span><span class="p">:</span> <span class="s1">'q'</span><span class="p">,</span> <span class="s1">'in'</span><span class="p">:</span> <span class="s1">'query'</span><span class="p">,</span> <span class="s1">'x'</span><span class="p">:</span> <span class="mi">1</span><span class="p">}],</span>
+<span class="gp">... </span>    <span class="p">[{</span><span class="s1">'name'</span><span class="p">:</span> <span class="s1">'q'</span><span class="p">,</span> <span class="s1">'in'</span><span class="p">:</span> <span class="s1">'query'</span><span class="p">,</span> <span class="s1">'x'</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span> <span class="p">{</span><span class="s1">'name'</span><span class="p">:</span> <span class="s1">'q'</span><span class="p">,</span> <span class="s1">'in'</span><span class="p">:</span> <span class="s1">'header'</span><span class="p">}],</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">[{'name': 'id', 'in': 'path'}, {'name': 'q', 'in': 'query', 'x': 2}, {'name': 'q', 'in': 'header'}]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
@@ -656,7 +703,9 @@ This function is just for demonstration and should be removed in production code
             <ul>
 <li><a class="reference internal" href="#">ju.oas</a><ul>
 <li><a class="reference internal" href="#ju.oas.ArrayOf"><code class="docutils literal notranslate"><span class="pre">ArrayOf</span></code></a></li>
+<li><a class="reference internal" href="#ju.oas.BODY_IN"><code class="docutils literal notranslate"><span class="pre">BODY_IN</span></code></a></li>
 <li><a class="reference internal" href="#ju.oas.OpenApiFunc"><code class="docutils literal notranslate"><span class="pre">OpenApiFunc</span></code></a></li>
+<li><a class="reference internal" href="#ju.oas.PARAM_IN"><code class="docutils literal notranslate"><span class="pre">PARAM_IN</span></code></a></li>
 <li><a class="reference internal" href="#ju.oas.Route"><code class="docutils literal notranslate"><span class="pre">Route</span></code></a><ul>
 <li><a class="reference internal" href="#ju.oas.Route.output_properties"><code class="docutils literal notranslate"><span class="pre">Route.output_properties</span></code></a></li>
 <li><a class="reference internal" href="#ju.oas.Route.params"><code class="docutils literal notranslate"><span class="pre">Route.params</span></code></a></li>
@@ -672,6 +721,7 @@ This function is just for demonstration and should be removed in production code
 <li><a class="reference internal" href="#ju.oas.generate_and_import_openapi_client"><code class="docutils literal notranslate"><span class="pre">generate_and_import_openapi_client()</span></code></a></li>
 <li><a class="reference internal" href="#ju.oas.generate_openapi_client"><code class="docutils literal notranslate"><span class="pre">generate_openapi_client()</span></code></a></li>
 <li><a class="reference internal" href="#ju.oas.get_routes"><code class="docutils literal notranslate"><span class="pre">get_routes()</span></code></a></li>
+<li><a class="reference internal" href="#ju.oas.merge_parameters"><code class="docutils literal notranslate"><span class="pre">merge_parameters()</span></code></a></li>
 <li><a class="reference internal" href="#ju.oas.merge_request_body_json_schema"><code class="docutils literal notranslate"><span class="pre">merge_request_body_json_schema()</span></code></a></li>
 <li><a class="reference internal" href="#ju.oas.openapi_to_funcs"><code class="docutils literal notranslate"><span class="pre">openapi_to_funcs()</span></code></a></li>
 <li><a class="reference internal" href="#ju.oas.openapi_to_generated_funcs"><code class="docutils literal notranslate"><span class="pre">openapi_to_generated_funcs()</span></code></a></li>
@@ -689,7 +739,7 @@ This function is just for demonstration and should be removed in production code
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=e88e4268"></script>
+</div><script src="../_static/documentation_options.js?v=41ce360e"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

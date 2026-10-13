@@ -2,6 +2,12 @@
 
 OpenAPI specification tools.
 
+### Module Attributes
+
+| [`BODY_IN`](#ju.oas.BODY_IN)   | The `OAS_IN_KEY` of a property that comes from the request body.                   |
+|------------------------------------------------------------|------------------------------------------------------------------------------------|
+| [`PARAM_IN`](#ju.oas.PARAM_IN)  | The `OAS_IN_KEY` of a parameter that does not say where it goes (invalid OpenAPI). |
+
 ### Functions
 
 | `compare_modules_to_missing_funcs`()                                                              |                                                                                                                                                                                                                                                                                                                                                                                                                                     |
@@ -14,6 +20,7 @@ OpenAPI specification tools.
 | [`generate_and_import_openapi_client`](#ju.oas.generate_and_import_openapi_client)(openapi_spec) | openapi_spec: dict, or str (path to YAML/JSON file) output_dir: where to generate the client (default: temp dir) file_format: 'yaml' or 'json' (used if openapi_spec is a dict)                                                                                                                                                                                                                                                     |
 | [`generate_openapi_client`](#ju.oas.generate_openapi_client)(openapi_spec[, ...])     | openapi_spec: dict, or str (path to YAML/JSON file) output_dir: where to generate the client (default: temp dir) file_format: 'yaml' or 'json' (used if openapi_spec is a dict)                                                                                                                                                                                                                                                     |
 | [`get_routes`](#ju.oas.get_routes)(d[, include_methods])                 | Takes OpenAPI specification dict 'd' and returns the key-paths to all the endpoints.                                                                                                                                                                                                                                                                                                                                                |
+| [`merge_parameters`](#ju.oas.merge_parameters)(path_item_params, ...)          | The parameters of an operation: those its path item declares for all its operations, overridden (same name and `in`) or extended by its own.                                                                                                                                                                                                                                                                                        |
 | [`merge_request_body_json_schema`](#ju.oas.merge_request_body_json_schema)(details, ...)     | If the operation has a requestBody with a JSON schema, merge its properties and required fields into param_schema.                                                                                                                                                                                                                                                                                                                  |
 | [`openapi_to_funcs`](#ju.oas.openapi_to_funcs)(spec, \*[, base_url, ...])      | spec: dict or str (YAML/JSON string or file path) base_url: override the spec's server URL default_servers_url: default URL to use if no servers are specified in the spec get_response: function to get the response object (default: requests.request) response_egress: function (method, uri) -> callable to extract result from response Returns a generator yielding OpenApiFunc instances for each route in the OpenAPI spec. |
 | [`openapi_to_generated_funcs`](#ju.oas.openapi_to_generated_funcs)(spec, \*[, ...])      | Like openapi_to_funcs, but yields OpenApiFunc objects for each route, using the generated client for requests.                                                                                                                                                                                                                                                                                                                      |
@@ -38,11 +45,19 @@ Bases: [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
 A class that is simply meant to mark the fact that some properties dict really
 represents an array of objects, and not just a single object.
 
+### ju.oas.BODY_IN *= 'body'*
+
+The `OAS_IN_KEY` of a property that comes from the request body.
+
 ### *class* ju.oas.OpenApiFunc(\*, method, uri, base_url, param_schema, get_response=<function default_get_response>, response_egress=None, name=None, qualname=None, doc=None)
 
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 Callable class for OpenAPI route functions, supporting introspection and pickling.
+
+### ju.oas.PARAM_IN *= 'param'*
+
+The `OAS_IN_KEY` of a parameter that does not say where it goes (invalid OpenAPI).
 
 ### *class* ju.oas.Route(method, endpoint, spec, type_mapping=(('array', <class 'list'>), ('integer', <class 'int'>), ('object', <class 'dict'>), ('string', <class 'str'>), ('boolean', <class 'bool'>), ('number', <class 'float'>)))
 
@@ -189,12 +204,28 @@ file_format: ‘yaml’ or ‘json’ (used if openapi_spec is a dict)
 * **Returns:**
   imported client module
 
-### ju.oas.get_routes(d, include_methods=('post', 'delete', 'head', 'patch', 'get', 'options', 'put'))
+### ju.oas.get_routes(d, include_methods=('patch', 'delete', 'get', 'put', 'post', 'options', 'head'))
 
 Takes OpenAPI specification dict ‘d’ and returns the key-paths to all the endpoints.
 
 * **Return type:**
   [`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str)]
+
+### ju.oas.merge_parameters(path_item_params, operation_params)
+
+The parameters of an operation: those its path item declares for all its
+operations, overridden (same name and `in`) or extended by its own.
+
+* **Return type:**
+  [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)
+
+```pycon
+>>> merge_parameters(
+...     [{'name': 'id', 'in': 'path'}, {'name': 'q', 'in': 'query', 'x': 1}],
+...     [{'name': 'q', 'in': 'query', 'x': 2}, {'name': 'q', 'in': 'header'}],
+... )
+[{'name': 'id', 'in': 'path'}, {'name': 'q', 'in': 'query', 'x': 2}, {'name': 'q', 'in': 'header'}]
+```
 
 ### ju.oas.merge_request_body_json_schema(details, param_schema)
 

@@ -24,6 +24,11 @@ Example usage:
 ... }
 ```
 
+### Module Attributes
+
+| [`OAS_NAME_KEY`](#ju.json_schema.OAS_NAME_KEY)   | Keys of a `properties` entry that stand for an OpenAPI parameter or body property whose own name was taken by another (`id` in the query and in a header): the entry is keyed by a distinct name, and these record the spec's name and place.   |
+|-----------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+
 ### Functions
 
 | [`function_to_json_schema`](#ju.json_schema.function_to_json_schema)(func, \*[, doc, ...])    | Transforms a Python function to a JSON schema.                                                                                                                                                                          |
@@ -41,6 +46,12 @@ Example usage:
 | [`signature_to_json_schema`](#ju.json_schema.signature_to_json_schema)(func, \*[, doc, ...])   | Transforms a Python function to a JSON schema.                                                                                                                                                                          |
 | [`title_to_pyname`](#ju.json_schema.title_to_pyname)(title)                           | Converts a title to a Python name.                                                                                                                                                                                      |
 | `wrap_schema_in_opus_spec`(schema)                                                                |                                                                                                                                                                                                                         |
+
+### ju.json_schema.OAS_NAME_KEY *= 'x-oas-name'*
+
+Keys of a `properties` entry that stand for an OpenAPI parameter or body property
+whose own name was taken by another (`id` in the query and in a header): the
+entry is keyed by a distinct name, and these record the spec’s name and place.
 
 ### ju.json_schema.function_to_json_schema(func, \*, doc=True, name_of_obj=functools.partial(<function name_of_obj>, default_factory=<function <lambda>>), pyname_to_title=<function asis>, param_to_prop_type=functools.partial(<function parametrized_param_to_type>, type_mapping=((<class 'str'>, 'string'), (<class 'bool'>, 'boolean'), (<class 'int'>, 'integer'), (<class 'float'>, 'number'), (<class 'collections.abc.Mapping'>, 'object'), (collections.abc.Sequence[str], 'array'), (<class 'bytes'>, 'string'), (<class 'bytearray'>, 'string'), (<class 'memoryview'>, 'string'), (<class 'collections.UserString'>, 'string'), (<class 'collections.abc.Sequence'>, 'array'))))
 
@@ -225,7 +236,8 @@ with the original names).
 OpenAPI `parameters` names that already are valid identifiers are kept as is;
 others (e.g. `X-MS-API-ROLE`) are sanitised with `title_to_pyname`. Names of
 `properties` are always passed through `title_to_pyname`. Clashes get a
-numeric suffix.
+numeric suffix. A `properties` entry carrying `x-oas-name` (see `Route.params`)
+maps to that name, not to its key.
 
 * **Return type:**
   [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)]
@@ -237,6 +249,12 @@ numeric suffix.
 ...     {'name': 'x_ms_api_role', 'in': 'query'}]}
 >>> schema_param_names(schema)
 {'x_ms_api_role': 'X-MS-API-ROLE', 'thingId': 'thingId', 'x_ms_api_role_2': 'x_ms_api_role'}
+```
+
+```pycon
+>>> schema = {'properties': {'id': {}, 'id_header': {'x-oas-name': 'id'}}}
+>>> schema_param_names(schema)
+{'id': 'id', 'id_header': 'id'}
 ```
 
 ### ju.json_schema.signature_to_json_schema(func, \*, doc=True, name_of_obj=functools.partial(<function name_of_obj>, default_factory=<function <lambda>>), pyname_to_title=<function asis>, param_to_prop_type=functools.partial(<function parametrized_param_to_type>, type_mapping=((<class 'str'>, 'string'), (<class 'bool'>, 'boolean'), (<class 'int'>, 'integer'), (<class 'float'>, 'number'), (<class 'collections.abc.Mapping'>, 'object'), (collections.abc.Sequence[str], 'array'), (<class 'bytes'>, 'string'), (<class 'bytearray'>, 'string'), (<class 'memoryview'>, 'string'), (<class 'collections.UserString'>, 'string'), (<class 'collections.abc.Sequence'>, 'array'))))

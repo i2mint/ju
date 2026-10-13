@@ -1,4 +1,4 @@
-> built 2026-10-13 09:12 UTC from 414ba9e (master) · ju 0.1.36. Details: build_info.json
+> built 2026-10-13 11:28 UTC from 84f69d4 (master) · ju 0.1.37. Details: build_info.json
 
 # index.html.md
 
@@ -280,6 +280,11 @@ Example usage:
 ... }
 ```
 
+### Module Attributes
+
+| [`OAS_NAME_KEY`](_autosummary/ju.json_schema.html.md#ju.json_schema.OAS_NAME_KEY)   | Keys of a `properties` entry that stand for an OpenAPI parameter or body property whose own name was taken by another (`id` in the query and in a header): the entry is keyed by a distinct name, and these record the spec's name and place.   |
+|-----------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+
 ### Functions
 
 | [`function_to_json_schema`](_autosummary/ju.json_schema.html.md#ju.json_schema.function_to_json_schema)(func, \*[, doc, ...])    | Transforms a Python function to a JSON schema.                                                                                                                                                                          |
@@ -297,6 +302,12 @@ Example usage:
 | [`signature_to_json_schema`](_autosummary/ju.json_schema.html.md#ju.json_schema.signature_to_json_schema)(func, \*[, doc, ...])   | Transforms a Python function to a JSON schema.                                                                                                                                                                          |
 | [`title_to_pyname`](_autosummary/ju.json_schema.html.md#ju.json_schema.title_to_pyname)(title)                           | Converts a title to a Python name.                                                                                                                                                                                      |
 | `wrap_schema_in_opus_spec`(schema)                                                                |                                                                                                                                                                                                                         |
+
+### ju.json_schema.OAS_NAME_KEY *= 'x-oas-name'*
+
+Keys of a `properties` entry that stand for an OpenAPI parameter or body property
+whose own name was taken by another (`id` in the query and in a header): the
+entry is keyed by a distinct name, and these record the spec’s name and place.
 
 ### ju.json_schema.function_to_json_schema(func, \*, doc=True, name_of_obj=functools.partial(<function name_of_obj>, default_factory=<function <lambda>>), pyname_to_title=<function asis>, param_to_prop_type=functools.partial(<function parametrized_param_to_type>, type_mapping=((<class 'str'>, 'string'), (<class 'bool'>, 'boolean'), (<class 'int'>, 'integer'), (<class 'float'>, 'number'), (<class 'collections.abc.Mapping'>, 'object'), (collections.abc.Sequence[str], 'array'), (<class 'bytes'>, 'string'), (<class 'bytearray'>, 'string'), (<class 'memoryview'>, 'string'), (<class 'collections.UserString'>, 'string'), (<class 'collections.abc.Sequence'>, 'array'))))
 
@@ -481,7 +492,8 @@ with the original names).
 OpenAPI `parameters` names that already are valid identifiers are kept as is;
 others (e.g. `X-MS-API-ROLE`) are sanitised with `title_to_pyname`. Names of
 `properties` are always passed through `title_to_pyname`. Clashes get a
-numeric suffix.
+numeric suffix. A `properties` entry carrying `x-oas-name` (see `Route.params`)
+maps to that name, not to its key.
 
 * **Return type:**
   [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)]
@@ -493,6 +505,12 @@ numeric suffix.
 ...     {'name': 'x_ms_api_role', 'in': 'query'}]}
 >>> schema_param_names(schema)
 {'x_ms_api_role': 'X-MS-API-ROLE', 'thingId': 'thingId', 'x_ms_api_role_2': 'x_ms_api_role'}
+```
+
+```pycon
+>>> schema = {'properties': {'id': {}, 'id_header': {'x-oas-name': 'id'}}}
+>>> schema_param_names(schema)
+{'id': 'id', 'id_header': 'id'}
 ```
 
 ### ju.json_schema.signature_to_json_schema(func, \*, doc=True, name_of_obj=functools.partial(<function name_of_obj>, default_factory=<function <lambda>>), pyname_to_title=<function asis>, param_to_prop_type=functools.partial(<function parametrized_param_to_type>, type_mapping=((<class 'str'>, 'string'), (<class 'bool'>, 'boolean'), (<class 'int'>, 'integer'), (<class 'float'>, 'number'), (<class 'collections.abc.Mapping'>, 'object'), (collections.abc.Sequence[str], 'array'), (<class 'bytes'>, 'string'), (<class 'bytearray'>, 'string'), (<class 'memoryview'>, 'string'), (<class 'collections.UserString'>, 'string'), (<class 'collections.abc.Sequence'>, 'array'))))
@@ -556,6 +574,12 @@ If the title contains camel case, it will be split into words.
 
 OpenAPI specification tools.
 
+### Module Attributes
+
+| [`BODY_IN`](_autosummary/ju.oas.html.md#ju.oas.BODY_IN)   | The `OAS_IN_KEY` of a property that comes from the request body.                   |
+|------------------------------------------------------------|------------------------------------------------------------------------------------|
+| [`PARAM_IN`](_autosummary/ju.oas.html.md#ju.oas.PARAM_IN)  | The `OAS_IN_KEY` of a parameter that does not say where it goes (invalid OpenAPI). |
+
 ### Functions
 
 | `compare_modules_to_missing_funcs`()                                                              |                                                                                                                                                                                                                                                                                                                                                                                                                                     |
@@ -568,6 +592,7 @@ OpenAPI specification tools.
 | [`generate_and_import_openapi_client`](_autosummary/ju.oas.html.md#ju.oas.generate_and_import_openapi_client)(openapi_spec) | openapi_spec: dict, or str (path to YAML/JSON file) output_dir: where to generate the client (default: temp dir) file_format: 'yaml' or 'json' (used if openapi_spec is a dict)                                                                                                                                                                                                                                                     |
 | [`generate_openapi_client`](_autosummary/ju.oas.html.md#ju.oas.generate_openapi_client)(openapi_spec[, ...])     | openapi_spec: dict, or str (path to YAML/JSON file) output_dir: where to generate the client (default: temp dir) file_format: 'yaml' or 'json' (used if openapi_spec is a dict)                                                                                                                                                                                                                                                     |
 | [`get_routes`](_autosummary/ju.oas.html.md#ju.oas.get_routes)(d[, include_methods])                 | Takes OpenAPI specification dict 'd' and returns the key-paths to all the endpoints.                                                                                                                                                                                                                                                                                                                                                |
+| [`merge_parameters`](_autosummary/ju.oas.html.md#ju.oas.merge_parameters)(path_item_params, ...)          | The parameters of an operation: those its path item declares for all its operations, overridden (same name and `in`) or extended by its own.                                                                                                                                                                                                                                                                                        |
 | [`merge_request_body_json_schema`](_autosummary/ju.oas.html.md#ju.oas.merge_request_body_json_schema)(details, ...)     | If the operation has a requestBody with a JSON schema, merge its properties and required fields into param_schema.                                                                                                                                                                                                                                                                                                                  |
 | [`openapi_to_funcs`](_autosummary/ju.oas.html.md#ju.oas.openapi_to_funcs)(spec, \*[, base_url, ...])      | spec: dict or str (YAML/JSON string or file path) base_url: override the spec's server URL default_servers_url: default URL to use if no servers are specified in the spec get_response: function to get the response object (default: requests.request) response_egress: function (method, uri) -> callable to extract result from response Returns a generator yielding OpenApiFunc instances for each route in the OpenAPI spec. |
 | [`openapi_to_generated_funcs`](_autosummary/ju.oas.html.md#ju.oas.openapi_to_generated_funcs)(spec, \*[, ...])      | Like openapi_to_funcs, but yields OpenApiFunc objects for each route, using the generated client for requests.                                                                                                                                                                                                                                                                                                                      |
@@ -592,11 +617,19 @@ Bases: [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
 A class that is simply meant to mark the fact that some properties dict really
 represents an array of objects, and not just a single object.
 
+### ju.oas.BODY_IN *= 'body'*
+
+The `OAS_IN_KEY` of a property that comes from the request body.
+
 ### *class* ju.oas.OpenApiFunc(\*, method, uri, base_url, param_schema, get_response=<function default_get_response>, response_egress=None, name=None, qualname=None, doc=None)
 
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 Callable class for OpenAPI route functions, supporting introspection and pickling.
+
+### ju.oas.PARAM_IN *= 'param'*
+
+The `OAS_IN_KEY` of a parameter that does not say where it goes (invalid OpenAPI).
 
 ### *class* ju.oas.Route(method, endpoint, spec, type_mapping=(('array', <class 'list'>), ('integer', <class 'int'>), ('object', <class 'dict'>), ('string', <class 'str'>), ('boolean', <class 'bool'>), ('number', <class 'float'>)))
 
@@ -743,12 +776,28 @@ file_format: ‘yaml’ or ‘json’ (used if openapi_spec is a dict)
 * **Returns:**
   imported client module
 
-### ju.oas.get_routes(d, include_methods=('post', 'delete', 'head', 'patch', 'get', 'options', 'put'))
+### ju.oas.get_routes(d, include_methods=('patch', 'delete', 'get', 'put', 'post', 'options', 'head'))
 
 Takes OpenAPI specification dict ‘d’ and returns the key-paths to all the endpoints.
 
 * **Return type:**
   [`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str)]
+
+### ju.oas.merge_parameters(path_item_params, operation_params)
+
+The parameters of an operation: those its path item declares for all its
+operations, overridden (same name and `in`) or extended by its own.
+
+* **Return type:**
+  [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)
+
+```pycon
+>>> merge_parameters(
+...     [{'name': 'id', 'in': 'path'}, {'name': 'q', 'in': 'query', 'x': 1}],
+...     [{'name': 'q', 'in': 'query', 'x': 2}, {'name': 'q', 'in': 'header'}],
+... )
+[{'name': 'id', 'in': 'path'}, {'name': 'q', 'in': 'query', 'x': 2}, {'name': 'q', 'in': 'header'}]
+```
 
 ### ju.oas.merge_request_body_json_schema(details, param_schema)
 
@@ -2058,20 +2107,18 @@ See also the online tool: [https://navneethg.github.io/jsonschemaviewer/](https:
 
 # About this build
 
-This documentation was built on **2026-10-13 09:12 UTC** from commit <a href="https://github.com/i2mint/ju/commit/414ba9e9c1dffa7f326143ebf50806fe84e25711"><code>414ba9e</code></a> on branch <code>master</code>, for **ju 0.1.36** (from <code>setup.cfg</code>).
+This documentation was built on **2026-10-13 11:28 UTC** from commit <a href="https://github.com/i2mint/ju/commit/84f69d4250d8008820b0e1a55c72d15411883479"><code>84f69d4</code></a> on branch <code>master</code>, for **ju 0.1.37** (from <code>setup.cfg</code>).
 
-#### WARNING
-The documentation and the package may be misaligned:
-
-- The documented version (0.1.36) is ahead of the latest release on PyPI (0.1.35): these docs describe unreleased code.
+#### NOTE
+Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
 
 ## Source
 
 |                     |                                                                                                                                                  |
 |---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/i2mint/ju/commit/414ba9e9c1dffa7f326143ebf50806fe84e25711"><code>414ba9e9c1dffa7f326143ebf50806fe84e25711</code></a> |
+| Commit              | <a href="https://github.com/i2mint/ju/commit/84f69d4250d8008820b0e1a55c72d15411883479"><code>84f69d4250d8008820b0e1a55c72d15411883479</code></a> |
 | Branch              | <code>master</code>                                                                                                                              |
-| Tags at this commit | <code>0.1.36</code>                                                                                                                              |
+| Tags at this commit | <code>0.1.37</code>                                                                                                                              |
 | Working tree        | clean                                                                                                                                            |
 | Remote              | <code>https://github.com/i2mint/ju</code>                                                                                                        |
 
@@ -2080,9 +2127,9 @@ The documentation and the package may be misaligned:
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>i2mint/ju</code>                                                                     |
-| Run          | <a href="https://github.com/i2mint/ju/actions/runs/38374458959">38374458959</a>            |
+| Run          | <a href="https://github.com/i2mint/ju/actions/runs/38390270364">38390270364</a>            |
 | Ref          | <code>refs/heads/master</code>                                                             |
-| Event commit | <code>48df87839d723fb3a8413bf76c891b59a1ece0c7</code> (in the history of the built commit) |
+| Event commit | <code>7bbbc9240dfd720e68a88f08c7e85775d31e8278</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -2107,13 +2154,13 @@ The documentation and the package may be misaligned:
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/ju/0.1.35/">0.1.35</a>, older than the documented version (0.1.36).
+Latest release: <a href="https://pypi.org/project/ju/0.1.37/">0.1.37</a>, the same as the documented version.
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/i2mint/ju && cd ju
-git checkout 414ba9e9c1dffa7f326143ebf50806fe84e25711
+git checkout 84f69d4250d8008820b0e1a55c72d15411883479
 pip install "epythet==0.2.15"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```
