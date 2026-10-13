@@ -1,4 +1,4 @@
-> built 2026-10-13 03:00 UTC from 42ca200 (master) · ju 0.1.35. Details: build_info.json
+> built 2026-10-13 09:12 UTC from 414ba9e (master) · ju 0.1.36. Details: build_info.json
 
 # index.html.md
 
@@ -298,7 +298,7 @@ Example usage:
 | [`title_to_pyname`](_autosummary/ju.json_schema.html.md#ju.json_schema.title_to_pyname)(title)                           | Converts a title to a Python name.                                                                                                                                                                                      |
 | `wrap_schema_in_opus_spec`(schema)                                                                |                                                                                                                                                                                                                         |
 
-### ju.json_schema.function_to_json_schema(func, \*, doc=True, name_of_obj=functools.partial(<function name_of_obj>, default_factory=<function <lambda>>), pyname_to_title=<function asis>, param_to_prop_type=functools.partial(<function parametrized_param_to_type>, type_mapping=((<class 'str'>, 'string'), (<class 'bool'>, 'boolean'), (<class 'int'>, 'integer'), (<class 'float'>, 'number'), (<class 'collections.abc.Mapping'>, 'object'), (collections.abc.Sequence[str], 'array'))))
+### ju.json_schema.function_to_json_schema(func, \*, doc=True, name_of_obj=functools.partial(<function name_of_obj>, default_factory=<function <lambda>>), pyname_to_title=<function asis>, param_to_prop_type=functools.partial(<function parametrized_param_to_type>, type_mapping=((<class 'str'>, 'string'), (<class 'bool'>, 'boolean'), (<class 'int'>, 'integer'), (<class 'float'>, 'number'), (<class 'collections.abc.Mapping'>, 'object'), (collections.abc.Sequence[str], 'array'), (<class 'bytes'>, 'string'), (<class 'bytearray'>, 'string'), (<class 'memoryview'>, 'string'), (<class 'collections.UserString'>, 'string'), (<class 'collections.abc.Sequence'>, 'array'))))
 
 Transforms a Python function to a JSON schema.
 
@@ -326,7 +326,7 @@ return: The JSON schema (as a dict) for the function
 
 See [https://github.com/i2mint/i2//blob/f547257c272433b7651d09276afdfb1bb7b2f67b/misc/i2.routing.ipynb#L17](https://github.com/i2mint/i2//blob/f547257c272433b7651d09276afdfb1bb7b2f67b/misc/i2.routing.ipynb#L17).
 
-### ju.json_schema.get_properties(parameters, \*, param_to_prop_type=functools.partial(<function parametrized_param_to_type>, type_mapping=((<class 'str'>, 'string'), (<class 'bool'>, 'boolean'), (<class 'int'>, 'integer'), (<class 'float'>, 'number'), (<class 'collections.abc.Mapping'>, 'object'), (collections.abc.Sequence[str], 'array'))))
+### ju.json_schema.get_properties(parameters, \*, param_to_prop_type=functools.partial(<function parametrized_param_to_type>, type_mapping=((<class 'str'>, 'string'), (<class 'bool'>, 'boolean'), (<class 'int'>, 'integer'), (<class 'float'>, 'number'), (<class 'collections.abc.Mapping'>, 'object'), (collections.abc.Sequence[str], 'array'), (<class 'bytes'>, 'string'), (<class 'bytearray'>, 'string'), (<class 'memoryview'>, 'string'), (<class 'collections.UserString'>, 'string'), (<class 'collections.abc.Sequence'>, 'array'))))
 
 Returns the properties dict for the JSON schema.
 
@@ -495,7 +495,7 @@ numeric suffix.
 {'x_ms_api_role': 'X-MS-API-ROLE', 'thingId': 'thingId', 'x_ms_api_role_2': 'x_ms_api_role'}
 ```
 
-### ju.json_schema.signature_to_json_schema(func, \*, doc=True, name_of_obj=functools.partial(<function name_of_obj>, default_factory=<function <lambda>>), pyname_to_title=<function asis>, param_to_prop_type=functools.partial(<function parametrized_param_to_type>, type_mapping=((<class 'str'>, 'string'), (<class 'bool'>, 'boolean'), (<class 'int'>, 'integer'), (<class 'float'>, 'number'), (<class 'collections.abc.Mapping'>, 'object'), (collections.abc.Sequence[str], 'array'))))
+### ju.json_schema.signature_to_json_schema(func, \*, doc=True, name_of_obj=functools.partial(<function name_of_obj>, default_factory=<function <lambda>>), pyname_to_title=<function asis>, param_to_prop_type=functools.partial(<function parametrized_param_to_type>, type_mapping=((<class 'str'>, 'string'), (<class 'bool'>, 'boolean'), (<class 'int'>, 'integer'), (<class 'float'>, 'number'), (<class 'collections.abc.Mapping'>, 'object'), (collections.abc.Sequence[str], 'array'), (<class 'bytes'>, 'string'), (<class 'bytearray'>, 'string'), (<class 'memoryview'>, 'string'), (<class 'collections.UserString'>, 'string'), (<class 'collections.abc.Sequence'>, 'array'))))
 
 Transforms a Python function to a JSON schema.
 
@@ -743,7 +743,7 @@ file_format: ‘yaml’ or ‘json’ (used if openapi_spec is a dict)
 * **Returns:**
   imported client module
 
-### ju.oas.get_routes(d, include_methods=('patch', 'options', 'delete', 'post', 'head', 'put', 'get'))
+### ju.oas.get_routes(d, include_methods=('post', 'delete', 'head', 'patch', 'get', 'options', 'put'))
 
 Takes OpenAPI specification dict ‘d’ and returns the key-paths to all the endpoints.
 
@@ -1653,7 +1653,7 @@ Display a string in a Jupyter notebook cell.
 * **Return type:**
   [`None`](https://docs.python.org/3/builtins/constants.html#None)
 
-### ju.rjsf.func_to_form_spec(func, \*, doc=True, param_to_prop_type=functools.partial(<function parametrized_param_to_type>, type_mapping=((<class 'str'>, 'string'), (<class 'bool'>, 'boolean'), (<class 'int'>, 'integer'), (<class 'float'>, 'number'), (<class 'collections.abc.Mapping'>, 'object'), (collections.abc.Sequence[str], 'array'))), nest_under_field='rjsf', base_rjsf_spec={'disabled': False, 'focusOnFirstError': False, 'liveOmit': False, 'liveValidate': False, 'noHtml5Validate': False, 'noValidate': False, 'omitExtraData': False, 'readonly': False, 'schema': {'properties': {}, 'required': [], 'title': '', 'type': 'object'}, 'showErrorList': 'top', 'uiSchema': {'ui:submitButtonOptions': {'submitText': 'Run'}}}, pyname_to_title=<function asis>)
+### ju.rjsf.func_to_form_spec(func, \*, doc=True, param_to_prop_type=functools.partial(<function parametrized_param_to_type>, type_mapping=((<class 'str'>, 'string'), (<class 'bool'>, 'boolean'), (<class 'int'>, 'integer'), (<class 'float'>, 'number'), (<class 'collections.abc.Mapping'>, 'object'), (collections.abc.Sequence[str], 'array'), (<class 'bytes'>, 'string'), (<class 'bytearray'>, 'string'), (<class 'memoryview'>, 'string'), (<class 'collections.UserString'>, 'string'), (<class 'collections.abc.Sequence'>, 'array'))), nest_under_field='rjsf', base_rjsf_spec={'disabled': False, 'focusOnFirstError': False, 'liveOmit': False, 'liveValidate': False, 'noHtml5Validate': False, 'noValidate': False, 'omitExtraData': False, 'readonly': False, 'schema': {'properties': {}, 'required': [], 'title': '', 'type': 'object'}, 'showErrorList': 'top', 'uiSchema': {'ui:submitButtonOptions': {'submitText': 'Run'}}}, pyname_to_title=<function asis>)
 
 Returns a JSON object that can be used as a form specification, along with the
 function, to generate a FuncCaller React component in a React application.
@@ -2058,20 +2058,20 @@ See also the online tool: [https://navneethg.github.io/jsonschemaviewer/](https:
 
 # About this build
 
-This documentation was built on **2026-10-13 03:00 UTC** from commit <a href="https://github.com/i2mint/ju/commit/42ca200fc0ca00a1de3acf23bbac74679c96ab34"><code>42ca200</code></a> on branch <code>master</code>, for **ju 0.1.35** (from <code>setup.cfg</code>).
+This documentation was built on **2026-10-13 09:12 UTC** from commit <a href="https://github.com/i2mint/ju/commit/414ba9e9c1dffa7f326143ebf50806fe84e25711"><code>414ba9e</code></a> on branch <code>master</code>, for **ju 0.1.36** (from <code>setup.cfg</code>).
 
 #### WARNING
 The documentation and the package may be misaligned:
 
-- The documented version (0.1.35) is ahead of the latest release on PyPI (0.1.34): these docs describe unreleased code.
+- The documented version (0.1.36) is ahead of the latest release on PyPI (0.1.35): these docs describe unreleased code.
 
 ## Source
 
 |                     |                                                                                                                                                  |
 |---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/i2mint/ju/commit/42ca200fc0ca00a1de3acf23bbac74679c96ab34"><code>42ca200fc0ca00a1de3acf23bbac74679c96ab34</code></a> |
+| Commit              | <a href="https://github.com/i2mint/ju/commit/414ba9e9c1dffa7f326143ebf50806fe84e25711"><code>414ba9e9c1dffa7f326143ebf50806fe84e25711</code></a> |
 | Branch              | <code>master</code>                                                                                                                              |
-| Tags at this commit | <code>0.1.35</code>                                                                                                                              |
+| Tags at this commit | <code>0.1.36</code>                                                                                                                              |
 | Working tree        | clean                                                                                                                                            |
 | Remote              | <code>https://github.com/i2mint/ju</code>                                                                                                        |
 
@@ -2080,15 +2080,15 @@ The documentation and the package may be misaligned:
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>i2mint/ju</code>                                                                     |
-| Run          | <a href="https://github.com/i2mint/ju/actions/runs/38339511338">38339511338</a>            |
+| Run          | <a href="https://github.com/i2mint/ju/actions/runs/38374458959">38374458959</a>            |
 | Ref          | <code>refs/heads/master</code>                                                             |
-| Event commit | <code>4bd00b151dc42988f5a726aa5297465751c008f9</code> (in the history of the built commit) |
+| Event commit | <code>48df87839d723fb3a8413bf76c891b59a1ece0c7</code> (in the history of the built commit) |
 
 ## Tools
 
 |          |         |
 |----------|---------|
-| epythet  | 0.2.12  |
+| epythet  | 0.2.15  |
 | Sphinx   | 9.1.0   |
 | docutils | 0.22.4  |
 | Python   | 3.12.15 |
@@ -2107,14 +2107,14 @@ The documentation and the package may be misaligned:
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/ju/0.1.34/">0.1.34</a>, older than the documented version (0.1.35).
+Latest release: <a href="https://pypi.org/project/ju/0.1.35/">0.1.35</a>, older than the documented version (0.1.36).
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/i2mint/ju && cd ju
-git checkout 42ca200fc0ca00a1de3acf23bbac74679c96ab34
-pip install "epythet==0.2.12"
+git checkout 414ba9e9c1dffa7f326143ebf50806fe84e25711
+pip install "epythet==0.2.15"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```
 

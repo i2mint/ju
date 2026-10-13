@@ -271,6 +271,7 @@
 <span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">UserString</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Callable</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">inspect</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parameter</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
@@ -321,7 +322,19 @@
 <span class="c1"># }</span>
 
 <span class="c1"># Need to get a tuple of items to use type mapping as unmutable default.</span>
-<span class="n">DFLT_PY_JSON_TYPE_PAIRS</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">_DFLT_TYPE_MAPPING</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+<span class="c1"># Order matters (first match wins): ``Sequence[str]`` only matches a sequence holding a</span>
+<span class="c1"># str, so a sequence of anything else (or an empty one) is caught by the plain</span>
+<span class="c1"># ``Sequence`` entry. ``str``/``bytes`` are Sequences too: ``str`` matched earlier, and</span>
+<span class="c1"># the string- and bytes-like types are pinned to 'string' before ``Sequence`` can</span>
+<span class="c1"># claim them.</span>
+<span class="n">_EXTRA_PY_JSON_TYPE_PAIRS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">(</span><span class="nb">bytes</span><span class="p">,</span> <span class="s2">"string"</span><span class="p">),</span>
+    <span class="p">(</span><span class="nb">bytearray</span><span class="p">,</span> <span class="s2">"string"</span><span class="p">),</span>
+    <span class="p">(</span><span class="nb">memoryview</span><span class="p">,</span> <span class="s2">"string"</span><span class="p">),</span>
+    <span class="p">(</span><span class="n">UserString</span><span class="p">,</span> <span class="s2">"string"</span><span class="p">),</span>
+    <span class="p">(</span><span class="n">Sequence</span><span class="p">,</span> <span class="s2">"array"</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="n">DFLT_PY_JSON_TYPE_PAIRS</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">_DFLT_TYPE_MAPPING</span><span class="o">.</span><span class="n">items</span><span class="p">())</span> <span class="o">+</span> <span class="n">_EXTRA_PY_JSON_TYPE_PAIRS</span>
 <span class="n">DFLT_JSON_PY_TYPE_PAIRS</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">((</span><span class="n">v</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">_DFLT_TYPE_MAPPING</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
 <span class="k">assert</span> <span class="nb">dict</span><span class="p">(</span><span class="n">DFLT_JSON_PY_TYPE_PAIRS</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">DFLT_JSON_PY_TYPE_PAIRS</span><span class="p">),</span> <span class="p">(</span>
     <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">DFLT_JSON_PY_TYPE_PAIRS</span><span class="si">=}</span><span class="s2">, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">DFLT_JSON_PY_TYPE_PAIRS</span><span class="p">)</span><span class="si">=}</span><span class="s2">"</span>
@@ -945,7 +958,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=c83fd883"></script>
+</div><script src="../../_static/documentation_options.js?v=e88e4268"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>
