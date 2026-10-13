@@ -9,7 +9,7 @@ from dataclasses import dataclass, field
 from dol import KvReader, cached_keys, path_get as _path_get
 from i2 import Sig
 
-from ju.json_schema import OAS_NAME_KEY, OAS_IN_KEY
+from ju.json_schema import OAS_NAME_KEY, OAS_IN_KEY, schema_param_names
 
 http_methods = {"get", "post", "put", "delete", "patch", "options", "head"}
 
@@ -201,6 +201,39 @@ def _distinct_key(name: str, place: str, taken) -> str:
     return candidate
 
 
+def add_property(schema, sent_as, spec_names, name, place, prop_schema, required):
+    """Add the parameter or body property `name`, sent in `place`, to the object
+    `schema`, keyed by its name; when that is taken (the same name in another
+    place -- ``id`` in the query and in a header, a query ``name`` and a body
+    ``name``), by a distinct key. Both then record the spec's name and place
+    (OAS_NAME_KEY, OAS_IN_KEY), so a consumer can tell which is which. No distinct
+    key is a name in `spec_names`. `sent_as` (key -> (name, place)) is the state
+    to carry between calls.
+
+    >>> schema, sent_as = {'properties': {}, 'required': []}, {}
+    >>> add_property(schema, sent_as, {'id'}, 'id', 'query', {'type': 'string'}, True)
+    >>> add_property(schema, sent_as, {'id'}, 'id', 'header', {'type': 'integer'}, False)
+    >>> sorted(schema['properties'])
+    ['id', 'id_header']
+    >>> schema['properties']['id_header']['x-oas-in'], schema['required']
+    ('header', ['id'])
+    """
+    key = name
+    if key in schema["properties"]:
+        first_name, first_place = sent_as[key]
+        schema["properties"][key] = {
+            **schema["properties"][key],
+            OAS_NAME_KEY: first_name,
+            OAS_IN_KEY: first_place,
+        }
+        key = _distinct_key(name, place, spec_names | set(schema["properties"]))
+        prop_schema = {**prop_schema, OAS_NAME_KEY: name, OAS_IN_KEY: place}
+    sent_as[key] = (name, place)
+    schema["properties"][key] = prop_schema
+    if required:
+        schema["required"].append(key)
+
+
 @dataclass
 class Route:
     """
@@ -319,29 +352,13 @@ class Route:
         body_schema = content.get("schema")
         body_properties = properties_of_schema(body_schema) if body_schema else {}
 
-        # A property is keyed by the parameter's name; when that is taken (the
-        # same name in another place -- ``id`` in the query and in a header, a
-        # query ``name`` and a body ``name``), by a distinct key. Both then record
-        # the spec's name and place (OAS_NAME_KEY, OAS_IN_KEY), so a consumer can
-        # tell which is which. No distinct key is a name the spec itself uses.
         spec_names = {p["name"] for p in parameters} | set(body_properties)
         sent_as = {}  # property key -> (spec name, place)
 
         def add(name, place, prop_schema, required):
-            key = name
-            if key in schema["properties"]:
-                first_name, first_place = sent_as[key]
-                schema["properties"][key] = {
-                    **schema["properties"][key],
-                    OAS_NAME_KEY: first_name,
-                    OAS_IN_KEY: first_place,
-                }
-                key = _distinct_key(name, place, spec_names | set(schema["properties"]))
-                prop_schema = {**prop_schema, OAS_NAME_KEY: name, OAS_IN_KEY: place}
-            sent_as[key] = (name, place)
-            schema["properties"][key] = prop_schema
-            if required:
-                schema["required"].append(key)
+            add_property(
+                schema, sent_as, spec_names, name, place, prop_schema, required
+            )
 
         # Process query and path parameters
         for param in parameters:
@@ -523,59 +540,61 @@ class OpenApiFunc:
         self.__qualname__ = qualname or self.__name__
         self.__doc__ = doc or f"OpenAPI route function for {method.upper()} {uri}"
 
+    def _places(self) -> dict:
+        """Python argument name -> (the spec's name for it, where the spec sends it:
+        'path', 'query', 'header', 'cookie' or 'body').
+
+        A property that shares its name with another says where it goes itself
+        (`x-oas-in`, see `add_property`); the others are told apart by name.
+        """
+        schema = self.param_schema
+        in_by_name = {
+            p["name"]: p.get("in") for p in schema.get("_oas_parameters") or ()
+        }
+        places = {}
+        for (pyname, name), prop in zip(
+            schema_param_names(schema).items(), schema["properties"].values()
+        ):
+            place = prop.get(OAS_IN_KEY) or in_by_name.get(name)
+            if place in (None, PARAM_IN):
+                if f"{{{name}}}" in self.uri:
+                    place = "path"
+                else:  # no word on where: the body if there is one, else the query
+                    place = BODY_IN if schema.get("_oas_request_body") else "query"
+            places[pyname] = (name, place)
+        return places
+
     def __call__(self, *args, **kwargs):
         _kwargs = self.__signature__.map_arguments(args, kwargs)
-        # Split _kwargs into path/query params and body params
-        import re
-
-        # Get path param names from the URL
-        path_param_names = re.findall(r"{(\w+)}", self.uri)
-        # Get parameter names from OpenAPI 'parameters'
-        oas_parameters = self.param_schema.get("_oas_parameters", [])
-        param_names = {p["name"] for p in oas_parameters}
-        # Get requestBody schema
+        # Split the arguments by where the spec sends them, under the spec's names
+        path_params, query_params, headers, cookies = {}, {}, {}, {}
         oas_request_body = self.param_schema.get("_oas_request_body", None)
-        # Path params
-        path_params = {k: _kwargs[k] for k in path_param_names if k in _kwargs}
-        # Query params (those in parameters but not in path)
-        query_params = {
-            k: _kwargs[k]
-            for k in param_names
-            if k not in path_param_names and k in _kwargs
-        }
-        # Body params
-        body = None
-        if oas_request_body:
-            if oas_request_body.get("type") == "object":
-                # All properties of the object schema
-                body = {
-                    k: _kwargs[k]
-                    for k in oas_request_body.get("properties", {})
-                    if k in _kwargs
-                }
-            elif oas_request_body.get("type") == "array":
-                # The array param is named by the schema's title or 'body'
-                array_param_name = oas_request_body.get("title", "body")
-                array_param_name = title_to_pyname(
-                    array_param_name
-                )  # because json_schema_to_signature uses it!
-                body = _kwargs.get(array_param_name)
-                # TODO: Must we always have a body at this point?
-                # TODO: The above is (to be verified) a better solution to the hack below:
-                # TODO: Find a SSOT solution: For this to work, json_schema_to_signature must use title_to_pyname itself: If they ever get misaligned, there will be bugs.
-                # array_param_name = oas_request_body.get("title", "body")
-                # body = _kwargs.get(array_param_name)
-                # # Following is the Hack. Find something cleaner
-                # # Here, the array_param_name is sometimes "Data", but the argument in
-                # # the function is "data" (because of title_to_pyname, used in json_schema_to_signature,
-                # # that does a lower()
-                # if body is None:
-                #     body = _kwargs.get(array_param_name.lower())
+        body_is_array = bool(oas_request_body) and oas_request_body.get("type") == (
+            "array"
+        )
+        body = {} if oas_request_body and not body_is_array else None
+        sent_by = {"path": path_params, "query": query_params}
+        for pyname, (name, place) in self._places().items():
+            if pyname not in _kwargs:
+                continue
+            value = _kwargs[pyname]
+            if place in sent_by:
+                sent_by[place][name] = value
+            elif place in ("header", "cookie"):
+                if value is not None:
+                    {"header": headers, "cookie": cookies}[place][name] = str(value)
+            elif place == BODY_IN and body_is_array:
+                body = value
+            elif place == BODY_IN:
+                body[name] = value
         url = self.base_url + self.uri.format(**path_params)
+        extra = {k: v for k, v in (("headers", headers), ("cookies", cookies)) if v}
         if self.method.lower() in ("post", "put", "patch"):
-            resp = self.get_response(self.method, url, params=query_params, json=body)
+            resp = self.get_response(
+                self.method, url, params=query_params, json=body, **extra
+            )
         else:
-            resp = self.get_response(self.method, url, params=query_params)
+            resp = self.get_response(self.method, url, params=query_params, **extra)
         egress = self.response_egress(self.method, self.uri)
         return egress(resp)
 
@@ -678,14 +697,9 @@ def openapi_to_funcs(
             "_oas_parameters": [],  # for internal use: list of parameter dicts
             "_oas_request_body": None,  # for internal use: requestBody schema
         }
-        # Add parameters (query, path, etc.)
-        for param in route.input_specs.get("parameters", []):
-            pname = param["name"]
-            param_schema["properties"][pname] = param.get("schema", {})
-            if param.get("required", False):
-                param_schema["required"].append(pname)
-            param_schema["_oas_parameters"].append(param)
-        # Add requestBody
+        # Add parameters (query, path, etc.). A name used in two places gets
+        # distinct keys that record where each goes (see `add_property`).
+        parameters = route.input_specs.get("parameters", [])
         request_body = route.input_specs.get("requestBody", {})
         content = request_body.get("content", {})
         json_schema = None
@@ -693,19 +707,41 @@ def openapi_to_funcs(
             if ct.endswith("json") and "schema" in content[ct]:
                 json_schema = content[ct]["schema"]
                 break
+        body_names = (
+            set(json_schema.get("properties", {}))
+            if json_schema and json_schema.get("type") == "object"
+            else set()
+        )
+        spec_names = {p["name"] for p in parameters} | body_names
+        sent_as = {}
+
+        def add(name, place, prop_schema, required):
+            add_property(
+                param_schema, sent_as, spec_names, name, place, prop_schema, required
+            )
+
+        for param in parameters:
+            add(
+                param["name"],
+                param.get("in") or PARAM_IN,
+                param.get("schema", {}),
+                param.get("required", False),
+            )
+            param_schema["_oas_parameters"].append(param)
+        # Add requestBody
         if json_schema:
             param_schema["_oas_request_body"] = json_schema
             if json_schema.get("type") == "object":
                 # Add each property as a parameter
+                body_required = json_schema.get("required", [])
                 for pname, pschema in json_schema.get("properties", {}).items():
-                    param_schema["properties"][pname] = pschema
-                if "required" in json_schema:
-                    param_schema["required"].extend(json_schema["required"])
+                    add(pname, BODY_IN, pschema, pname in body_required)
+                param_schema["required"].extend(
+                    n for n in body_required if n not in body_names
+                )
             elif json_schema.get("type") == "array":
                 # Add a single parameter for the array body
-                array_param_name = json_schema.get("title", "body")
-                param_schema["properties"][array_param_name] = json_schema
-                param_schema["required"].append(array_param_name)
+                add(json_schema.get("title", "body"), BODY_IN, json_schema, True)
         func = OpenApiFunc(
             method=method,
             uri=uri,
