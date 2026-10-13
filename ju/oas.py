@@ -273,9 +273,7 @@ class Route:
                     OAS_NAME_KEY: first_name,
                     OAS_IN_KEY: first_place,
                 }
-                key = _distinct_key(
-                    name, place, spec_names | set(schema["properties"])
-                )
+                key = _distinct_key(name, place, spec_names | set(schema["properties"]))
                 prop_schema = {**prop_schema, OAS_NAME_KEY: name, OAS_IN_KEY: place}
             sent_as[key] = (name, place)
             schema["properties"][key] = prop_schema

@@ -196,8 +196,7 @@ def test_a_route_without_any_parameters_gets_no_parameters_key():
 def test_same_name_in_two_places_stay_two_properties():
     from yaml import safe_load
 
-    spec = safe_load(
-        """
+    spec = safe_load("""
 openapi: 3.0.3
 paths:
   /things:
@@ -215,8 +214,7 @@ paths:
               properties:
                 name: {type: boolean}
                 other: {type: string}
-"""
-    )
+""")
     props = Routes(spec)["post", "/things"].params
     assert props["properties"] == {
         "id": {"type": "string", "x-oas-name": "id", "x-oas-in": "query"},
@@ -236,15 +234,18 @@ paths:
         "other": "other",
     }
     assert list(json_schema_to_signature(props).names) == [
-        "id", "name_body", "other", "id_header", "name",
+        "id",
+        "name_body",
+        "other",
+        "id_header",
+        "name",
     ]
 
 
 def test_a_distinct_key_never_takes_a_name_the_spec_uses():
     from yaml import safe_load
 
-    spec = safe_load(
-        """
+    spec = safe_load("""
 openapi: 3.0.3
 paths:
   /x:
@@ -255,8 +256,7 @@ paths:
         - {in: query, name: id_header, schema: {type: integer}}
         - {in: query, schema: {type: string}, name: other}
         - {in: cookie, name: other, schema: {type: string}}
-"""
-    )
+""")
     props = Routes(spec)["get", "/x"].params["properties"]
     assert props["id_header"] == {"type": "integer"}  # the spec's own, untouched
     where = {
