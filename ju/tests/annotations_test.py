@@ -4,9 +4,12 @@ annotations``, so every annotation in it is a string."""
 
 from __future__ import annotations
 
+import sys
 from functools import partial
 from inspect import Parameter
 from typing import Annotated, NewType, Optional, TYPE_CHECKING
+
+import pytest
 
 from ju.json_schema import DFLT_PARAM_TO_TYPE, signature_to_json_schema
 
@@ -88,3 +91,25 @@ def test_custom_param_to_prop_type_sees_the_owning_name():
 
     signature_to_json_schema(f, param_to_prop_type=spy)
     assert set(seen) == {"xs", "ys"}
+
+
+@pytest.mark.skipif(sys.version_info < (3, 12), reason="`type` statement")
+def test_recursive_and_cyclic_type_aliases_terminate():
+    ns = {}
+    exec(
+        "type Tree = list[Tree]\ntype A = B\ntype B = A\n"
+        "def t(x: Tree): ...\ndef c(y: A): ...\n",
+        ns,
+    )
+    assert _props(ns["t"])["x"]["type"] == "array"  # (items nest to a bounded depth)
+    assert _props(ns["c"]) == {"y": {"type": "string"}}
+
+
+def test_class_with_only_a_new_is_resolved():
+    class N:
+        def __new__(cls, a: int, b: list[float]): ...
+
+    assert _props(N) == {
+        "a": {"type": "integer"},
+        "b": {"type": "array", "items": {"type": "number"}},
+    }

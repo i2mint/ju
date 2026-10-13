@@ -613,8 +613,16 @@ def _json_safe(value):
     return True, value
 
 
+_MAX_ITEMS_DEPTH = 16  # (a recursive ``type`` alias would nest ``items`` forever)
+
+
 def _array_items(
-    annotation, default, param_to_prop_type: Callable, name: str = "_"
+    annotation,
+    default,
+    param_to_prop_type: Callable,
+    name: str = "_",
+    *,
+    depth: int = 0,
 ) -> dict | None:
     """
     The JSON schema of an array parameter's items, or ``None`` if there is no telling.
@@ -636,21 +644,31 @@ def _array_items(
     True
     """
     empty = inspect.Parameter.empty
+    if depth >= _MAX_ITEMS_DEPTH:
+        return None
     args = get_args(unwrap_optional(annotation)) if annotation is not empty else ()
     args = tuple(a for a in args if a is not Ellipsis)
     if len(args) == 1:  # list[int], tuple[int, ...]; not tuple[int, str]
-        return _value_schema(args[0], empty, param_to_prop_type, name)
+        return _value_schema(args[0], empty, param_to_prop_type, name, depth=depth + 1)
     if args:
         return None
     if isinstance(default, (list, tuple)) and default:
-        schemas = [_value_schema(empty, d, param_to_prop_type, name) for d in default]
+        schemas = [
+            _value_schema(empty, d, param_to_prop_type, name, depth=depth + 1)
+            for d in default
+        ]
         if all(schema == schemas[0] for schema in schemas):
             return schemas[0]
     return None
 
 
 def _value_schema(
-    annotation, default, param_to_prop_type: Callable, name: str = "_"
+    annotation,
+    default,
+    param_to_prop_type: Callable,
+    name: str = "_",
+    *,
+    depth: int = 0,
 ) -> dict:
     """``{"type": ..., "items": ...}`` for a value described by an annotation and/or a
     default. ``name`` is that of the parameter the value belongs to (so a custom
@@ -660,7 +678,9 @@ def _value_schema(
     )
     schema = {"type": param_to_prop_type(param)}
     if schema["type"] == "array":
-        items = _array_items(annotation, default, param_to_prop_type, name)
+        items = _array_items(
+            annotation, default, param_to_prop_type, name, depth=depth
+        )
         if items is not None:
             schema["items"] = items
     return schema

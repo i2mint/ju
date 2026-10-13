@@ -71,7 +71,11 @@ def _strip_wrappers(annotation):
     >>> _strip_wrappers(Annotated[UserId, "meta"])
     <class 'int'>
     """
+    seen = []  # (aliases can refer to each other: don't loop)
     while True:
+        if any(annotation is a for a in seen):
+            return annotation
+        seen.append(annotation)
         if get_origin(annotation) is typing.Annotated:
             annotation = get_args(annotation)[0]
         elif hasattr(annotation, "__supertype__"):  # NewType
@@ -118,6 +122,8 @@ def _annotation_target(func):
     while isinstance(func, partial):
         func = func.func
     if inspect.isclass(func):
+        if func.__init__ is object.__init__ and func.__new__ is not object.__new__:
+            return func.__new__  # (only a ``__new__`` describes its signature)
         return func.__init__
     if not (inspect.isroutine(func) or hasattr(func, "__wrapped__")):
         return getattr(type(func), "__call__", func)  # a callable instance
