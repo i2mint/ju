@@ -98,3 +98,67 @@ test_schema_gen(
         earth: earth_schema,
     },
 )
+
+
+def test_non_json_defaults_are_serializable():
+    """Enum, date and arbitrary-object defaults must not break json.dumps (#15)."""
+    import datetime
+    import enum
+    import json
+    from ju.rjsf import func_to_form_spec
+
+    class Color(enum.Enum):
+        red = "red"
+        blue = "blue"
+
+    class Num(enum.IntEnum):
+        one = 1
+
+    def f(
+        c: Color = Color.red,
+        n: Num = Num.one,
+        d: datetime.date = datetime.date(2020, 1, 2),
+        dt: datetime.datetime = datetime.datetime(2020, 1, 2, 3, 4, 5),
+        o: object = object(),
+        keep=3,
+        none=None,
+    ):
+        ...
+
+    spec = func_to_form_spec(f, nest_under_field=None)
+    json.dumps(spec)  # does not raise
+    props = spec["schema"]["properties"]
+    assert props["c"]["default"] == "red" and props["c"]["enum"] == ["red", "blue"]
+    assert props["n"]["default"] == 1 and props["n"]["enum"] == [1]
+    assert props["d"]["default"] == "2020-01-02"
+    assert props["dt"]["default"] == "2020-01-02T03:04:05"
+    assert "default" not in props["o"]
+    assert props["keep"]["default"] == 3 and props["none"]["default"] is None
+
+
+def test_dropped_default_keeps_param_optional():
+    from ju.rjsf import func_to_form_spec
+
+    """A default with no JSON form is omitted but the parameter stays optional (#15)."""
+    import datetime
+    import enum
+
+    class P(enum.Enum):
+        x = 1
+        y = 2
+
+    class Perm(enum.Flag):
+        R = 1
+        W = 2
+
+    def f(a, o=object(), td=datetime.timedelta(1), lst=[object()], p: P = P.x,
+          perm: Perm = Perm.R | Perm.W, ok=[datetime.date(2020, 1, 2)]):
+        ...
+
+    schema = func_to_form_spec(f, nest_under_field=None)["schema"]
+    props = schema["properties"]
+    assert schema["required"] == ["a"]
+    assert "default" not in props["lst"]
+    assert props["p"] == {"type": "integer", "default": 1, "enum": [1, 2]}
+    assert props["perm"]["default"] == 3 and "enum" not in props["perm"]
+    assert props["ok"]["default"] == ["2020-01-02"]
