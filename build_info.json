@@ -1,34 +1,34 @@
 {
   "schema_version": 1,
-  "built_at": "2026-10-13T12:21:17Z",
+  "built_at": "2026-10-13T14:19:12Z",
   "package": {
     "name": "ju",
-    "version": "0.1.39",
+    "version": "0.1.40",
     "display_name": "ju",
     "source": "setup.cfg"
   },
   "git": {
     "available": true,
-    "commit": "25e04e1e7d7f642c53e9d9e0385ea3098e07fbc0",
-    "short_commit": "25e04e1",
+    "commit": "d6c811a3c4173b5a4e3ae443a717864119238214",
+    "short_commit": "d6c811a",
     "branch": "master",
     "tags": [
-      "0.1.39"
+      "0.1.40"
     ],
     "dirty": false,
     "remote_url": "https://github.com/i2mint/ju",
-    "commit_url": "https://github.com/i2mint/ju/commit/25e04e1e7d7f642c53e9d9e0385ea3098e07fbc0",
+    "commit_url": "https://github.com/i2mint/ju/commit/d6c811a3c4173b5a4e3ae443a717864119238214",
     "error": null
   },
   "ci": {
     "provider": "github",
     "repository": "i2mint/ju",
-    "sha": "9d91946bbf77537ce91294fc24b1a198a425e63c",
+    "sha": "329e9eafb9dbfb665a14b655e7d914f9551cff02",
     "sha_in_history": true,
     "ref": "refs/heads/master",
     "ref_name": "master",
-    "run_id": "38396440884",
-    "run_url": "https://github.com/i2mint/ju/actions/runs/38396440884",
+    "run_id": "38412068090",
+    "run_url": "https://github.com/i2mint/ju/actions/runs/38412068090",
     "server_url": "https://github.com"
   },
   "tools": {
@@ -58,15 +58,15 @@
   },
   "site": {
     "modules_documented": 8,
-    "objects_documented": 81
+    "objects_documented": 82
   },
   "pypi": {
     "checked": true,
-    "latest": "0.1.39",
+    "latest": "0.1.40",
     "relation": "same",
     "error": null
   },
-  "reproduce": "git clone https://github.com/i2mint/ju && cd ju\ngit checkout 25e04e1e7d7f642c53e9d9e0385ea3098e07fbc0\npip install \"epythet==0.2.15\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
+  "reproduce": "git clone https://github.com/i2mint/ju && cd ju\ngit checkout d6c811a3c4173b5a4e3ae443a717864119238214\npip install \"epythet==0.2.15\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
   "warnings": [],
   "alignment": {
     "aligned": true,

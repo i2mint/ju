@@ -21,6 +21,7 @@ ju.util
       mk_function_returning
       switch_case
       truncate_dict_values
+      unwrap_optional
    
    .. rubric:: Classes
 

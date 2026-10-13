@@ -270,7 +270,7 @@
 
 <span class="sd">"""</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">get_args</span><span class="p">,</span> <span class="n">get_origin</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">UserString</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Callable</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">inspect</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parameter</span>
@@ -282,7 +282,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">i2</span><span class="w"> </span><span class="kn">import</span> <span class="n">name_of_obj</span> <span class="k">as</span> <span class="n">_name_of_obj</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">ju.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_type</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ju.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_type</span><span class="p">,</span> <span class="n">unwrap_optional</span>
 
 <span class="n">DFLT_FUNC_TITLE</span> <span class="o">=</span> <span class="s2">""</span>
 
@@ -876,6 +876,54 @@
     <span class="k">return</span> <span class="kc">True</span><span class="p">,</span> <span class="n">value</span>
 
 
+<span class="k">def</span><span class="w"> </span><span class="nf">_array_items</span><span class="p">(</span><span class="n">annotation</span><span class="p">,</span> <span class="n">default</span><span class="p">,</span> <span class="n">param_to_prop_type</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    The JSON schema of an array parameter's items, or ``None`` if there is no telling.</span>
+
+<span class="sd">    The element type comes from the annotation's arguments (``list[int]``,</span>
+<span class="sd">    ``tuple[int, ...]``, ``Sequence[list[str]]``), else from the default's elements</span>
+<span class="sd">    when they all have the same JSON type.</span>
+
+<span class="sd">    &gt;&gt;&gt; from ju.json_schema import DFLT_PARAM_TO_TYPE as to_type</span>
+<span class="sd">    &gt;&gt;&gt; _array_items(list[int], inspect.Parameter.empty, to_type)</span>
+<span class="sd">    {'type': 'integer'}</span>
+<span class="sd">    &gt;&gt;&gt; _array_items(list[list[str]], inspect.Parameter.empty, to_type)</span>
+<span class="sd">    {'type': 'array', 'items': {'type': 'string'}}</span>
+<span class="sd">    &gt;&gt;&gt; _array_items(inspect.Parameter.empty, [1, 2, 3], to_type)</span>
+<span class="sd">    {'type': 'integer'}</span>
+<span class="sd">    &gt;&gt;&gt; _array_items(inspect.Parameter.empty, [1, 'a'], to_type) is None</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; _array_items(list, [], to_type) is None</span>
+<span class="sd">    True</span>
+<span class="sd">    """</span>
+    <span class="n">empty</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">Parameter</span><span class="o">.</span><span class="n">empty</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">get_args</span><span class="p">(</span><span class="n">unwrap_optional</span><span class="p">(</span><span class="n">annotation</span><span class="p">))</span> <span class="k">if</span> <span class="n">annotation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">empty</span> <span class="k">else</span> <span class="p">()</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">args</span> <span class="k">if</span> <span class="n">a</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">Ellipsis</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># list[int], tuple[int, ...]; not tuple[int, str]</span>
+        <span class="k">return</span> <span class="n">_value_schema</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">empty</span><span class="p">,</span> <span class="n">param_to_prop_type</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">))</span> <span class="ow">and</span> <span class="n">default</span><span class="p">:</span>
+        <span class="n">schemas</span> <span class="o">=</span> <span class="p">[</span><span class="n">_value_schema</span><span class="p">(</span><span class="n">empty</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">param_to_prop_type</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">default</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">schema</span> <span class="o">==</span> <span class="n">schemas</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">schema</span> <span class="ow">in</span> <span class="n">schemas</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">schemas</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_value_schema</span><span class="p">(</span><span class="n">annotation</span><span class="p">,</span> <span class="n">default</span><span class="p">,</span> <span class="n">param_to_prop_type</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""``{"type": ..., "items": ...}`` for a value described by an annotation and/or a</span>
+<span class="sd">    default."""</span>
+    <span class="n">param</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span>
+        <span class="s2">"_"</span><span class="p">,</span> <span class="n">Parameter</span><span class="o">.</span><span class="n">KEYWORD_ONLY</span><span class="p">,</span> <span class="n">annotation</span><span class="o">=</span><span class="n">annotation</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">default</span>
+    <span class="p">)</span>
+    <span class="n">schema</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="n">param_to_prop_type</span><span class="p">(</span><span class="n">param</span><span class="p">)}</span>
+    <span class="k">if</span> <span class="n">schema</span><span class="p">[</span><span class="s2">"type"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"array"</span><span class="p">:</span>
+        <span class="n">items</span> <span class="o">=</span> <span class="n">_array_items</span><span class="p">(</span><span class="n">annotation</span><span class="p">,</span> <span class="n">default</span><span class="p">,</span> <span class="n">param_to_prop_type</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">items</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">schema</span><span class="p">[</span><span class="s2">"items"</span><span class="p">]</span> <span class="o">=</span> <span class="n">items</span>
+    <span class="k">return</span> <span class="n">schema</span>
+
+
 <div class="viewcode-block" id="get_properties">
 <a class="viewcode-back" href="../../_autosummary/ju.json_schema.html#ju.json_schema.get_properties">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_properties</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">param_to_prop_type</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="n">DFLT_PARAM_TO_TYPE</span><span class="p">):</span>
@@ -911,6 +959,10 @@
         <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="o">=</span> <span class="n">item</span>
         <span class="n">field</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">field</span><span class="p">[</span><span class="s2">"type"</span><span class="p">]</span> <span class="o">=</span> <span class="n">param_to_prop_type</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">field</span><span class="p">[</span><span class="s2">"type"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"array"</span><span class="p">:</span>
+            <span class="n">items</span> <span class="o">=</span> <span class="n">_array_items</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">annotation</span><span class="p">,</span> <span class="n">param</span><span class="o">.</span><span class="n">default</span><span class="p">,</span> <span class="n">param_to_prop_type</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">items</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">field</span><span class="p">[</span><span class="s2">"items"</span><span class="p">]</span> <span class="o">=</span> <span class="n">items</span>
 
         <span class="c1"># If there's a default value, add it</span>
         <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">default</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">inspect</span><span class="o">.</span><span class="n">Parameter</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
@@ -976,7 +1028,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=4af9b32f"></script>
+</div><script src="../../_static/documentation_options.js?v=6264e773"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>
