@@ -80,7 +80,9 @@ def unwrap_optional(annotation):
 
 def _annotation_matches(annotation, type_) -> bool:
     """Does ``annotation`` (a class or a subscripted generic) denote ``type_``, or a
-    subclass of it? Arguments are compared only when both sides have them."""
+    subclass of it? If ``type_`` is subscripted, the annotation must have the same
+    arguments. (The order of a type mapping matters: a parent listed before its child
+    claims the child's annotations too.)"""
     annotation = unwrap_optional(annotation)
     if _is_union(annotation):
         return False
@@ -88,10 +90,15 @@ def _annotation_matches(annotation, type_) -> bool:
     type_origin = get_origin(type_) or type_
     if not (isinstance(origin, type) and isinstance(type_origin, type)):
         return False
-    if not issubclass(origin, type_origin):
+    try:
+        if not issubclass(origin, type_origin):
+            return False
+    except TypeError:  # e.g. a Protocol with data members
         return False
     type_args, args = get_args(type_), get_args(annotation)
-    return not (type_args and args) or type_args == args
+    if type_args:  # ``bytes`` is a ``Sequence``, but not a ``Sequence[str]``
+        return args == type_args
+    return True
 
 
 def is_type(param: Parameter, type_: SomeType):

@@ -232,3 +232,11 @@ def test_annotated_list_params_in_signature_schema():
     assert props["xs"] == {"type": "array", "items": {"type": "integer"}}
     assert props["names"]["type"] == "array" and "items" not in props["names"]
     assert props["ys"]["items"] == {"type": "number"}
+
+
+@pytest.mark.parametrize("annotation", [bytes, bytearray, memoryview, UserString, str])
+def test_bytes_like_and_str_annotations_stay_string(annotation):
+    from ju.json_schema import DFLT_PARAM_TO_TYPE
+
+    param = Parameter("p", Parameter.KEYWORD_ONLY, annotation=annotation)
+    assert DFLT_PARAM_TO_TYPE(param) == "string"
