@@ -108,6 +108,8 @@ DFLT_PARAM_TO_TYPE = partial(
 # util
 
 import json
+import enum
+import datetime
 
 
 def print_dict(d):
@@ -481,6 +483,32 @@ def _required_names(json_schema: dict):
 
 
 # TODO: The loop body could be factored out
+def _json_safe(value):
+    """Return ``(ok, json_value)``: ``value`` coerced to something ``json.dumps`` accepts.
+
+    ``ok`` is False if there is no sensible JSON form (the caller should omit it).
+
+    >>> import enum, datetime
+    >>> class Color(enum.Enum):
+    ...     red = 'red'
+    >>> _json_safe(Color.red)
+    (True, 'red')
+    >>> _json_safe(datetime.date(2020, 1, 2))
+    (True, '2020-01-02')
+    >>> _json_safe(object())
+    (False, None)
+    """
+    if isinstance(value, enum.Enum):
+        return _json_safe(value.value)
+    if isinstance(value, (datetime.date, datetime.time)):  # incl. datetime
+        return True, value.isoformat()
+    try:
+        json.dumps(value)
+    except (TypeError, ValueError):  # not serializable (or circular)
+        return False, None
+    return True, value
+
+
 def get_properties(parameters, *, param_to_prop_type: Callable = DFLT_PARAM_TO_TYPE):
     """
     Returns the properties dict for the JSON schema.
@@ -517,7 +545,16 @@ def get_properties(parameters, *, param_to_prop_type: Callable = DFLT_PARAM_TO_T
 
         # If there's a default value, add it
         if param.default is not inspect.Parameter.empty:
-            field["default"] = param.default
+            # Defaults with no JSON form (arbitrary objects) are omitted, so the
+            # schema stays serializable; Enum members become their value (plus the
+            # list of allowed values) and dates become ISO strings.
+            ok, default = _json_safe(param.default)
+            if ok:
+                field["default"] = default
+            if isinstance(param.default, enum.Enum):
+                allowed = [_json_safe(m) for m in type(param.default)]
+                if all(ok for ok, _ in allowed):
+                    field["enum"] = [v for _, v in allowed]
 
         # Add the field to the schema
         properties[name] = field

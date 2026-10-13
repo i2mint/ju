@@ -98,3 +98,39 @@ test_schema_gen(
         earth: earth_schema,
     },
 )
+
+
+def test_non_json_defaults_are_serializable():
+    """Enum, date and arbitrary-object defaults must not break json.dumps (#15)."""
+    import datetime
+    import enum
+    import json
+    from ju.rjsf import func_to_form_spec
+
+    class Color(enum.Enum):
+        red = "red"
+        blue = "blue"
+
+    class Num(enum.IntEnum):
+        one = 1
+
+    def f(
+        c: Color = Color.red,
+        n: Num = Num.one,
+        d: datetime.date = datetime.date(2020, 1, 2),
+        dt: datetime.datetime = datetime.datetime(2020, 1, 2, 3, 4, 5),
+        o: object = object(),
+        keep=3,
+        none=None,
+    ):
+        ...
+
+    spec = func_to_form_spec(f, nest_under_field=None)
+    json.dumps(spec)  # does not raise
+    props = spec["schema"]["properties"]
+    assert props["c"]["default"] == "red" and props["c"]["enum"] == ["red", "blue"]
+    assert props["n"]["default"] == 1 and props["n"]["enum"] == [1]
+    assert props["d"]["default"] == "2020-01-02"
+    assert props["dt"]["default"] == "2020-01-02T03:04:05"
+    assert "default" not in props["o"]
+    assert props["keep"]["default"] == 3 and props["none"]["default"] is None
