@@ -15,7 +15,7 @@
 - [ju.traitlets_util](_autosummary/ju.traitlets_util.html.md): Utils for traitlets
 - [ju.util](_autosummary/ju.util.html.md): Ju base utils.
 - [ju.viz](_autosummary/ju.viz.html.md): Visualization functions for Ju.
-- [About this build](about-this-build.html.md): This documentation was built on &#42;&#42;2026-10-13 11:28 UTC&#42;&#42; from commit &lt;a href="https://github.com/i2m...
+- [About this build](about-this-build.html.md): This documentation was built on &#42;&#42;2026-10-13 12:13 UTC&#42;&#42; from commit &lt;a href="https://github.com/i2m...
 
 ## Optional
 

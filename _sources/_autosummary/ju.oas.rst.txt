@@ -8,6 +8,7 @@ ju.oas
 
    .. autosummary::
    
+      BODY_MEDIA_TYPES
       BODY_IN
       PARAM_IN
    

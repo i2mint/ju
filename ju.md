@@ -1,4 +1,4 @@
-> built 2026-10-13 11:28 UTC from 84f69d4 (master) · ju 0.1.37. Details: build_info.json
+> built 2026-10-13 12:13 UTC from 6cadf23 (master) · ju 0.1.38. Details: build_info.json
 
 # index.html.md
 
@@ -576,9 +576,10 @@ OpenAPI specification tools.
 
 ### Module Attributes
 
-| [`BODY_IN`](_autosummary/ju.oas.html.md#ju.oas.BODY_IN)   | The `OAS_IN_KEY` of a property that comes from the request body.                   |
-|------------------------------------------------------------|------------------------------------------------------------------------------------|
-| [`PARAM_IN`](_autosummary/ju.oas.html.md#ju.oas.PARAM_IN)  | The `OAS_IN_KEY` of a parameter that does not say where it goes (invalid OpenAPI). |
+| [`BODY_MEDIA_TYPES`](_autosummary/ju.oas.html.md#ju.oas.BODY_MEDIA_TYPES)   | Non-JSON request body media types `Route.params` reads, in order of preference.    |
+|---------------------------------------------------------------------|------------------------------------------------------------------------------------|
+| [`BODY_IN`](_autosummary/ju.oas.html.md#ju.oas.BODY_IN)            | The `OAS_IN_KEY` of a property that comes from the request body.                   |
+| [`PARAM_IN`](_autosummary/ju.oas.html.md#ju.oas.PARAM_IN)           | The `OAS_IN_KEY` of a parameter that does not say where it goes (invalid OpenAPI). |
 
 ### Functions
 
@@ -620,6 +621,10 @@ represents an array of objects, and not just a single object.
 ### ju.oas.BODY_IN *= 'body'*
 
 The `OAS_IN_KEY` of a property that comes from the request body.
+
+### ju.oas.BODY_MEDIA_TYPES *= ('application/x-www-form-urlencoded', 'multipart/form-data')*
+
+Non-JSON request body media types `Route.params` reads, in order of preference.
 
 ### *class* ju.oas.OpenApiFunc(\*, method, uri, base_url, param_schema, get_response=<function default_get_response>, response_egress=None, name=None, qualname=None, doc=None)
 
@@ -671,6 +676,27 @@ The `type_mapping` attribute is a dictionary that maps OpenAPI types to correspo
 'List items'
 >>> route_get.params
 {'type': 'object', 'properties': {'type': {'type': 'string'}}, 'required': ['type']}
+```
+
+#### *property* body_content_type
+
+The media type of the request body `params` reads, or None for no body.
+
+JSON is preferred; then form-urlencoded, then multipart.
+
+```pycon
+>>> from yaml import safe_load
+>>> spec = safe_load('''
+... paths:
+...   /f:
+...     post:
+...       requestBody:
+...         content:
+...           multipart/form-data: {schema: {properties: {a: {type: string}}}}
+... ''')
+>>> route = Route('post', '/f', spec)
+>>> route.body_content_type, list(route.params['properties'])
+('multipart/form-data', ['a'])
 ```
 
 #### *property* output_properties
@@ -776,7 +802,7 @@ file_format: ‘yaml’ or ‘json’ (used if openapi_spec is a dict)
 * **Returns:**
   imported client module
 
-### ju.oas.get_routes(d, include_methods=('patch', 'delete', 'get', 'put', 'post', 'options', 'head'))
+### ju.oas.get_routes(d, include_methods=('delete', 'head', 'post', 'options', 'put', 'patch', 'get'))
 
 Takes OpenAPI specification dict ‘d’ and returns the key-paths to all the endpoints.
 
@@ -2107,18 +2133,20 @@ See also the online tool: [https://navneethg.github.io/jsonschemaviewer/](https:
 
 # About this build
 
-This documentation was built on **2026-10-13 11:28 UTC** from commit <a href="https://github.com/i2mint/ju/commit/84f69d4250d8008820b0e1a55c72d15411883479"><code>84f69d4</code></a> on branch <code>master</code>, for **ju 0.1.37** (from <code>setup.cfg</code>).
+This documentation was built on **2026-10-13 12:13 UTC** from commit <a href="https://github.com/i2mint/ju/commit/6cadf23617939d45d271128aed71ed18d148d2fa"><code>6cadf23</code></a> on branch <code>master</code>, for **ju 0.1.38** (from <code>setup.cfg</code>).
 
-#### NOTE
-Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
+#### WARNING
+The documentation and the package may be misaligned:
+
+- The documented version (0.1.38) is ahead of the latest release on PyPI (0.1.37): these docs describe unreleased code.
 
 ## Source
 
 |                     |                                                                                                                                                  |
 |---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/i2mint/ju/commit/84f69d4250d8008820b0e1a55c72d15411883479"><code>84f69d4250d8008820b0e1a55c72d15411883479</code></a> |
+| Commit              | <a href="https://github.com/i2mint/ju/commit/6cadf23617939d45d271128aed71ed18d148d2fa"><code>6cadf23617939d45d271128aed71ed18d148d2fa</code></a> |
 | Branch              | <code>master</code>                                                                                                                              |
-| Tags at this commit | <code>0.1.37</code>                                                                                                                              |
+| Tags at this commit | <code>0.1.38</code>                                                                                                                              |
 | Working tree        | clean                                                                                                                                            |
 | Remote              | <code>https://github.com/i2mint/ju</code>                                                                                                        |
 
@@ -2127,9 +2155,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>i2mint/ju</code>                                                                     |
-| Run          | <a href="https://github.com/i2mint/ju/actions/runs/38390270364">38390270364</a>            |
+| Run          | <a href="https://github.com/i2mint/ju/actions/runs/38395543082">38395543082</a>            |
 | Ref          | <code>refs/heads/master</code>                                                             |
-| Event commit | <code>7bbbc9240dfd720e68a88f08c7e85775d31e8278</code> (in the history of the built commit) |
+| Event commit | <code>86b06cd2e394448dbca7a5c2989ce19c7fc28742</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -2154,13 +2182,13 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/ju/0.1.37/">0.1.37</a>, the same as the documented version.
+Latest release: <a href="https://pypi.org/project/ju/0.1.37/">0.1.37</a>, older than the documented version (0.1.38).
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/i2mint/ju && cd ju
-git checkout 84f69d4250d8008820b0e1a55c72d15411883479
+git checkout 6cadf23617939d45d271128aed71ed18d148d2fa
 pip install "epythet==0.2.15"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```

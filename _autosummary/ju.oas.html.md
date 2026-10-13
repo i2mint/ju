@@ -4,9 +4,10 @@ OpenAPI specification tools.
 
 ### Module Attributes
 
-| [`BODY_IN`](#ju.oas.BODY_IN)   | The `OAS_IN_KEY` of a property that comes from the request body.                   |
-|------------------------------------------------------------|------------------------------------------------------------------------------------|
-| [`PARAM_IN`](#ju.oas.PARAM_IN)  | The `OAS_IN_KEY` of a parameter that does not say where it goes (invalid OpenAPI). |
+| [`BODY_MEDIA_TYPES`](#ju.oas.BODY_MEDIA_TYPES)   | Non-JSON request body media types `Route.params` reads, in order of preference.    |
+|---------------------------------------------------------------------|------------------------------------------------------------------------------------|
+| [`BODY_IN`](#ju.oas.BODY_IN)            | The `OAS_IN_KEY` of a property that comes from the request body.                   |
+| [`PARAM_IN`](#ju.oas.PARAM_IN)           | The `OAS_IN_KEY` of a parameter that does not say where it goes (invalid OpenAPI). |
 
 ### Functions
 
@@ -48,6 +49,10 @@ represents an array of objects, and not just a single object.
 ### ju.oas.BODY_IN *= 'body'*
 
 The `OAS_IN_KEY` of a property that comes from the request body.
+
+### ju.oas.BODY_MEDIA_TYPES *= ('application/x-www-form-urlencoded', 'multipart/form-data')*
+
+Non-JSON request body media types `Route.params` reads, in order of preference.
 
 ### *class* ju.oas.OpenApiFunc(\*, method, uri, base_url, param_schema, get_response=<function default_get_response>, response_egress=None, name=None, qualname=None, doc=None)
 
@@ -99,6 +104,27 @@ The `type_mapping` attribute is a dictionary that maps OpenAPI types to correspo
 'List items'
 >>> route_get.params
 {'type': 'object', 'properties': {'type': {'type': 'string'}}, 'required': ['type']}
+```
+
+#### *property* body_content_type
+
+The media type of the request body `params` reads, or None for no body.
+
+JSON is preferred; then form-urlencoded, then multipart.
+
+```pycon
+>>> from yaml import safe_load
+>>> spec = safe_load('''
+... paths:
+...   /f:
+...     post:
+...       requestBody:
+...         content:
+...           multipart/form-data: {schema: {properties: {a: {type: string}}}}
+... ''')
+>>> route = Route('post', '/f', spec)
+>>> route.body_content_type, list(route.params['properties'])
+('multipart/form-data', ['a'])
 ```
 
 #### *property* output_properties
@@ -204,7 +230,7 @@ file_format: ‘yaml’ or ‘json’ (used if openapi_spec is a dict)
 * **Returns:**
   imported client module
 
-### ju.oas.get_routes(d, include_methods=('patch', 'delete', 'get', 'put', 'post', 'options', 'head'))
+### ju.oas.get_routes(d, include_methods=('delete', 'head', 'post', 'options', 'put', 'patch', 'get'))
 
 Takes OpenAPI specification dict ‘d’ and returns the key-paths to all the endpoints.
 
