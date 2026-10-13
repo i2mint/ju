@@ -87,9 +87,7 @@ _EXTRA_PY_JSON_TYPE_PAIRS = (
     (UserString, "string"),
     (Sequence, "array"),
 )
-DFLT_PY_JSON_TYPE_PAIRS = (
-    tuple(_DFLT_TYPE_MAPPING.items()) + _EXTRA_PY_JSON_TYPE_PAIRS
-)
+DFLT_PY_JSON_TYPE_PAIRS = tuple(_DFLT_TYPE_MAPPING.items()) + _EXTRA_PY_JSON_TYPE_PAIRS
 DFLT_JSON_PY_TYPE_PAIRS = tuple((v, k) for k, v in _DFLT_TYPE_MAPPING.items())
 assert dict(DFLT_JSON_PY_TYPE_PAIRS) != len(DFLT_JSON_PY_TYPE_PAIRS), (
     f"{DFLT_JSON_PY_TYPE_PAIRS=}, {len(DFLT_JSON_PY_TYPE_PAIRS)=}"
