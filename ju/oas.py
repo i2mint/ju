@@ -129,6 +129,8 @@ def properties_of_schema(schema: dict) -> dict:
 
 #: The `OAS_IN_KEY` of a property that comes from the request body.
 BODY_IN = "body"
+#: The `OAS_IN_KEY` of a parameter that does not say where it goes (invalid OpenAPI).
+PARAM_IN = "param"
 
 
 def _param_id(param: dict) -> tuple:
@@ -248,40 +250,49 @@ class Route:
         """
         schema = {"type": "object", "properties": {}, "required": []}
 
+        parameters = self.method_data.get("parameters", [])
+        request_body = self.method_data.get("requestBody", {})
+        content = path_get(request_body, "content.application/json")
+        body_schema = content.get("schema")
+        body_properties = properties_of_schema(body_schema) if body_schema else {}
+
         # A property is keyed by the parameter's name; when that is taken (the
         # same name in another place -- ``id`` in the query and in a header, a
-        # query ``name`` and a body ``name``), by a distinct key that also records
-        # the spec's name and place (OAS_NAME_KEY, OAS_IN_KEY).
+        # query ``name`` and a body ``name``), by a distinct key. Both then record
+        # the spec's name and place (OAS_NAME_KEY, OAS_IN_KEY), so a consumer can
+        # tell which is which. No distinct key is a name the spec itself uses.
+        spec_names = {p["name"] for p in parameters} | set(body_properties)
+        sent_as = {}  # property key -> (spec name, place)
+
         def add(name, place, prop_schema, required):
             key = name
             if key in schema["properties"]:
-                key = _distinct_key(name, place, schema["properties"])
-                prop_schema = {
-                    **prop_schema,
-                    OAS_NAME_KEY: name,
-                    OAS_IN_KEY: place,
+                first_name, first_place = sent_as[key]
+                schema["properties"][key] = {
+                    **schema["properties"][key],
+                    OAS_NAME_KEY: first_name,
+                    OAS_IN_KEY: first_place,
                 }
+                key = _distinct_key(
+                    name, place, spec_names | set(schema["properties"])
+                )
+                prop_schema = {**prop_schema, OAS_NAME_KEY: name, OAS_IN_KEY: place}
+            sent_as[key] = (name, place)
             schema["properties"][key] = prop_schema
             if required:
                 schema["required"].append(key)
 
         # Process query and path parameters
-        for param in self.method_data.get("parameters", []):
+        for param in parameters:
             add(
                 param["name"],
-                param.get("in"),
+                param.get("in") or PARAM_IN,
                 param.get("schema", {}),
                 param.get("required", False),
             )
-        # list(t['content']['application/json']['schema']['items']['properties'])
-        # Process requestBody
-        request_body = self.method_data.get("requestBody", {})
-        content = path_get(request_body, "content.application/json")
-        if "schema" in content:
-            # Merge the requestBody schema with the existing properties
-            body_schema = content["schema"]
+        # Process requestBody (list(t['content']['application/json']['schema']['items']['properties']))
+        if body_schema:
             body_required = body_schema.get("required", [])
-            body_properties = properties_of_schema(body_schema)
             for name, prop_schema in body_properties.items():
                 add(name, BODY_IN, prop_schema, name in body_required)
             # Required names the body declares without a property of their own

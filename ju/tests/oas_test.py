@@ -219,9 +219,9 @@ paths:
     )
     props = Routes(spec)["post", "/things"].params
     assert props["properties"] == {
-        "id": {"type": "string"},
+        "id": {"type": "string", "x-oas-name": "id", "x-oas-in": "query"},
         "id_header": {"type": "integer", "x-oas-name": "id", "x-oas-in": "header"},
-        "name": {"type": "string"},
+        "name": {"type": "string", "x-oas-name": "name", "x-oas-in": "query"},
         "name_body": {"type": "boolean", "x-oas-name": "name", "x-oas-in": "body"},
         "other": {"type": "string"},
     }
@@ -238,3 +238,35 @@ paths:
     assert list(json_schema_to_signature(props).names) == [
         "id", "name_body", "other", "id_header", "name",
     ]
+
+
+def test_a_distinct_key_never_takes_a_name_the_spec_uses():
+    from yaml import safe_load
+
+    spec = safe_load(
+        """
+openapi: 3.0.3
+paths:
+  /x:
+    get:
+      parameters:
+        - {in: query, name: id, schema: {type: string}}
+        - {in: header, name: id, schema: {type: string}}
+        - {in: query, name: id_header, schema: {type: integer}}
+        - {in: query, schema: {type: string}, name: other}
+        - {in: cookie, name: other, schema: {type: string}}
+"""
+    )
+    props = Routes(spec)["get", "/x"].params["properties"]
+    assert props["id_header"] == {"type": "integer"}  # the spec's own, untouched
+    where = {
+        k: (v.get("x-oas-name"), v.get("x-oas-in"))
+        for k, v in props.items()
+        if "x-oas-name" in v
+    }
+    assert where == {
+        "id": ("id", "query"),
+        "id_header_2": ("id", "header"),
+        "other": ("other", "query"),
+        "other_cookie": ("other", "cookie"),
+    }
