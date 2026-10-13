@@ -1,5 +1,6 @@
 """Tests for ``ju.json_schema.json_schema_to_signature`` honoring ``required``."""
 
+from collections import UserString
 from inspect import Parameter
 
 import pytest
@@ -151,6 +152,8 @@ def test_openapi_parameters_names_are_sanitised():
         ("abc", "string"),  # a str is a Sequence but not an array
         (b"abc", "string"),
         (bytearray(b"abc"), "string"),
+        (memoryview(b"abc"), "string"),
+        (UserString("abc"), "string"),
         ({"a": 1}, "object"),
         (True, "boolean"),
         (3, "integer"),
