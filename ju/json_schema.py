@@ -23,7 +23,7 @@ Example usage:
 
 """
 
-from typing import Union, Optional, Any
+from typing import Union, Optional, Any, get_args, get_origin
 from collections import UserString
 from collections.abc import Mapping, Sequence, Callable
 from inspect import Parameter
@@ -35,7 +35,7 @@ from copy import deepcopy
 from pydantic import BaseModel
 from i2 import name_of_obj as _name_of_obj
 
-from ju.util import is_type
+from ju.util import is_type, unwrap_optional
 
 DFLT_FUNC_TITLE = ""
 
@@ -611,6 +611,54 @@ def _json_safe(value):
     return True, value
 
 
+def _array_items(annotation, default, param_to_prop_type: Callable) -> dict | None:
+    """
+    The JSON schema of an array parameter's items, or ``None`` if there is no telling.
+
+    The element type comes from the annotation's arguments (``list[int]``,
+    ``tuple[int, ...]``, ``Sequence[list[str]]``), else from the default's elements
+    when they all have the same JSON type.
+
+    >>> from ju.json_schema import DFLT_PARAM_TO_TYPE as to_type
+    >>> _array_items(list[int], inspect.Parameter.empty, to_type)
+    {'type': 'integer'}
+    >>> _array_items(list[list[str]], inspect.Parameter.empty, to_type)
+    {'type': 'array', 'items': {'type': 'string'}}
+    >>> _array_items(inspect.Parameter.empty, [1, 2, 3], to_type)
+    {'type': 'integer'}
+    >>> _array_items(inspect.Parameter.empty, [1, 'a'], to_type) is None
+    True
+    >>> _array_items(list, [], to_type) is None
+    True
+    """
+    empty = inspect.Parameter.empty
+    args = get_args(unwrap_optional(annotation)) if annotation is not empty else ()
+    args = tuple(a for a in args if a is not Ellipsis)
+    if len(args) == 1:  # list[int], tuple[int, ...]; not tuple[int, str]
+        return _value_schema(args[0], empty, param_to_prop_type)
+    if args:
+        return None
+    if isinstance(default, (list, tuple)) and default:
+        schemas = [_value_schema(empty, d, param_to_prop_type) for d in default]
+        if all(schema == schemas[0] for schema in schemas):
+            return schemas[0]
+    return None
+
+
+def _value_schema(annotation, default, param_to_prop_type: Callable) -> dict:
+    """``{"type": ..., "items": ...}`` for a value described by an annotation and/or a
+    default."""
+    param = Parameter(
+        "_", Parameter.KEYWORD_ONLY, annotation=annotation, default=default
+    )
+    schema = {"type": param_to_prop_type(param)}
+    if schema["type"] == "array":
+        items = _array_items(annotation, default, param_to_prop_type)
+        if items is not None:
+            schema["items"] = items
+    return schema
+
+
 def get_properties(parameters, *, param_to_prop_type: Callable = DFLT_PARAM_TO_TYPE):
     """
     Returns the properties dict for the JSON schema.
@@ -644,6 +692,10 @@ def get_properties(parameters, *, param_to_prop_type: Callable = DFLT_PARAM_TO_T
         name, param = item
         field = {}
         field["type"] = param_to_prop_type(param)
+        if field["type"] == "array":
+            items = _array_items(param.annotation, param.default, param_to_prop_type)
+            if items is not None:
+                field["items"] = items
 
         # If there's a default value, add it
         if param.default is not inspect.Parameter.empty:

@@ -18,7 +18,7 @@ from typing import (
 from collections.abc import Mapping, Callable, Sequence
 from collections import defaultdict
 from dataclasses import dataclass
-from types import GenericAlias
+from types import GenericAlias, UnionType
 from inspect import Parameter
 
 from i2 import mk_sentinel
@@ -49,6 +49,49 @@ SomeType.__doc__ = "A type or a GenericAlias, but also Any, just in case"
 
 def asis(obj):
     return obj
+
+
+def _is_union(tp) -> bool:
+    return get_origin(tp) in (Union, UnionType)
+
+
+def unwrap_optional(annotation):
+    """
+    Strips ``None`` out of an ``Optional``/union annotation; returns the annotation
+    unchanged if it is not a union, and the single remaining member if there is one.
+
+    >>> from typing import Optional
+    >>> unwrap_optional(Optional[list[int]])
+    list[int]
+    >>> unwrap_optional(int | None)
+    <class 'int'>
+    >>> unwrap_optional(int | str | None)
+    typing.Union[int, str]
+    >>> unwrap_optional(list[int])
+    list[int]
+    """
+    if not _is_union(annotation):
+        return annotation
+    members = tuple(a for a in get_args(annotation) if a is not type(None))
+    if len(members) == 1:
+        return members[0]
+    return Union[members] if members else annotation
+
+
+def _annotation_matches(annotation, type_) -> bool:
+    """Does ``annotation`` (a class or a subscripted generic) denote ``type_``, or a
+    subclass of it? Arguments are compared only when both sides have them."""
+    annotation = unwrap_optional(annotation)
+    if _is_union(annotation):
+        return False
+    origin = get_origin(annotation) or annotation
+    type_origin = get_origin(type_) or type_
+    if not (isinstance(origin, type) and isinstance(type_origin, type)):
+        return False
+    if not issubclass(origin, type_origin):
+        return False
+    type_args, args = get_args(type_), get_args(annotation)
+    return not (type_args and args) or type_args == args
 
 
 def is_type(param: Parameter, type_: SomeType):
@@ -95,8 +138,30 @@ def is_type(param: Parameter, type_: SomeType):
     True
     >>> is_type(param, Sequence[str])
     False
+
+    An annotation alone is enough, bare or subscripted, optional or not -- it matches
+    ``type_`` or any subclass of it:
+
+    >>> annotated = Parameter('p', Parameter.KEYWORD_ONLY, annotation=list[int])
+    >>> is_type(annotated, Sequence)
+    True
+    >>> is_type(annotated, list)
+    True
+    >>> is_type(annotated, List[int])
+    True
+    >>> is_type(annotated, List[str])
+    False
+    >>> is_type(annotated, str)
+    False
+    >>> optional = Parameter('p', Parameter.KEYWORD_ONLY, annotation=list | None)
+    >>> is_type(optional, Sequence)
+    True
     """
     if param.annotation is type_:
+        return True
+    if param.annotation is not Parameter.empty and _annotation_matches(
+        param.annotation, type_
+    ):
         return True
     if isinstance(type_, type) and not hasattr(type_, "__origin__"):
         return isinstance(param.default, type_)
