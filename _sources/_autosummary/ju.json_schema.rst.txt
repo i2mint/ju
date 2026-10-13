@@ -18,6 +18,7 @@ ju.json\_schema
       print_schema
       pydantic_model_to_type_mapping
       pyname_to_title
+      schema_param_names
       signature_to_json_schema
       title_to_pyname
       wrap_schema_in_opus_spec

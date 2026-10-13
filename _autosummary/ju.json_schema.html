@@ -309,13 +309,16 @@ a form in a React application.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="#ju.json_schema.pyname_to_title" title="ju.json_schema.pyname_to_title"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pyname_to_title</span></code></a>(pyname)</p></td>
 <td><p>Converts a Python name to a title.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#ju.json_schema.signature_to_json_schema" title="ju.json_schema.signature_to_json_schema"><code class="xref py py-obj docutils literal notranslate"><span class="pre">signature_to_json_schema</span></code></a>(func, *[, doc, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ju.json_schema.schema_param_names" title="ju.json_schema.schema_param_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">schema_param_names</span></code></a>(json_schema, *[, ...])</p></td>
+<td><p>Map the Python parameter names <code class="code docutils literal notranslate"><span class="pre">json_schema_to_signature</span></code> gives to the original names in the schema (the SSOT for the renaming, so callers can build requests with the original names).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#ju.json_schema.signature_to_json_schema" title="ju.json_schema.signature_to_json_schema"><code class="xref py py-obj docutils literal notranslate"><span class="pre">signature_to_json_schema</span></code></a>(func, *[, doc, ...])</p></td>
 <td><p>Transforms a Python function to a JSON schema.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#ju.json_schema.title_to_pyname" title="ju.json_schema.title_to_pyname"><code class="xref py py-obj docutils literal notranslate"><span class="pre">title_to_pyname</span></code></a>(title)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ju.json_schema.title_to_pyname" title="ju.json_schema.title_to_pyname"><code class="xref py py-obj docutils literal notranslate"><span class="pre">title_to_pyname</span></code></a>(title)</p></td>
 <td><p>Converts a title to a Python name.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">wrap_schema_in_opus_spec</span></code>(schema)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">wrap_schema_in_opus_spec</span></code>(schema)</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -499,6 +502,31 @@ If the name contains camel case, it will be split into words.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="ju.json_schema.schema_param_names">
+<span class="sig-prename descclassname"><span class="pre">ju.json_schema.</span></span><span class="sig-name descname"><span class="pre">schema_param_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_schema</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title_to_pyname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;function</span> <span class="pre">title_to_pyname&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ju/json_schema.html#schema_param_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.json_schema.schema_param_names" title="Link to this definition">¶</a></dt>
+<dd><p>Map the Python parameter names <code class="code docutils literal notranslate"><span class="pre">json_schema_to_signature</span></code> gives to the original
+names in the schema (the SSOT for the renaming, so callers can build requests
+with the original names).</p>
+<p>OpenAPI <code class="docutils literal notranslate"><span class="pre">parameters</span></code> names that already are valid identifiers are kept as is;
+others (e.g. <code class="docutils literal notranslate"><span class="pre">X-MS-API-ROLE</span></code>) are sanitised with <code class="docutils literal notranslate"><span class="pre">title_to_pyname</span></code>. Names of
+<code class="docutils literal notranslate"><span class="pre">properties</span></code> are always passed through <code class="docutils literal notranslate"><span class="pre">title_to_pyname</span></code>. Clashes get a
+numeric suffix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</span></p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">schema</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'parameters'</span><span class="p">:</span> <span class="p">[</span>
+<span class="gp">... </span>    <span class="p">{</span><span class="s1">'name'</span><span class="p">:</span> <span class="s1">'X-MS-API-ROLE'</span><span class="p">,</span> <span class="s1">'in'</span><span class="p">:</span> <span class="s1">'header'</span><span class="p">,</span> <span class="s1">'schema'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'type'</span><span class="p">:</span> <span class="s1">'string'</span><span class="p">}},</span>
+<span class="gp">... </span>    <span class="p">{</span><span class="s1">'name'</span><span class="p">:</span> <span class="s1">'thingId'</span><span class="p">,</span> <span class="s1">'in'</span><span class="p">:</span> <span class="s1">'path'</span><span class="p">,</span> <span class="s1">'required'</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+<span class="gp">... </span>    <span class="p">{</span><span class="s1">'name'</span><span class="p">:</span> <span class="s1">'x_ms_api_role'</span><span class="p">,</span> <span class="s1">'in'</span><span class="p">:</span> <span class="s1">'query'</span><span class="p">}]}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">schema_param_names</span><span class="p">(</span><span class="n">schema</span><span class="p">)</span>
+<span class="go">{'x_ms_api_role': 'X-MS-API-ROLE', 'thingId': 'thingId', 'x_ms_api_role_2': 'x_ms_api_role'}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="ju.json_schema.signature_to_json_schema">
 <span class="sig-prename descclassname"><span class="pre">ju.json_schema.</span></span><span class="sig-name descname"><span class="pre">signature_to_json_schema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">func,</span> <span class="pre">*,</span> <span class="pre">doc=True,</span> <span class="pre">name_of_obj=functools.partial(&lt;function</span> <span class="pre">name_of_obj&gt;,</span> <span class="pre">default_factory=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;),</span> <span class="pre">pyname_to_title=&lt;function</span> <span class="pre">asis&gt;,</span> <span class="pre">param_to_prop_type=functools.partial(&lt;function</span> <span class="pre">parametrized_param_to_type&gt;,</span> <span class="pre">type_mapping=((&lt;class</span> <span class="pre">'str'&gt;,</span> <span class="pre">'string'),</span> <span class="pre">(&lt;class</span> <span class="pre">'bool'&gt;,</span> <span class="pre">'boolean'),</span> <span class="pre">(&lt;class</span> <span class="pre">'int'&gt;,</span> <span class="pre">'integer'),</span> <span class="pre">(&lt;class</span> <span class="pre">'float'&gt;,</span> <span class="pre">'number'),</span> <span class="pre">(&lt;class</span> <span class="pre">'collections.abc.Mapping'&gt;,</span> <span class="pre">'object'),</span> <span class="pre">(collections.abc.Sequence[str],</span> <span class="pre">'array')))</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ju/json_schema.html#signature_to_json_schema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.json_schema.signature_to_json_schema" title="Link to this definition">¶</a></dt>
 <dd><p>Transforms a Python function to a JSON schema.</p>
@@ -612,6 +640,7 @@ If the title contains camel case, it will be split into words.</p>
 <li><a class="reference internal" href="#ju.json_schema.json_schema_to_signature"><code class="docutils literal notranslate"><span class="pre">json_schema_to_signature()</span></code></a></li>
 <li><a class="reference internal" href="#ju.json_schema.merge_with_defaults"><code class="docutils literal notranslate"><span class="pre">merge_with_defaults()</span></code></a></li>
 <li><a class="reference internal" href="#ju.json_schema.pyname_to_title"><code class="docutils literal notranslate"><span class="pre">pyname_to_title()</span></code></a></li>
+<li><a class="reference internal" href="#ju.json_schema.schema_param_names"><code class="docutils literal notranslate"><span class="pre">schema_param_names()</span></code></a></li>
 <li><a class="reference internal" href="#ju.json_schema.signature_to_json_schema"><code class="docutils literal notranslate"><span class="pre">signature_to_json_schema()</span></code></a></li>
 <li><a class="reference internal" href="#ju.json_schema.title_to_pyname"><code class="docutils literal notranslate"><span class="pre">title_to_pyname()</span></code></a></li>
 </ul>
@@ -625,7 +654,7 @@ If the title contains camel case, it will be split into words.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=617face5"></script>
+</div><script src="../_static/documentation_options.js?v=c83fd883"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

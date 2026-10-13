@@ -275,6 +275,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">inspect</span><span class="w"> </span><span class="kn">import</span> <span class="n">Parameter</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">keyword</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">deepcopy</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
@@ -603,6 +604,57 @@
 <span class="n">function_to_json_schema</span> <span class="o">=</span> <span class="n">signature_to_json_schema</span>  <span class="c1"># backwards compatibility</span>
 
 
+<div class="viewcode-block" id="schema_param_names">
+<a class="viewcode-back" href="../../_autosummary/ju.json_schema.html#ju.json_schema.schema_param_names">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">schema_param_names</span><span class="p">(</span>
+    <span class="n">json_schema</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">title_to_pyname</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">title_to_pyname</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""Map the Python parameter names `json_schema_to_signature` gives to the original</span>
+<span class="sd">    names in the schema (the SSOT for the renaming, so callers can build requests</span>
+<span class="sd">    with the original names).</span>
+
+<span class="sd">    OpenAPI ``parameters`` names that already are valid identifiers are kept as is;</span>
+<span class="sd">    others (e.g. ``X-MS-API-ROLE``) are sanitised with ``title_to_pyname``. Names of</span>
+<span class="sd">    ``properties`` are always passed through ``title_to_pyname``. Clashes get a</span>
+<span class="sd">    numeric suffix.</span>
+
+<span class="sd">    &gt;&gt;&gt; schema = {'parameters': [</span>
+<span class="sd">    ...     {'name': 'X-MS-API-ROLE', 'in': 'header', 'schema': {'type': 'string'}},</span>
+<span class="sd">    ...     {'name': 'thingId', 'in': 'path', 'required': True},</span>
+<span class="sd">    ...     {'name': 'x_ms_api_role', 'in': 'query'}]}</span>
+<span class="sd">    &gt;&gt;&gt; schema_param_names(schema)</span>
+<span class="sd">    {'x_ms_api_role': 'X-MS-API-ROLE', 'thingId': 'thingId', 'x_ms_api_role_2': 'x_ms_api_role'}</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="s2">"parameters"</span> <span class="ow">in</span> <span class="n">json_schema</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">json_schema</span><span class="p">[</span><span class="s2">"parameters"</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">originals</span> <span class="o">=</span> <span class="p">[</span><span class="n">param</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]</span> <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">json_schema</span><span class="p">[</span><span class="s2">"parameters"</span><span class="p">]]</span>
+        <span class="n">keep_valid</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">elif</span> <span class="s2">"properties"</span> <span class="ow">in</span> <span class="n">json_schema</span><span class="p">:</span>
+        <span class="n">originals</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">json_schema</span><span class="p">[</span><span class="s2">"properties"</span><span class="p">])</span>
+        <span class="n">keep_valid</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{}</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># pyname -&gt; original</span>
+    <span class="k">for</span> <span class="n">original</span> <span class="ow">in</span> <span class="n">originals</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">keep_valid</span> <span class="ow">and</span> <span class="n">original</span><span class="o">.</span><span class="n">isidentifier</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">keyword</span><span class="o">.</span><span class="n">iskeyword</span><span class="p">(</span><span class="n">original</span><span class="p">):</span>
+            <span class="n">pyname</span> <span class="o">=</span> <span class="n">original</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">pyname</span> <span class="o">=</span> <span class="n">title_to_pyname</span><span class="p">(</span><span class="n">original</span><span class="p">)</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">AssertionError</span><span class="p">,</span> <span class="ne">IndexError</span><span class="p">):</span>  <span class="c1"># e.g. '' or only symbols</span>
+                <span class="n">pyname</span> <span class="o">=</span> <span class="s2">"_"</span>
+            <span class="k">if</span> <span class="n">keyword</span><span class="o">.</span><span class="n">iskeyword</span><span class="p">(</span><span class="n">pyname</span><span class="p">):</span>
+                <span class="n">pyname</span> <span class="o">+=</span> <span class="s2">"_"</span>
+        <span class="n">candidate</span><span class="p">,</span> <span class="n">i</span> <span class="o">=</span> <span class="n">pyname</span><span class="p">,</span> <span class="mi">1</span>
+        <span class="k">while</span> <span class="n">candidate</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">candidate</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">pyname</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span>
+        <span class="n">names</span><span class="p">[</span><span class="n">candidate</span><span class="p">]</span> <span class="o">=</span> <span class="n">original</span>
+    <span class="k">return</span> <span class="n">names</span></div>
+
+
+
 <div class="viewcode-block" id="json_schema_to_signature">
 <a class="viewcode-back" href="../../_autosummary/ju.json_schema.html#ju.json_schema.json_schema_to_signature">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">json_schema_to_signature</span><span class="p">(</span>
@@ -677,10 +729,12 @@
 <span class="sd">    """</span>
     <span class="n">type_mapper</span> <span class="o">=</span> <span class="n">ensure_callable_mapper</span><span class="p">(</span><span class="n">type_mapper</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">default_annotation</span><span class="p">)</span>
     <span class="n">params</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="c1"># pyname -&gt; original name, in schema order (the SSOT for the renaming)</span>
+    <span class="n">pynames</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">schema_param_names</span><span class="p">(</span><span class="n">json_schema</span><span class="p">,</span> <span class="n">title_to_pyname</span><span class="o">=</span><span class="n">title_to_pyname</span><span class="p">))</span>
     <span class="c1"># Support OpenAPI 'parameters' (list of dicts)</span>
     <span class="k">if</span> <span class="s2">"parameters"</span> <span class="ow">in</span> <span class="n">json_schema</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">json_schema</span><span class="p">[</span><span class="s2">"parameters"</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">json_schema</span><span class="p">[</span><span class="s2">"parameters"</span><span class="p">]:</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="n">param</span><span class="p">[</span><span class="s2">"name"</span><span class="p">]</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">pynames</span><span class="p">)</span>
             <span class="c1"># Try to get type from schema/type, fallback to string</span>
             <span class="n">py_type</span> <span class="o">=</span> <span class="n">type_mapper</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"schema"</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"type"</span><span class="p">,</span> <span class="s2">"string"</span><span class="p">))</span>
             <span class="n">default</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"schema"</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"default"</span><span class="p">,</span> <span class="n">default_default</span><span class="p">)</span>
@@ -700,7 +754,7 @@
         <span class="n">required</span> <span class="o">=</span> <span class="n">_required_names</span><span class="p">(</span><span class="n">json_schema</span><span class="p">)</span>  <span class="c1"># None when there is no such key</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">properties</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">is_required</span> <span class="o">=</span> <span class="n">required</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">required</span>
-            <span class="n">name</span> <span class="o">=</span> <span class="n">title_to_pyname</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">pynames</span><span class="p">)</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">json_type</span> <span class="o">:=</span> <span class="n">field</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"type"</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">json_type</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
                     <span class="n">py_type</span> <span class="o">=</span> <span class="n">type_mapper</span><span class="p">(</span><span class="n">json_type</span><span class="p">)</span>
@@ -891,7 +945,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=617face5"></script>
+</div><script src="../../_static/documentation_options.js?v=c83fd883"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>

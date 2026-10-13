@@ -1,4 +1,4 @@
-> built 2026-10-13 02:58 UTC from afba4b9 (master) · ju 0.1.34. Details: build_info.json
+> built 2026-10-13 03:00 UTC from 42ca200 (master) · ju 0.1.35. Details: build_info.json
 
 # index.html.md
 
@@ -293,6 +293,7 @@ Example usage:
 | `print_schema`([func_key, store])                                                                 |                                                                                                                                                                                                                         |
 | `pydantic_model_to_type_mapping`(pydantic_model)                                                  |                                                                                                                                                                                                                         |
 | [`pyname_to_title`](_autosummary/ju.json_schema.html.md#ju.json_schema.pyname_to_title)(pyname)                          | Converts a Python name to a title.                                                                                                                                                                                      |
+| [`schema_param_names`](_autosummary/ju.json_schema.html.md#ju.json_schema.schema_param_names)(json_schema, \*[, ...])       | Map the Python parameter names `json_schema_to_signature` gives to the original names in the schema (the SSOT for the renaming, so callers can build requests with the original names).                                 |
 | [`signature_to_json_schema`](_autosummary/ju.json_schema.html.md#ju.json_schema.signature_to_json_schema)(func, \*[, doc, ...])   | Transforms a Python function to a JSON schema.                                                                                                                                                                          |
 | [`title_to_pyname`](_autosummary/ju.json_schema.html.md#ju.json_schema.title_to_pyname)(title)                           | Converts a title to a Python name.                                                                                                                                                                                      |
 | `wrap_schema_in_opus_spec`(schema)                                                                |                                                                                                                                                                                                                         |
@@ -469,6 +470,29 @@ A sort of (imperfect) inverse of `title_to_pyname`.
 'Hello World'
 >>> pyname_to_title('helloWorld')
 'Hello World'
+```
+
+### ju.json_schema.schema_param_names(json_schema, \*, title_to_pyname=<function title_to_pyname>)
+
+Map the Python parameter names `json_schema_to_signature` gives to the original
+names in the schema (the SSOT for the renaming, so callers can build requests
+with the original names).
+
+OpenAPI `parameters` names that already are valid identifiers are kept as is;
+others (e.g. `X-MS-API-ROLE`) are sanitised with `title_to_pyname`. Names of
+`properties` are always passed through `title_to_pyname`. Clashes get a
+numeric suffix.
+
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)]
+
+```pycon
+>>> schema = {'parameters': [
+...     {'name': 'X-MS-API-ROLE', 'in': 'header', 'schema': {'type': 'string'}},
+...     {'name': 'thingId', 'in': 'path', 'required': True},
+...     {'name': 'x_ms_api_role', 'in': 'query'}]}
+>>> schema_param_names(schema)
+{'x_ms_api_role': 'X-MS-API-ROLE', 'thingId': 'thingId', 'x_ms_api_role_2': 'x_ms_api_role'}
 ```
 
 ### ju.json_schema.signature_to_json_schema(func, \*, doc=True, name_of_obj=functools.partial(<function name_of_obj>, default_factory=<function <lambda>>), pyname_to_title=<function asis>, param_to_prop_type=functools.partial(<function parametrized_param_to_type>, type_mapping=((<class 'str'>, 'string'), (<class 'bool'>, 'boolean'), (<class 'int'>, 'integer'), (<class 'float'>, 'number'), (<class 'collections.abc.Mapping'>, 'object'), (collections.abc.Sequence[str], 'array'))))
@@ -719,7 +743,7 @@ file_format: ‘yaml’ or ‘json’ (used if openapi_spec is a dict)
 * **Returns:**
   imported client module
 
-### ju.oas.get_routes(d, include_methods=('patch', 'post', 'delete', 'put', 'get', 'head', 'options'))
+### ju.oas.get_routes(d, include_methods=('patch', 'options', 'delete', 'post', 'head', 'put', 'get'))
 
 Takes OpenAPI specification dict ‘d’ and returns the key-paths to all the endpoints.
 
@@ -2034,18 +2058,20 @@ See also the online tool: [https://navneethg.github.io/jsonschemaviewer/](https:
 
 # About this build
 
-This documentation was built on **2026-10-13 02:58 UTC** from commit <a href="https://github.com/i2mint/ju/commit/afba4b9919b245d068bd6f2770463d86d763ecc4"><code>afba4b9</code></a> on branch <code>master</code>, for **ju 0.1.34** (from <code>setup.cfg</code>).
+This documentation was built on **2026-10-13 03:00 UTC** from commit <a href="https://github.com/i2mint/ju/commit/42ca200fc0ca00a1de3acf23bbac74679c96ab34"><code>42ca200</code></a> on branch <code>master</code>, for **ju 0.1.35** (from <code>setup.cfg</code>).
 
-#### NOTE
-Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
+#### WARNING
+The documentation and the package may be misaligned:
+
+- The documented version (0.1.35) is ahead of the latest release on PyPI (0.1.34): these docs describe unreleased code.
 
 ## Source
 
 |                     |                                                                                                                                                  |
 |---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/i2mint/ju/commit/afba4b9919b245d068bd6f2770463d86d763ecc4"><code>afba4b9919b245d068bd6f2770463d86d763ecc4</code></a> |
+| Commit              | <a href="https://github.com/i2mint/ju/commit/42ca200fc0ca00a1de3acf23bbac74679c96ab34"><code>42ca200fc0ca00a1de3acf23bbac74679c96ab34</code></a> |
 | Branch              | <code>master</code>                                                                                                                              |
-| Tags at this commit | <code>0.1.34</code>                                                                                                                              |
+| Tags at this commit | <code>0.1.35</code>                                                                                                                              |
 | Working tree        | clean                                                                                                                                            |
 | Remote              | <code>https://github.com/i2mint/ju</code>                                                                                                        |
 
@@ -2054,9 +2080,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>i2mint/ju</code>                                                                     |
-| Run          | <a href="https://github.com/i2mint/ju/actions/runs/38339269808">38339269808</a>            |
+| Run          | <a href="https://github.com/i2mint/ju/actions/runs/38339511338">38339511338</a>            |
 | Ref          | <code>refs/heads/master</code>                                                             |
-| Event commit | <code>28d37c3e7969c95d7578c55bd59b9924a8bba531</code> (in the history of the built commit) |
+| Event commit | <code>4bd00b151dc42988f5a726aa5297465751c008f9</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -2081,13 +2107,13 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/ju/0.1.34/">0.1.34</a>, the same as the documented version.
+Latest release: <a href="https://pypi.org/project/ju/0.1.34/">0.1.34</a>, older than the documented version (0.1.35).
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/i2mint/ju && cd ju
-git checkout afba4b9919b245d068bd6f2770463d86d763ecc4
+git checkout 42ca200fc0ca00a1de3acf23bbac74679c96ab34
 pip install "epythet==0.2.12"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```

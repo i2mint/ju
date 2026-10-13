@@ -37,6 +37,7 @@ Example usage:
 | `print_schema`([func_key, store])                                                                 |                                                                                                                                                                                                                         |
 | `pydantic_model_to_type_mapping`(pydantic_model)                                                  |                                                                                                                                                                                                                         |
 | [`pyname_to_title`](#ju.json_schema.pyname_to_title)(pyname)                          | Converts a Python name to a title.                                                                                                                                                                                      |
+| [`schema_param_names`](#ju.json_schema.schema_param_names)(json_schema, \*[, ...])       | Map the Python parameter names `json_schema_to_signature` gives to the original names in the schema (the SSOT for the renaming, so callers can build requests with the original names).                                 |
 | [`signature_to_json_schema`](#ju.json_schema.signature_to_json_schema)(func, \*[, doc, ...])   | Transforms a Python function to a JSON schema.                                                                                                                                                                          |
 | [`title_to_pyname`](#ju.json_schema.title_to_pyname)(title)                           | Converts a title to a Python name.                                                                                                                                                                                      |
 | `wrap_schema_in_opus_spec`(schema)                                                                |                                                                                                                                                                                                                         |
@@ -213,6 +214,29 @@ A sort of (imperfect) inverse of `title_to_pyname`.
 'Hello World'
 >>> pyname_to_title('helloWorld')
 'Hello World'
+```
+
+### ju.json_schema.schema_param_names(json_schema, \*, title_to_pyname=<function title_to_pyname>)
+
+Map the Python parameter names `json_schema_to_signature` gives to the original
+names in the schema (the SSOT for the renaming, so callers can build requests
+with the original names).
+
+OpenAPI `parameters` names that already are valid identifiers are kept as is;
+others (e.g. `X-MS-API-ROLE`) are sanitised with `title_to_pyname`. Names of
+`properties` are always passed through `title_to_pyname`. Clashes get a
+numeric suffix.
+
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)]
+
+```pycon
+>>> schema = {'parameters': [
+...     {'name': 'X-MS-API-ROLE', 'in': 'header', 'schema': {'type': 'string'}},
+...     {'name': 'thingId', 'in': 'path', 'required': True},
+...     {'name': 'x_ms_api_role', 'in': 'query'}]}
+>>> schema_param_names(schema)
+{'x_ms_api_role': 'X-MS-API-ROLE', 'thingId': 'thingId', 'x_ms_api_role_2': 'x_ms_api_role'}
 ```
 
 ### ju.json_schema.signature_to_json_schema(func, \*, doc=True, name_of_obj=functools.partial(<function name_of_obj>, default_factory=<function <lambda>>), pyname_to_title=<function asis>, param_to_prop_type=functools.partial(<function parametrized_param_to_type>, type_mapping=((<class 'str'>, 'string'), (<class 'bool'>, 'boolean'), (<class 'int'>, 'integer'), (<class 'float'>, 'number'), (<class 'collections.abc.Mapping'>, 'object'), (collections.abc.Sequence[str], 'array'))))

@@ -189,7 +189,7 @@ file_format: ‘yaml’ or ‘json’ (used if openapi_spec is a dict)
 * **Returns:**
   imported client module
 
-### ju.oas.get_routes(d, include_methods=('patch', 'post', 'delete', 'put', 'get', 'head', 'options'))
+### ju.oas.get_routes(d, include_methods=('patch', 'options', 'delete', 'post', 'head', 'put', 'get'))
 
 Takes OpenAPI specification dict ‘d’ and returns the key-paths to all the endpoints.
 
