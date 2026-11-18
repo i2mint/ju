@@ -17,7 +17,7 @@ Tools for React-JSONSchema-Form (RJSF)
 |----------------------------------------------------------------------------------------------------|-------------------------------------------------|
 | [`RJSFViewer`](#ju.rjsf.RJSFViewer)(rjsf_spec, \*[, on_submit, name, ...]) | Renders RJSF specifications as Jupyter widgets. |
 
-### ju.rjsf.DFLT_RJSF_VIEWER_ON_SUBMIT(form_data, , indent=2, ensure_ascii=False, prefix='\*\*Submitted data:\*\*\\\\n\\\\n')
+### ju.rjsf.DFLT_RJSF_VIEWER_ON_SUBMIT(form_data, , indent=2, ensure_ascii=False, prefix='\*\*Submitted data:\*\*\\n\\n')
 
 Prints form_data in a nicely formatted way.
 
@@ -100,7 +100,7 @@ Factory function to create and display an RJSF viewer.
 >>> viewer.display()
 ```
 
-### ju.rjsf.display_form_data(form_data, , indent=2, ensure_ascii=False, prefix='\*\*Submitted data:\*\*\\\\n\\\\n')
+### ju.rjsf.display_form_data(form_data, , indent=2, ensure_ascii=False, prefix='\*\*Submitted data:\*\*\\n\\n')
 
 Prints form_data in a nicely formatted way.
 

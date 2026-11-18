@@ -23,12 +23,12 @@ Extract type parameters for a trait.
 
 Convert a traitlets trait (instance or type) to a Python object (instance or type)
 
-* **Return type:**
-  [`object`](https://docs.python.org/3/builtins/functions.html#object) | [`type`](https://docs.python.org/3/builtins/functions.html#type)
-
 ```pycon
 >>> trait_to_py(traitlets.Bool())
 <class 'bool'>
 >>> trait_to_py(traitlets.Union([traitlets.Unicode(), traitlets.Float()]))
 typing.Union[str, float]
 ```
+
+* **Return type:**
+  [`object`](https://docs.python.org/3/builtins/functions.html#object) | [`type`](https://docs.python.org/3/builtins/functions.html#type)

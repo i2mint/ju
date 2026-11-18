@@ -9,10 +9,11 @@
 <link rel="alternate" type="text/markdown" href="ju.json_schema.html.md">
 <link rel="describedby" href="llms.txt"><link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="ju.oas" href="ju.oas.html"><link rel="prev" title="ju" href="ju.html">
 
-    <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+    <!-- Generated with Sphinx 9.1.1 and Furo 2025.12.19 -->
         <title>ju.json_schema - ju</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d75fae25" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx_autodoc_typehints.css?v=057ac668" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
     
@@ -348,11 +349,6 @@ entry is keyed by a distinct name, and these record the spec’s name and place.
 <dd><p>Transforms a Python function to a JSON schema.</p>
 <p>param func: The function to transform
 return: The JSON schema (as a dict) for the function</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
-</dd>
-</dl>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">mercury</span><span class="p">(</span><span class="n">sweet</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">sour</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="gp">... </span><span class="w">    </span><span class="sd">'''Near the sun'''</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">sweet</span> <span class="o">*</span> <span class="n">sour</span>
@@ -369,6 +365,11 @@ return: The JSON schema (as a dict) for the function</p>
 </pre></div>
 </div>
 <p>See <a class="reference external" href="https://github.com/i2mint/i2//blob/f547257c272433b7651d09276afdfb1bb7b2f67b/misc/i2.routing.ipynb#L17">https://github.com/i2mint/i2//blob/f547257c272433b7651d09276afdfb1bb7b2f67b/misc/i2.routing.ipynb#L17</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -474,11 +475,6 @@ unless they have their own default):</p>
 <dd><p>Returns a new dictionary that combines two dictionaries by using the keys
 and order from the first dictionary (defaults) and overwriting its values
 with those from the second dictionary (overwrites) when they exist.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
-</dd>
-</dl>
 <p class="rubric">Parameters</p>
 <ul class="simple">
 <li><p>defaults (dict): The base dictionary containing default key-value pairs.</p></li>
@@ -495,6 +491,11 @@ with those from the second dictionary (overwrites) when they exist.</p>
 <span class="go">{'a': 1, 'b': 4, 'c': 5}</span>
 </pre></div>
 </div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -505,11 +506,6 @@ with those from the second dictionary (overwrites) when they exist.</p>
 letter of each word.
 If the name contains camel case, it will be split into words.</p>
 <p>A sort of (imperfect) inverse of <code class="code docutils literal notranslate"><span class="pre">title_to_pyname</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
-</dd>
-</dl>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pyname_to_title</span><span class="p">(</span><span class="s1">'hello_world'</span><span class="p">)</span>
 <span class="go">'Hello World'</span>
@@ -517,6 +513,11 @@ If the name contains camel case, it will be split into words.</p>
 <span class="go">'Hello World'</span>
 </pre></div>
 </div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -530,11 +531,6 @@ others (e.g. <code class="docutils literal notranslate"><span class="pre">X-MS-A
 <code class="docutils literal notranslate"><span class="pre">properties</span></code> are always passed through <code class="docutils literal notranslate"><span class="pre">title_to_pyname</span></code>. Clashes get a
 numeric suffix. A <code class="docutils literal notranslate"><span class="pre">properties</span></code> entry carrying <code class="docutils literal notranslate"><span class="pre">x-oas-name</span></code> (see <code class="docutils literal notranslate"><span class="pre">Route.params</span></code>)
 maps to that name, not to its key.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</span></p>
-</dd>
-</dl>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">schema</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'parameters'</span><span class="p">:</span> <span class="p">[</span>
 <span class="gp">... </span>    <span class="p">{</span><span class="s1">'name'</span><span class="p">:</span> <span class="s1">'X-MS-API-ROLE'</span><span class="p">,</span> <span class="s1">'in'</span><span class="p">:</span> <span class="s1">'header'</span><span class="p">,</span> <span class="s1">'schema'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'type'</span><span class="p">:</span> <span class="s1">'string'</span><span class="p">}},</span>
 <span class="gp">... </span>    <span class="p">{</span><span class="s1">'name'</span><span class="p">:</span> <span class="s1">'thingId'</span><span class="p">,</span> <span class="s1">'in'</span><span class="p">:</span> <span class="s1">'path'</span><span class="p">,</span> <span class="s1">'required'</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
@@ -548,6 +544,11 @@ maps to that name, not to its key.</p>
 <span class="go">{'id': 'id', 'id_header': 'id'}</span>
 </pre></div>
 </div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -556,11 +557,6 @@ maps to that name, not to its key.</p>
 <dd><p>Transforms a Python function to a JSON schema.</p>
 <p>param func: The function to transform
 return: The JSON schema (as a dict) for the function</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
-</dd>
-</dl>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">mercury</span><span class="p">(</span><span class="n">sweet</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">sour</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="gp">... </span><span class="w">    </span><span class="sd">'''Near the sun'''</span>
 <span class="gp">... </span>    <span class="k">return</span> <span class="n">sweet</span> <span class="o">*</span> <span class="n">sour</span>
@@ -577,6 +573,11 @@ return: The JSON schema (as a dict) for the function</p>
 </pre></div>
 </div>
 <p>See <a class="reference external" href="https://github.com/i2mint/i2//blob/f547257c272433b7651d09276afdfb1bb7b2f67b/misc/i2.routing.ipynb#L17">https://github.com/i2mint/i2//blob/f547257c272433b7651d09276afdfb1bb7b2f67b/misc/i2.routing.ipynb#L17</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -587,11 +588,6 @@ return: The JSON schema (as a dict) for the function</p>
 <p>It does this by replacing spaces with underscores and lowercasing the first
 letter of each word.
 If the title contains camel case, it will be split into words.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
-</dd>
-</dl>
 <p class="rubric">Example</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">title_to_pyname</span><span class="p">(</span><span class="s1">'Hello World'</span><span class="p">)</span>
 <span class="go">'hello_world'</span>
@@ -603,6 +599,11 @@ If the title contains camel case, it will be split into words.</p>
 <span class="go">'_he_l_l_o_wo__rld'</span>
 </pre></div>
 </div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -679,7 +680,7 @@ If the title contains camel case, it will be split into words.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=cb249315"></script>
+</div><script src="../_static/documentation_options.js?v=eb9509fe"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

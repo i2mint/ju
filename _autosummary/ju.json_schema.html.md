@@ -60,9 +60,6 @@ Transforms a Python function to a JSON schema.
 param func: The function to transform
 return: The JSON schema (as a dict) for the function
 
-* **Return type:**
-  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
-
 ```pycon
 >>> def mercury(sweet: float, sour=True):
 ...     '''Near the sun'''
@@ -80,6 +77,9 @@ return: The JSON schema (as a dict) for the function
 ```
 
 See [https://github.com/i2mint/i2//blob/f547257c272433b7651d09276afdfb1bb7b2f67b/misc/i2.routing.ipynb#L17](https://github.com/i2mint/i2//blob/f547257c272433b7651d09276afdfb1bb7b2f67b/misc/i2.routing.ipynb#L17).
+
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
 
 ### ju.json_schema.get_properties(parameters, \*, param_to_prop_type=functools.partial(<function parametrized_param_to_type>, type_mapping=((<class 'str'>, 'string'), (<class 'bool'>, 'boolean'), (<class 'int'>, 'integer'), (<class 'float'>, 'number'), (<class 'collections.abc.Mapping'>, 'object'), (collections.abc.Sequence[str], 'array'), (<class 'bytes'>, 'string'), (<class 'bytearray'>, 'string'), (<class 'memoryview'>, 'string'), (<class 'collections.UserString'>, 'string'), (<class 'collections.abc.Sequence'>, 'array'))))
 
@@ -184,9 +184,6 @@ Returns a new dictionary that combines two dictionaries by using the keys
 and order from the first dictionary (defaults) and overwriting its values
 with those from the second dictionary (overwrites) when they exist.
 
-* **Return type:**
-  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
-
 ### Parameters
 
 - defaults (dict): The base dictionary containing default key-value pairs.
@@ -205,6 +202,9 @@ with those from the second dictionary (overwrites) when they exist.
 {'a': 1, 'b': 4, 'c': 5}
 ```
 
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
+
 ### ju.json_schema.pyname_to_title(pyname)
 
 Converts a Python name to a title.
@@ -215,9 +215,6 @@ If the name contains camel case, it will be split into words.
 
 A sort of (imperfect) inverse of `title_to_pyname`.
 
-* **Return type:**
-  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
-
 ### Example
 
 ```pycon
@@ -226,6 +223,9 @@ A sort of (imperfect) inverse of `title_to_pyname`.
 >>> pyname_to_title('helloWorld')
 'Hello World'
 ```
+
+* **Return type:**
+  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
 
 ### ju.json_schema.schema_param_names(json_schema, \*, title_to_pyname=<function title_to_pyname>)
 
@@ -238,9 +238,6 @@ others (e.g. `X-MS-API-ROLE`) are sanitised with `title_to_pyname`. Names of
 `properties` are always passed through `title_to_pyname`. Clashes get a
 numeric suffix. A `properties` entry carrying `x-oas-name` (see `Route.params`)
 maps to that name, not to its key.
-
-* **Return type:**
-  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)]
 
 ```pycon
 >>> schema = {'parameters': [
@@ -257,15 +254,15 @@ maps to that name, not to its key.
 {'id': 'id', 'id_header': 'id'}
 ```
 
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)]
+
 ### ju.json_schema.signature_to_json_schema(func, \*, doc=True, name_of_obj=functools.partial(<function name_of_obj>, default_factory=<function <lambda>>), pyname_to_title=<function asis>, param_to_prop_type=functools.partial(<function parametrized_param_to_type>, type_mapping=((<class 'str'>, 'string'), (<class 'bool'>, 'boolean'), (<class 'int'>, 'integer'), (<class 'float'>, 'number'), (<class 'collections.abc.Mapping'>, 'object'), (collections.abc.Sequence[str], 'array'), (<class 'bytes'>, 'string'), (<class 'bytearray'>, 'string'), (<class 'memoryview'>, 'string'), (<class 'collections.UserString'>, 'string'), (<class 'collections.abc.Sequence'>, 'array'))))
 
 Transforms a Python function to a JSON schema.
 
 param func: The function to transform
 return: The JSON schema (as a dict) for the function
-
-* **Return type:**
-  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
 
 ```pycon
 >>> def mercury(sweet: float, sour=True):
@@ -285,6 +282,9 @@ return: The JSON schema (as a dict) for the function
 
 See [https://github.com/i2mint/i2//blob/f547257c272433b7651d09276afdfb1bb7b2f67b/misc/i2.routing.ipynb#L17](https://github.com/i2mint/i2//blob/f547257c272433b7651d09276afdfb1bb7b2f67b/misc/i2.routing.ipynb#L17).
 
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
+
 ### ju.json_schema.title_to_pyname(title)
 
 Converts a title to a Python name.
@@ -294,9 +294,6 @@ A sort of (imperfect) inverse of `pyname_to_title`.
 It does this by replacing spaces with underscores and lowercasing the first
 letter of each word.
 If the title contains camel case, it will be split into words.
-
-* **Return type:**
-  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
 
 ### Example
 
@@ -310,3 +307,6 @@ If the title contains camel case, it will be split into words.
 >>> title_to_pyname('   heL----lO  \n\t;; wo__rld')
 '_he_l_l_o_wo__rld'
 ```
+
+* **Return type:**
+  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)

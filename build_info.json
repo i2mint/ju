@@ -1,41 +1,41 @@
 {
   "schema_version": 1,
-  "built_at": "2026-10-13T15:45:39Z",
+  "built_at": "2026-11-18T13:00:35Z",
   "package": {
     "name": "ju",
-    "version": "0.1.41",
+    "version": "0.1.42",
     "display_name": "ju",
     "source": "setup.cfg"
   },
   "git": {
     "available": true,
-    "commit": "902b4662ff0d6d173032c3c9be6a54436fb55462",
-    "short_commit": "902b466",
+    "commit": "5faec80e5d5196a91082c9723655112934a802ce",
+    "short_commit": "5faec80",
     "branch": "master",
     "tags": [
-      "0.1.41"
+      "0.1.42"
     ],
     "dirty": false,
     "remote_url": "https://github.com/i2mint/ju",
-    "commit_url": "https://github.com/i2mint/ju/commit/902b4662ff0d6d173032c3c9be6a54436fb55462",
+    "commit_url": "https://github.com/i2mint/ju/commit/5faec80e5d5196a91082c9723655112934a802ce",
     "error": null
   },
   "ci": {
     "provider": "github",
     "repository": "i2mint/ju",
-    "sha": "78b8a1696c85d7c8ab30e10ce6c9c8e4ae70103e",
+    "sha": "a0cefab1981c7b46a0aa88d13216739a692b39b9",
     "sha_in_history": true,
     "ref": "refs/heads/master",
     "ref_name": "master",
-    "run_id": "38424550537",
-    "run_url": "https://github.com/i2mint/ju/actions/runs/38424550537",
+    "run_id": "44309101546",
+    "run_url": "https://github.com/i2mint/ju/actions/runs/44309101546",
     "server_url": "https://github.com"
   },
   "tools": {
-    "epythet": "0.2.16",
-    "sphinx": "9.1.0",
+    "epythet": "0.2.22",
+    "sphinx": "9.1.1",
     "docutils": "0.22.4",
-    "python": "3.12.15"
+    "python": "3.12.16"
   },
   "config": {
     "theme": "auto",
@@ -62,11 +62,11 @@
   },
   "pypi": {
     "checked": true,
-    "latest": "0.1.41",
+    "latest": "0.1.42",
     "relation": "same",
     "error": null
   },
-  "reproduce": "git clone https://github.com/i2mint/ju && cd ju\ngit checkout 902b4662ff0d6d173032c3c9be6a54436fb55462\npip install \"epythet==0.2.16\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
+  "reproduce": "git clone https://github.com/i2mint/ju && cd ju\ngit checkout 5faec80e5d5196a91082c9723655112934a802ce\npip install \"epythet==0.2.22\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
   "warnings": [],
   "alignment": {
     "aligned": true,

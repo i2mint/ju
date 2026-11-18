@@ -1,4 +1,4 @@
-> built 2026-10-13 15:45 UTC from 902b466 (master) · ju 0.1.41. Details: build_info.json
+> built 2026-11-18 13:00 UTC from 5faec80 (master) · ju 0.1.42. Details: build_info.json
 
 # index.html.md
 
@@ -316,9 +316,6 @@ Transforms a Python function to a JSON schema.
 param func: The function to transform
 return: The JSON schema (as a dict) for the function
 
-* **Return type:**
-  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
-
 ```pycon
 >>> def mercury(sweet: float, sour=True):
 ...     '''Near the sun'''
@@ -336,6 +333,9 @@ return: The JSON schema (as a dict) for the function
 ```
 
 See [https://github.com/i2mint/i2//blob/f547257c272433b7651d09276afdfb1bb7b2f67b/misc/i2.routing.ipynb#L17](https://github.com/i2mint/i2//blob/f547257c272433b7651d09276afdfb1bb7b2f67b/misc/i2.routing.ipynb#L17).
+
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
 
 ### ju.json_schema.get_properties(parameters, \*, param_to_prop_type=functools.partial(<function parametrized_param_to_type>, type_mapping=((<class 'str'>, 'string'), (<class 'bool'>, 'boolean'), (<class 'int'>, 'integer'), (<class 'float'>, 'number'), (<class 'collections.abc.Mapping'>, 'object'), (collections.abc.Sequence[str], 'array'), (<class 'bytes'>, 'string'), (<class 'bytearray'>, 'string'), (<class 'memoryview'>, 'string'), (<class 'collections.UserString'>, 'string'), (<class 'collections.abc.Sequence'>, 'array'))))
 
@@ -440,9 +440,6 @@ Returns a new dictionary that combines two dictionaries by using the keys
 and order from the first dictionary (defaults) and overwriting its values
 with those from the second dictionary (overwrites) when they exist.
 
-* **Return type:**
-  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
-
 ### Parameters
 
 - defaults (dict): The base dictionary containing default key-value pairs.
@@ -461,6 +458,9 @@ with those from the second dictionary (overwrites) when they exist.
 {'a': 1, 'b': 4, 'c': 5}
 ```
 
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
+
 ### ju.json_schema.pyname_to_title(pyname)
 
 Converts a Python name to a title.
@@ -471,9 +471,6 @@ If the name contains camel case, it will be split into words.
 
 A sort of (imperfect) inverse of `title_to_pyname`.
 
-* **Return type:**
-  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
-
 ### Example
 
 ```pycon
@@ -482,6 +479,9 @@ A sort of (imperfect) inverse of `title_to_pyname`.
 >>> pyname_to_title('helloWorld')
 'Hello World'
 ```
+
+* **Return type:**
+  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
 
 ### ju.json_schema.schema_param_names(json_schema, \*, title_to_pyname=<function title_to_pyname>)
 
@@ -494,9 +494,6 @@ others (e.g. `X-MS-API-ROLE`) are sanitised with `title_to_pyname`. Names of
 `properties` are always passed through `title_to_pyname`. Clashes get a
 numeric suffix. A `properties` entry carrying `x-oas-name` (see `Route.params`)
 maps to that name, not to its key.
-
-* **Return type:**
-  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)]
 
 ```pycon
 >>> schema = {'parameters': [
@@ -513,15 +510,15 @@ maps to that name, not to its key.
 {'id': 'id', 'id_header': 'id'}
 ```
 
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)]
+
 ### ju.json_schema.signature_to_json_schema(func, \*, doc=True, name_of_obj=functools.partial(<function name_of_obj>, default_factory=<function <lambda>>), pyname_to_title=<function asis>, param_to_prop_type=functools.partial(<function parametrized_param_to_type>, type_mapping=((<class 'str'>, 'string'), (<class 'bool'>, 'boolean'), (<class 'int'>, 'integer'), (<class 'float'>, 'number'), (<class 'collections.abc.Mapping'>, 'object'), (collections.abc.Sequence[str], 'array'), (<class 'bytes'>, 'string'), (<class 'bytearray'>, 'string'), (<class 'memoryview'>, 'string'), (<class 'collections.UserString'>, 'string'), (<class 'collections.abc.Sequence'>, 'array'))))
 
 Transforms a Python function to a JSON schema.
 
 param func: The function to transform
 return: The JSON schema (as a dict) for the function
-
-* **Return type:**
-  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
 
 ```pycon
 >>> def mercury(sweet: float, sour=True):
@@ -541,6 +538,9 @@ return: The JSON schema (as a dict) for the function
 
 See [https://github.com/i2mint/i2//blob/f547257c272433b7651d09276afdfb1bb7b2f67b/misc/i2.routing.ipynb#L17](https://github.com/i2mint/i2//blob/f547257c272433b7651d09276afdfb1bb7b2f67b/misc/i2.routing.ipynb#L17).
 
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
+
 ### ju.json_schema.title_to_pyname(title)
 
 Converts a title to a Python name.
@@ -550,9 +550,6 @@ A sort of (imperfect) inverse of `pyname_to_title`.
 It does this by replacing spaces with underscores and lowercasing the first
 letter of each word.
 If the title contains camel case, it will be split into words.
-
-* **Return type:**
-  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
 
 ### Example
 
@@ -566,6 +563,9 @@ If the title contains camel case, it will be split into words.
 >>> title_to_pyname('   heL----lO  \n\t;; wo__rld')
 '_he_l_l_o_wo__rld'
 ```
+
+* **Return type:**
+  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
 
 
 # _autosummary/ju.oas.html.md
@@ -782,13 +782,13 @@ to carry between calls.
 
 Default function name generator for OpenAPI routes.
 
-* **Return type:**
-  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
-
 ```pycon
 >>> default_func_namer('get', '/stores/{store_name}/{key}')
 'get_stores__store_name__key'
 ```
+
+* **Return type:**
+  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
 
 ### ju.oas.ensure_openapi_dict(spec)
 
@@ -823,7 +823,7 @@ file_format: ‘yaml’ or ‘json’ (used if openapi_spec is a dict)
 * **Returns:**
   imported client module
 
-### ju.oas.get_routes(d, include_methods=('get', 'put', 'post', 'patch', 'head', 'options', 'delete'))
+### ju.oas.get_routes(d, include_methods=('delete', 'post', 'put', 'patch', 'head', 'options', 'get'))
 
 Takes OpenAPI specification dict ‘d’ and returns the key-paths to all the endpoints.
 
@@ -835,9 +835,6 @@ Takes OpenAPI specification dict ‘d’ and returns the key-paths to all the en
 The parameters of an operation: those its path item declares for all its
 operations, overridden (same name and `in`) or extended by its own.
 
-* **Return type:**
-  [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)
-
 ```pycon
 >>> merge_parameters(
 ...     [{'name': 'id', 'in': 'path'}, {'name': 'q', 'in': 'query', 'x': 1}],
@@ -845,6 +842,9 @@ operations, overridden (same name and `in`) or extended by its own.
 ... )
 [{'name': 'id', 'in': 'path'}, {'name': 'q', 'in': 'query', 'x': 2}, {'name': 'q', 'in': 'header'}]
 ```
+
+* **Return type:**
+  [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)
 
 ### ju.oas.merge_request_body_json_schema(details, param_schema)
 
@@ -1141,9 +1141,6 @@ only surpassed by its intuitiveness. Give it a whirl!
 Converts a JSON schema (with ‘properties’) to a Pydantic model.
 Only supports basic types and required fields for demonstration.
 
-* **Return type:**
-  [`type`](https://docs.python.org/3/builtins/functions.html#type)[`BaseModel`]
-
 ```pycon
 >>> schema_simple = {
 ...     "type": "object",
@@ -1168,6 +1165,9 @@ Only supports basic types and required fields for demonstration.
 >>> model.model_json_schema()['required']
 ['name']
 ```
+
+* **Return type:**
+  [`type`](https://docs.python.org/3/builtins/functions.html#type)[`BaseModel`]
 
 ### ju.pydantic_util.data_to_pydantic_model(data, name='DataBasedModel', , defaults=None, create_nested_models=True, mk_nested_name=None)
 
@@ -1302,9 +1302,6 @@ Infers the type of the value for Pydantic model field.
 
 Check if an object is a Pydantic BaseModel.
 
-* **Return type:**
-  [`bool`](https://docs.python.org/3/builtins/functions.html#bool)
-
 ```pycon
 >>> from typing import List
 >>> class MyModel(BaseModel):
@@ -1312,6 +1309,9 @@ Check if an object is a Pydantic BaseModel.
 >>> list(map(is_a_basemodel, [BaseModel, MyModel, 3.14, int, List[MyModel]]))
 [True, True, False, False, False]
 ```
+
+* **Return type:**
+  [`bool`](https://docs.python.org/3/builtins/functions.html#bool)
 
 ### ju.pydantic_util.is_pydantic_model(obj)
 
@@ -1359,7 +1359,7 @@ concrete types.
   A dictionary mapping type variables (e.g., T and U)
   to their concrete types (e.g., int and str).
 * **Return type:**
-  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)[[`TypeVar`](https://docs.python.org/3/library/typing.html#typing.TypeVar)(`TypeVar`, bound= <attribute ‘_\_bound_\_’ of ‘typing.TypeVar’ objects>, covariant=<member ‘_\_covariant_\_’ of ‘typing.TypeVar’ objects>, contravariant=<member ‘_\_contravariant_\_’ of ‘typing.TypeVar’ objects>), [`type`](https://docs.python.org/3/builtins/functions.html#type)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any)]]
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)[[`TypeVar`](https://docs.python.org/3/library/typing.html#typing.TypeVar), [`type`](https://docs.python.org/3/builtins/functions.html#type)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any)]]
 
 ```pycon
 >>> from typing import TypeVar, Generic, List
@@ -1393,9 +1393,9 @@ By default, it uses the `model.model_validate` method, but you can pass a custom
 constructor function and error handling callback.
 
 * **Parameters:**
-  * **data** ([`TypeVar`](https://docs.python.org/3/library/typing.html#typing.TypeVar)(`Data`, bound= [`Any`](https://docs.python.org/3/library/typing.html#typing.Any))) – A dictionary representing the data to be validated.
+  * **data** (`Data`) – A dictionary representing the data to be validated.
   * **model** ([`type`](https://docs.python.org/3/builtins/functions.html#type)[`BaseModel`]) – A Pydantic model class.
-  * **factory** ([`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`type`](https://docs.python.org/3/builtins/functions.html#type)[`BaseModel`], [`TypeVar`](https://docs.python.org/3/library/typing.html#typing.TypeVar)(`Data`, bound= [`Any`](https://docs.python.org/3/library/typing.html#typing.Any))], `BaseModel`]) – A callable used to construct the model instance.
+  * **factory** ([`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`type`](https://docs.python.org/3/builtins/functions.html#type)[`BaseModel`], `Data`], `BaseModel`]) – A callable used to construct the model instance.
     Defaults to `model.model_validate`.
   * **error_callback** ([`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)) – A callback to handle validation errors.
 * **Return type:**
@@ -1530,9 +1530,6 @@ class Simple(BaseModel):
 Converts a JSON schema (with ‘properties’) to a Pydantic model.
 Only supports basic types and required fields for demonstration.
 
-* **Return type:**
-  [`type`](https://docs.python.org/3/builtins/functions.html#type)[`BaseModel`]
-
 ```pycon
 >>> schema_simple = {
 ...     "type": "object",
@@ -1557,15 +1554,15 @@ Only supports basic types and required fields for demonstration.
 >>> model.model_json_schema()['required']
 ['name']
 ```
+
+* **Return type:**
+  [`type`](https://docs.python.org/3/builtins/functions.html#type)[`BaseModel`]
 
 ### ju.pydantic_util.schema_to_pydantic_model_simple(schema, model_name='AutoModel')
 
 Converts a JSON schema (with ‘properties’) to a Pydantic model.
 Only supports basic types and required fields for demonstration.
 
-* **Return type:**
-  [`type`](https://docs.python.org/3/builtins/functions.html#type)[`BaseModel`]
-
 ```pycon
 >>> schema_simple = {
 ...     "type": "object",
@@ -1590,6 +1587,9 @@ Only supports basic types and required fields for demonstration.
 >>> model.model_json_schema()['required']
 ['name']
 ```
+
+* **Return type:**
+  [`type`](https://docs.python.org/3/builtins/functions.html#type)[`BaseModel`]
 
 ### ju.pydantic_util.valid_models(json_obj, models, \*, factory=<function \_model_validate>)
 
@@ -1650,7 +1650,7 @@ Tools for React-JSONSchema-Form (RJSF)
 |----------------------------------------------------------------------------------------------------|-------------------------------------------------|
 | [`RJSFViewer`](_autosummary/ju.rjsf.html.md#ju.rjsf.RJSFViewer)(rjsf_spec, \*[, on_submit, name, ...]) | Renders RJSF specifications as Jupyter widgets. |
 
-### ju.rjsf.DFLT_RJSF_VIEWER_ON_SUBMIT(form_data, , indent=2, ensure_ascii=False, prefix='\*\*Submitted data:\*\*\\\\n\\\\n')
+### ju.rjsf.DFLT_RJSF_VIEWER_ON_SUBMIT(form_data, , indent=2, ensure_ascii=False, prefix='\*\*Submitted data:\*\*\\n\\n')
 
 Prints form_data in a nicely formatted way.
 
@@ -1733,7 +1733,7 @@ Factory function to create and display an RJSF viewer.
 >>> viewer.display()
 ```
 
-### ju.rjsf.display_form_data(form_data, , indent=2, ensure_ascii=False, prefix='\*\*Submitted data:\*\*\\\\n\\\\n')
+### ju.rjsf.display_form_data(form_data, , indent=2, ensure_ascii=False, prefix='\*\*Submitted data:\*\*\\n\\n')
 
 Prints form_data in a nicely formatted way.
 
@@ -1830,15 +1830,15 @@ Extract type parameters for a trait.
 
 Convert a traitlets trait (instance or type) to a Python object (instance or type)
 
-* **Return type:**
-  [`object`](https://docs.python.org/3/builtins/functions.html#object) | [`type`](https://docs.python.org/3/builtins/functions.html#type)
-
 ```pycon
 >>> trait_to_py(traitlets.Bool())
 <class 'bool'>
 >>> trait_to_py(traitlets.Union([traitlets.Unicode(), traitlets.Float()]))
 typing.Union[str, float]
 ```
+
+* **Return type:**
+  [`object`](https://docs.python.org/3/builtins/functions.html#object) | [`type`](https://docs.python.org/3/builtins/functions.html#type)
 
 
 # _autosummary/ju.util.html.md
@@ -1927,9 +1927,6 @@ which could be a Mapping itself, a callable, or (key, value) pairs.
 Further, if default is specified, the mapper will return that default if the
 requested key is not found.
 
-* **Return type:**
-  [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`TypeVar`](https://docs.python.org/3/library/typing.html#typing.TypeVar)(`KT`)], [`TypeVar`](https://docs.python.org/3/library/typing.html#typing.TypeVar)(`VT`)]
-
 ```pycon
 >>> mapping = {'a': 1, 'b': 2}
 >>> func = ensure_callable_mapper(mapping, default=3)
@@ -1945,6 +1942,9 @@ requested key is not found.
 3
 ```
 
+* **Return type:**
+  [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[`KT`], `VT`]
+
 ### ju.util.ensure_mapping_mapper(mapper, , default=Sentinel('NotSpecified'))
 
 Will return a MappingMapper (a dict really) from the specification of a Mapper,
@@ -1952,9 +1952,6 @@ which could be a Mapping itself, a callable, or (key, value) pairs.
 
 Further, if default is specified, the mapper will return that default if the
 requested key is not found.
-
-* **Return type:**
-  [`Mapping`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping)[[`TypeVar`](https://docs.python.org/3/library/typing.html#typing.TypeVar)(`KT`), [`TypeVar`](https://docs.python.org/3/library/typing.html#typing.TypeVar)(`VT`)]
 
 ```pycon
 >>> func = lambda k: {'a': 1, 'b': 2}[k]
@@ -1970,6 +1967,9 @@ requested key is not found.
 >>> d['c']
 3
 ```
+
+* **Return type:**
+  [`Mapping`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping)[`KT`, `VT`]
 
 ### ju.util.feature_based_search(feature_processor_pairs, feature_similarity, default)
 
@@ -1992,7 +1992,7 @@ This function handles both regular types and subscripted generics.
 
 * **Parameters:**
   * **param** ([`Parameter`](https://docs.python.org/3/library/inspect.html#inspect.Parameter)) – The parameter to check.
-  * **type_** (`Union`[[`type`](https://docs.python.org/3/builtins/functions.html#type), [`GenericAlias`](https://docs.python.org/3/library/types.html#types.GenericAlias), [`Any`](https://docs.python.org/3/library/typing.html#typing.Any)]) – The type to check against.
+  * **type_** ([`Union`](https://docs.python.org/3/library/typing.html#typing.Union)[[`type`](https://docs.python.org/3/builtins/functions.html#type), [`GenericAlias`](https://docs.python.org/3/library/types.html#types.GenericAlias), [`Any`](https://docs.python.org/3/library/typing.html#typing.Any)]) – The type to check against.
 * **Returns:**
   True if the parameter’s type matches the given type, False otherwise.
 * **Return type:**
@@ -2212,7 +2212,7 @@ See also the online tool: [https://navneethg.github.io/jsonschemaviewer/](https:
 
 # About this build
 
-This documentation was built on **2026-10-13 15:45 UTC** from commit <a href="https://github.com/i2mint/ju/commit/902b4662ff0d6d173032c3c9be6a54436fb55462"><code>902b466</code></a> on branch <code>master</code>, for **ju 0.1.41** (from <code>setup.cfg</code>).
+This documentation was built on **2026-11-18 13:00 UTC** from commit <a href="https://github.com/i2mint/ju/commit/5faec80e5d5196a91082c9723655112934a802ce"><code>5faec80</code></a> on branch <code>master</code>, for **ju 0.1.42** (from <code>setup.cfg</code>).
 
 #### NOTE
 Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
@@ -2221,9 +2221,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 |                     |                                                                                                                                                  |
 |---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/i2mint/ju/commit/902b4662ff0d6d173032c3c9be6a54436fb55462"><code>902b4662ff0d6d173032c3c9be6a54436fb55462</code></a> |
+| Commit              | <a href="https://github.com/i2mint/ju/commit/5faec80e5d5196a91082c9723655112934a802ce"><code>5faec80e5d5196a91082c9723655112934a802ce</code></a> |
 | Branch              | <code>master</code>                                                                                                                              |
-| Tags at this commit | <code>0.1.41</code>                                                                                                                              |
+| Tags at this commit | <code>0.1.42</code>                                                                                                                              |
 | Working tree        | clean                                                                                                                                            |
 | Remote              | <code>https://github.com/i2mint/ju</code>                                                                                                        |
 
@@ -2232,18 +2232,18 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>i2mint/ju</code>                                                                     |
-| Run          | <a href="https://github.com/i2mint/ju/actions/runs/38424550537">38424550537</a>            |
+| Run          | <a href="https://github.com/i2mint/ju/actions/runs/44309101546">44309101546</a>            |
 | Ref          | <code>refs/heads/master</code>                                                             |
-| Event commit | <code>78b8a1696c85d7c8ab30e10ce6c9c8e4ae70103e</code> (in the history of the built commit) |
+| Event commit | <code>a0cefab1981c7b46a0aa88d13216739a692b39b9</code> (in the history of the built commit) |
 
 ## Tools
 
 |          |         |
 |----------|---------|
-| epythet  | 0.2.16  |
-| Sphinx   | 9.1.0   |
+| epythet  | 0.2.22  |
+| Sphinx   | 9.1.1   |
 | docutils | 0.22.4  |
-| Python   | 3.12.15 |
+| Python   | 3.12.16 |
 
 ## Configuration as resolved
 
@@ -2259,14 +2259,14 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/ju/0.1.41/">0.1.41</a>, the same as the documented version.
+Latest release: <a href="https://pypi.org/project/ju/0.1.42/">0.1.42</a>, the same as the documented version.
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/i2mint/ju && cd ju
-git checkout 902b4662ff0d6d173032c3c9be6a54436fb55462
-pip install "epythet==0.2.16"
+git checkout 5faec80e5d5196a91082c9723655112934a802ce
+pip install "epythet==0.2.22"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```
 

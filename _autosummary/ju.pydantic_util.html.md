@@ -241,9 +241,6 @@ only surpassed by its intuitiveness. Give it a whirl!
 Converts a JSON schema (with ‘properties’) to a Pydantic model.
 Only supports basic types and required fields for demonstration.
 
-* **Return type:**
-  [`type`](https://docs.python.org/3/builtins/functions.html#type)[`BaseModel`]
-
 ```pycon
 >>> schema_simple = {
 ...     "type": "object",
@@ -268,6 +265,9 @@ Only supports basic types and required fields for demonstration.
 >>> model.model_json_schema()['required']
 ['name']
 ```
+
+* **Return type:**
+  [`type`](https://docs.python.org/3/builtins/functions.html#type)[`BaseModel`]
 
 ### ju.pydantic_util.data_to_pydantic_model(data, name='DataBasedModel', , defaults=None, create_nested_models=True, mk_nested_name=None)
 
@@ -402,9 +402,6 @@ Infers the type of the value for Pydantic model field.
 
 Check if an object is a Pydantic BaseModel.
 
-* **Return type:**
-  [`bool`](https://docs.python.org/3/builtins/functions.html#bool)
-
 ```pycon
 >>> from typing import List
 >>> class MyModel(BaseModel):
@@ -412,6 +409,9 @@ Check if an object is a Pydantic BaseModel.
 >>> list(map(is_a_basemodel, [BaseModel, MyModel, 3.14, int, List[MyModel]]))
 [True, True, False, False, False]
 ```
+
+* **Return type:**
+  [`bool`](https://docs.python.org/3/builtins/functions.html#bool)
 
 ### ju.pydantic_util.is_pydantic_model(obj)
 
@@ -459,7 +459,7 @@ concrete types.
   A dictionary mapping type variables (e.g., T and U)
   to their concrete types (e.g., int and str).
 * **Return type:**
-  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)[[`TypeVar`](https://docs.python.org/3/library/typing.html#typing.TypeVar)(`TypeVar`, bound= <attribute ‘_\_bound_\_’ of ‘typing.TypeVar’ objects>, covariant=<member ‘_\_covariant_\_’ of ‘typing.TypeVar’ objects>, contravariant=<member ‘_\_contravariant_\_’ of ‘typing.TypeVar’ objects>), [`type`](https://docs.python.org/3/builtins/functions.html#type)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any)]]
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)[[`TypeVar`](https://docs.python.org/3/library/typing.html#typing.TypeVar), [`type`](https://docs.python.org/3/builtins/functions.html#type)[[`Any`](https://docs.python.org/3/library/typing.html#typing.Any)]]
 
 ```pycon
 >>> from typing import TypeVar, Generic, List
@@ -493,9 +493,9 @@ By default, it uses the `model.model_validate` method, but you can pass a custom
 constructor function and error handling callback.
 
 * **Parameters:**
-  * **data** ([`TypeVar`](https://docs.python.org/3/library/typing.html#typing.TypeVar)(`Data`, bound= [`Any`](https://docs.python.org/3/library/typing.html#typing.Any))) – A dictionary representing the data to be validated.
+  * **data** (`Data`) – A dictionary representing the data to be validated.
   * **model** ([`type`](https://docs.python.org/3/builtins/functions.html#type)[`BaseModel`]) – A Pydantic model class.
-  * **factory** ([`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`type`](https://docs.python.org/3/builtins/functions.html#type)[`BaseModel`], [`TypeVar`](https://docs.python.org/3/library/typing.html#typing.TypeVar)(`Data`, bound= [`Any`](https://docs.python.org/3/library/typing.html#typing.Any))], `BaseModel`]) – A callable used to construct the model instance.
+  * **factory** ([`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`type`](https://docs.python.org/3/builtins/functions.html#type)[`BaseModel`], `Data`], `BaseModel`]) – A callable used to construct the model instance.
     Defaults to `model.model_validate`.
   * **error_callback** ([`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)) – A callback to handle validation errors.
 * **Return type:**
@@ -630,9 +630,6 @@ class Simple(BaseModel):
 Converts a JSON schema (with ‘properties’) to a Pydantic model.
 Only supports basic types and required fields for demonstration.
 
-* **Return type:**
-  [`type`](https://docs.python.org/3/builtins/functions.html#type)[`BaseModel`]
-
 ```pycon
 >>> schema_simple = {
 ...     "type": "object",
@@ -657,15 +654,15 @@ Only supports basic types and required fields for demonstration.
 >>> model.model_json_schema()['required']
 ['name']
 ```
+
+* **Return type:**
+  [`type`](https://docs.python.org/3/builtins/functions.html#type)[`BaseModel`]
 
 ### ju.pydantic_util.schema_to_pydantic_model_simple(schema, model_name='AutoModel')
 
 Converts a JSON schema (with ‘properties’) to a Pydantic model.
 Only supports basic types and required fields for demonstration.
 
-* **Return type:**
-  [`type`](https://docs.python.org/3/builtins/functions.html#type)[`BaseModel`]
-
 ```pycon
 >>> schema_simple = {
 ...     "type": "object",
@@ -690,6 +687,9 @@ Only supports basic types and required fields for demonstration.
 >>> model.model_json_schema()['required']
 ['name']
 ```
+
+* **Return type:**
+  [`type`](https://docs.python.org/3/builtins/functions.html#type)[`BaseModel`]
 
 ### ju.pydantic_util.valid_models(json_obj, models, \*, factory=<function \_model_validate>)
 

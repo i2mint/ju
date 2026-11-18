@@ -82,9 +82,6 @@ which could be a Mapping itself, a callable, or (key, value) pairs.
 Further, if default is specified, the mapper will return that default if the
 requested key is not found.
 
-* **Return type:**
-  [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[[`TypeVar`](https://docs.python.org/3/library/typing.html#typing.TypeVar)(`KT`)], [`TypeVar`](https://docs.python.org/3/library/typing.html#typing.TypeVar)(`VT`)]
-
 ```pycon
 >>> mapping = {'a': 1, 'b': 2}
 >>> func = ensure_callable_mapper(mapping, default=3)
@@ -100,6 +97,9 @@ requested key is not found.
 3
 ```
 
+* **Return type:**
+  [`Callable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable)[[`KT`], `VT`]
+
 ### ju.util.ensure_mapping_mapper(mapper, , default=Sentinel('NotSpecified'))
 
 Will return a MappingMapper (a dict really) from the specification of a Mapper,
@@ -107,9 +107,6 @@ which could be a Mapping itself, a callable, or (key, value) pairs.
 
 Further, if default is specified, the mapper will return that default if the
 requested key is not found.
-
-* **Return type:**
-  [`Mapping`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping)[[`TypeVar`](https://docs.python.org/3/library/typing.html#typing.TypeVar)(`KT`), [`TypeVar`](https://docs.python.org/3/library/typing.html#typing.TypeVar)(`VT`)]
 
 ```pycon
 >>> func = lambda k: {'a': 1, 'b': 2}[k]
@@ -125,6 +122,9 @@ requested key is not found.
 >>> d['c']
 3
 ```
+
+* **Return type:**
+  [`Mapping`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping)[`KT`, `VT`]
 
 ### ju.util.feature_based_search(feature_processor_pairs, feature_similarity, default)
 
@@ -147,7 +147,7 @@ This function handles both regular types and subscripted generics.
 
 * **Parameters:**
   * **param** ([`Parameter`](https://docs.python.org/3/library/inspect.html#inspect.Parameter)) – The parameter to check.
-  * **type_** (`Union`[[`type`](https://docs.python.org/3/builtins/functions.html#type), [`GenericAlias`](https://docs.python.org/3/library/types.html#types.GenericAlias), [`Any`](https://docs.python.org/3/library/typing.html#typing.Any)]) – The type to check against.
+  * **type_** ([`Union`](https://docs.python.org/3/library/typing.html#typing.Union)[[`type`](https://docs.python.org/3/builtins/functions.html#type), [`GenericAlias`](https://docs.python.org/3/library/types.html#types.GenericAlias), [`Any`](https://docs.python.org/3/library/typing.html#typing.Any)]) – The type to check against.
 * **Returns:**
   True if the parameter’s type matches the given type, False otherwise.
 * **Return type:**

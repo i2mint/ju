@@ -210,13 +210,13 @@ to carry between calls.
 
 Default function name generator for OpenAPI routes.
 
-* **Return type:**
-  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
-
 ```pycon
 >>> default_func_namer('get', '/stores/{store_name}/{key}')
 'get_stores__store_name__key'
 ```
+
+* **Return type:**
+  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
 
 ### ju.oas.ensure_openapi_dict(spec)
 
@@ -251,7 +251,7 @@ file_format: ‘yaml’ or ‘json’ (used if openapi_spec is a dict)
 * **Returns:**
   imported client module
 
-### ju.oas.get_routes(d, include_methods=('get', 'put', 'post', 'patch', 'head', 'options', 'delete'))
+### ju.oas.get_routes(d, include_methods=('delete', 'post', 'put', 'patch', 'head', 'options', 'get'))
 
 Takes OpenAPI specification dict ‘d’ and returns the key-paths to all the endpoints.
 
@@ -263,9 +263,6 @@ Takes OpenAPI specification dict ‘d’ and returns the key-paths to all the en
 The parameters of an operation: those its path item declares for all its
 operations, overridden (same name and `in`) or extended by its own.
 
-* **Return type:**
-  [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)
-
 ```pycon
 >>> merge_parameters(
 ...     [{'name': 'id', 'in': 'path'}, {'name': 'q', 'in': 'query', 'x': 1}],
@@ -273,6 +270,9 @@ operations, overridden (same name and `in`) or extended by its own.
 ... )
 [{'name': 'id', 'in': 'path'}, {'name': 'q', 'in': 'query', 'x': 2}, {'name': 'q', 'in': 'header'}]
 ```
+
+* **Return type:**
+  [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)
 
 ### ju.oas.merge_request_body_json_schema(details, param_schema)
 

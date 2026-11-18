@@ -5,7 +5,7 @@ orphan: true
 
 # About this build
 
-This documentation was built on **2026-10-13 15:45 UTC** from commit <a href="https://github.com/i2mint/ju/commit/902b4662ff0d6d173032c3c9be6a54436fb55462"><code>902b466</code></a> on branch <code>master</code>, for **ju 0.1.41** (from <code>setup.cfg</code>).
+This documentation was built on **2026-11-18 13:00 UTC** from commit <a href="https://github.com/i2mint/ju/commit/5faec80e5d5196a91082c9723655112934a802ce"><code>5faec80</code></a> on branch <code>master</code>, for **ju 0.1.42** (from <code>setup.cfg</code>).
 
 :::{note}
 Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
@@ -15,9 +15,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 | | |
 |---|---|
-| Commit | <a href="https://github.com/i2mint/ju/commit/902b4662ff0d6d173032c3c9be6a54436fb55462"><code>902b4662ff0d6d173032c3c9be6a54436fb55462</code></a> |
+| Commit | <a href="https://github.com/i2mint/ju/commit/5faec80e5d5196a91082c9723655112934a802ce"><code>5faec80e5d5196a91082c9723655112934a802ce</code></a> |
 | Branch | <code>master</code> |
-| Tags at this commit | <code>0.1.41</code> |
+| Tags at this commit | <code>0.1.42</code> |
 | Working tree | clean |
 | Remote | <code>https://github.com/i2mint/ju</code> |
 
@@ -26,18 +26,18 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 | | |
 |---|---|
 | Repository | <code>i2mint/ju</code> |
-| Run | <a href="https://github.com/i2mint/ju/actions/runs/38424550537">38424550537</a> |
+| Run | <a href="https://github.com/i2mint/ju/actions/runs/44309101546">44309101546</a> |
 | Ref | <code>refs/heads/master</code> |
-| Event commit | <code>78b8a1696c85d7c8ab30e10ce6c9c8e4ae70103e</code> (in the history of the built commit) |
+| Event commit | <code>a0cefab1981c7b46a0aa88d13216739a692b39b9</code> (in the history of the built commit) |
 
 ## Tools
 
 | | |
 |---|---|
-| epythet | 0.2.16 |
-| Sphinx | 9.1.0 |
+| epythet | 0.2.22 |
+| Sphinx | 9.1.1 |
 | docutils | 0.22.4 |
-| Python | 3.12.15 |
+| Python | 3.12.16 |
 
 ## Configuration as resolved
 
@@ -53,14 +53,14 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/ju/0.1.41/">0.1.41</a>, the same as the documented version.
+Latest release: <a href="https://pypi.org/project/ju/0.1.42/">0.1.42</a>, the same as the documented version.
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/i2mint/ju && cd ju
-git checkout 902b4662ff0d6d173032c3c9be6a54436fb55462
-pip install "epythet==0.2.16"
+git checkout 5faec80e5d5196a91082c9723655112934a802ce
+pip install "epythet==0.2.22"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```
 
