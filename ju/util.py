@@ -47,7 +47,9 @@ def is_jsonable(x):
 
 
 SomeType = Union[type, GenericAlias, Any]
-SomeType.__doc__ = "A type or a GenericAlias, but also Any, just in case"
+# A type or a GenericAlias, but also Any, just in case. (Said here, not as SomeType.__doc__:
+# from Python 3.14 a typing.Union's attributes are read-only, and assigning one made
+# `import ju` fail with AttributeError.)
 
 
 def asis(obj):
@@ -353,8 +355,8 @@ def truncate_dict_values(
 CallableMapper = Callable[[KT], VT]
 MappingMapper = Mapping[KT, VT]
 PairsMapper = Sequence[tuple[KT, VT]]
+# A Mapper is a specification of (key, value) pairs. (A comment: see SomeType above.)
 Mapper = Union[PairsMapper, MappingMapper, CallableMapper]
-Mapper.__doc__ = "A Mapper is a specification of (key, value) pairs"
 
 Exceptions = Sequence[BaseException]
 NotSpecified = mk_sentinel("NotSpecified")
