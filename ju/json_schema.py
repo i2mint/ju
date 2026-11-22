@@ -238,9 +238,9 @@ def title_to_pyname(title: str) -> str:
     title = re.sub(r"\s+", "_", title)
     pyname = title.lower()  # TODO: Should we? Get control over this?
     # assert pyname is a valid Python identifier
-    assert (
-        pyname.isidentifier()
-    ), f"Invalid Python identifier: {pyname}, computed from title: {original_title}"
+    assert pyname.isidentifier(), (
+        f"Invalid Python identifier: {pyname}, computed from title: {original_title}"
+    )
     return pyname
 
 

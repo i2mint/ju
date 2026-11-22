@@ -548,7 +548,7 @@ class OpenApiFunc:
         self.__signature__ = Sig(json_schema_to_signature(param_schema))
         self.__name__ = (
             name
-            or f"{method.lower()}_{uri.strip('/').replace('/', '_').replace('{','').replace('}','')}"
+            or f"{method.lower()}_{uri.strip('/').replace('/', '_').replace('{', '').replace('}', '')}"
         )
         self.__qualname__ = qualname or self.__name__
         self.__doc__ = doc or f"OpenAPI route function for {method.upper()} {uri}"
