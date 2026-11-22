@@ -17,6 +17,7 @@ http_methods = {"get", "post", "put", "delete", "patch", "options", "head"}
 # Make a function that gets the value of a key in a dict, given a path to that key
 # but returning an empty dict if any element of the path doesn't exist
 def return_empty_dict_on_error(e):
+    """Return an empty dict, whatever the exception ``e``."""
     return dict()
 
 
@@ -87,12 +88,14 @@ class Routes(KvReader):
     """
 
     def __init__(self, spec: dict, *, type_mapping: dict = dflt_type_mapping) -> None:
+        """Keep the ``spec`` and make the route factory and title from it."""
         self.spec = spec
         self._mk_route = partial(Route, spec=spec, type_mapping=type_mapping)
         self._title = spec.get("info", {}).get("title", "OpenAPI spec")
 
     @classmethod
     def from_yaml(cls, yaml_str: str):
+        """Make an instance from a YAML string of an OpenAPI spec."""
         import yaml
 
         return cls(yaml.safe_load(yaml_str))
@@ -102,12 +105,15 @@ class Routes(KvReader):
         self.spec["paths"]
 
     def __iter__(self):
+        """Iterate over the ``(method, endpoint)`` routes of the spec."""
         return get_routes(self.spec)
 
     def __getitem__(self, k):
+        """Return the ``Route`` for ``k``, a ``(method, endpoint)`` pair."""
         return self._mk_route(*k, spec=self.spec)
 
     def __repr__(self) -> str:
+        """Return ``ClassName('title')``, using the title of the spec."""
         return f"{type(self).__name__}('{self._title}')"
 
 
@@ -281,10 +287,12 @@ class Route:
     type_mapping: dict = field(default=dflt_type_mapping, repr=False)
 
     def __post_init__(self):
+        """Make ``type_mapping`` a plain ``dict`` copy."""
         self.type_mapping = dict(self.type_mapping)
 
     @cached_property
     def method_data(self):
+        """The spec of the route's method on its endpoint."""
         method, endpoint = self.method, self.endpoint
         path_item = self.spec.get("paths", {}).get(endpoint, {})
         method_data = path_item.get(method, None)
@@ -304,6 +312,7 @@ class Route:
 
     @cached_property
     def input_specs(self):
+        """The ``parameters`` and ``requestBody`` specs of the route."""
         return {
             "parameters": self.method_data.get("parameters", []),
             "requestBody": self.method_data.get("requestBody", {}),
@@ -336,6 +345,7 @@ class Route:
 
     @cached_property
     def output_specs(self):
+        """The ``responses`` spec of the route."""
         return self.method_data.get("responses", {})
 
     @cached_property
@@ -496,12 +506,14 @@ def ensure_openapi_dict(spec: OpenAPISpec) -> dict:
 
 
 def default_get_response(method, url, **kwargs):
+    """Send an HTTP request with ``requests`` and return the response."""
     import requests
 
     return requests.request(method.upper(), url, **kwargs)
 
 
 def default_response_egress(method, uri):
+    """Return a function calling ``.json()`` on a response."""
     return operations.methodcaller("json")
 
 
@@ -523,6 +535,7 @@ class OpenApiFunc:
         qualname=None,
         doc=None,
     ):
+        """Store the request arguments and build the signature from the spec."""
         self.method = method
         self.uri = uri
         self.base_url = base_url
@@ -569,6 +582,7 @@ class OpenApiFunc:
         return places
 
     def __call__(self, *args, **kwargs):
+        """Map the arguments by where the spec sends them (path, query, headers, cookies, body), make the request and return the egressed response."""
         _kwargs = self.__signature__.map_arguments(args, kwargs)
         # Split the arguments by where the spec sends them, under the spec's names
         path_params, query_params, headers, cookies = {}, {}, {}, {}
@@ -606,6 +620,7 @@ class OpenApiFunc:
         return egress(resp)
 
     def __repr__(self):
+        """Return a representation showing the function's signature."""
         import inspect
 
         sig = getattr(self, "__signature__", None)
@@ -980,6 +995,7 @@ def validate_openapi_to_generated_funcs_alignment():
 
 
 def print_generated_modules():
+    """Print the generated client modules (a development helper)."""
     import os
     from ju.oas import generate_openapi_client
     import json
@@ -992,6 +1008,7 @@ def print_generated_modules():
 
 
 def compare_modules_to_missing_funcs():
+    """Compare the generated client modules to the functions missing from them (a development helper)."""
     import os
     import json
     from ju.oas import generate_openapi_client, openapi_to_funcs
@@ -1019,6 +1036,7 @@ def compare_modules_to_missing_funcs():
 
 
 def compare_modules_to_operationids():
+    """Compare the generated client modules to the spec's operation ids (a development helper)."""
     import os
     import json
     from ju.oas import generate_openapi_client

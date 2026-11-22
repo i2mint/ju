@@ -824,6 +824,7 @@ class ModelExtractor:
     getter: Callable = glom
 
     def __post_init__(self):
+        """Make ``models`` a mapping of model names to models, if it isn't one."""
         # If models is not a Mapping, make it so. We want a dict whose values are
         # the models, and whose keys are the names of the models.
         if not isinstance(self.models, Mapping):
@@ -853,6 +854,7 @@ class ModelExtractor:
         self.model_classifier = ObjectClassifier(verifiers)
 
     def __call__(self, data, *, assert_unique: bool = True) -> KeysReader:
+        """Find the model matching ``data``, validate ``data`` with it and return the reader of the result."""
         # find the model that matches the data
         model_key = self.model_classifier.matching_kind(
             data, assert_unique=assert_unique

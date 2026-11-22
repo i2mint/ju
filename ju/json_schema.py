@@ -52,6 +52,7 @@ class _BasicPythonTypes(BaseModel):
 
 
 def pydantic_model_to_type_mapping(pydantic_model: BaseModel) -> dict:
+    """Map each field annotation of ``pydantic_model`` to the JSON schema type pydantic gives it."""
     fields = pydantic_model.model_fields
     properties = pydantic_model.model_json_schema().get("properties")
 
@@ -106,6 +107,7 @@ def parametrized_param_to_type(
     type_mapping=DFLT_PY_JSON_TYPE_PAIRS,
     default=DFLT_JSON_TYPE,
 ):
+    """Return the JSON type of ``param``: that of the first ``type_mapping`` pair whose python type matches, else ``default``."""
     # TODO: validate type_mapping. (namely child before parent)
     #   If parent was before child, the child would never be reached.
     for python_type, json_type in type_mapping:
@@ -127,10 +129,12 @@ import datetime
 
 
 def print_dict(d):
+    """Print ``d`` as indented JSON."""
     print(json.dumps(d, indent=2))
 
 
 def print_schema(func_key, store):
+    """Print the rjsf schema of ``store[func_key]``, twice (see also the later redefinition)."""
     print_dict(store[func_key]["rjsf"]["schema"])
     print_dict(store[func_key]["rjsf"]["schema"])
 
@@ -139,10 +143,12 @@ form_specs = None
 
 
 def print_schema(func_key="olab.objects.dpp.accuracy", store=form_specs):
+    """Print the rjsf schema of ``store[func_key]``."""
     print_dict(store[func_key]["rjsf"]["schema"])
 
 
 def wrap_schema_in_opus_spec(schema: dict):
+    """Wrap ``schema`` as ``{"rjsf": {"schema": schema}}``."""
     return {"rjsf": {"schema": schema}}
 
 
@@ -758,4 +764,5 @@ def get_properties(parameters, *, param_to_prop_type: Callable = DFLT_PARAM_TO_T
 
 
 def get_required(properties: dict):
+    """Return the names of the ``properties`` that have no ``"default"``."""
     return [name for name in properties if "default" not in properties[name]]
