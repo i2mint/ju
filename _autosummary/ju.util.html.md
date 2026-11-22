@@ -6,16 +6,16 @@ Ju base utils.
 
 | [`apply`](#ju.util.apply)(func, obj)                                  | Calls a function to an object, returing the result                                                                                                                     |
 |----------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `asis`(obj)                                                                                        |                                                                                                                                                                        |
-| `display_dag_of_code`(func, \*args, \*\*kwargs)                                                    |                                                                                                                                                                        |
+| [`asis`](#ju.util.asis)(obj)                                         | Return `obj` unchanged.                                                                                                                                                |
+| [`display_dag_of_code`](#ju.util.display_dag_of_code)(func, \*args, \*\*kwargs)     | Return the `dot_digraph` of the `meshed` DAG of the code of `func`.                                                                                                    |
 | [`ensure_callable_mapper`](#ju.util.ensure_callable_mapper)(mapper, \*[, default])     | Will return a CallableMapper from the specification of a Mapper, which could be a Mapping itself, a callable, or (key, value) pairs.                                   |
 | [`ensure_mapping_mapper`](#ju.util.ensure_mapping_mapper)(mapper, \*[, default])      | Will return a MappingMapper (a dict really) from the specification of a Mapper, which could be a Mapping itself, a callable, or (key, value) pairs.                    |
 | [`feature_based_search`](#ju.util.feature_based_search)(...)                         | Returns a function that searches for a feature in a list of feature_processor_pairs                                                                                    |
 | [`feature_similarity_search`](#ju.util.feature_similarity_search)(obj, \*, ...[, ...])    | Returns the output of a feature based on a featurizer and a list of feature_output_pairs                                                                               |
 | [`feature_switch`](#ju.util.feature_switch)(obj, \*, featurizer, ...)          | Returns the output of a feature based on a featurizer and a mapping                                                                                                    |
-| `is_jsonable`(x)                                                                                   |                                                                                                                                                                        |
+| [`is_jsonable`](#ju.util.is_jsonable)(x)                                    | Return whether `x` can be serialized with `json.dumps`.                                                                                                                |
 | [`is_type`](#ju.util.is_type)(param, type_)                             | Checks if the type of a parameter's default value or its annotation matches a given type.                                                                              |
-| `mk_function_returning`(_obj)                                                                      |                                                                                                                                                                        |
+| [`mk_function_returning`](#ju.util.mk_function_returning)(_obj)                       | Return a function that returns `_obj` whatever it is called with.                                                                                                      |
 | [`resolve_annotations`](#ju.util.resolve_annotations)(func, parameters)             | Returns `parameters` (a mapping or iterable of `Parameter`) with the string annotations of `func` evaluated -- all of them under `from __future__ import annotations`. |
 | [`switch_case`](#ju.util.switch_case)(mapping, default)                     | Returns a function that switches between cases based on a feature                                                                                                      |
 | [`truncate_dict_values`](#ju.util.truncate_dict_values)(d, \*[, max_list_size, ...]) | Returns a new dictionary with the same nested keys structure, where:                                                                                                   |
@@ -73,6 +73,14 @@ True
 ### ju.util.apply(func, obj)
 
 Calls a function to an object, returing the result
+
+### ju.util.asis(obj)
+
+Return `obj` unchanged.
+
+### ju.util.display_dag_of_code(func, \*args, \*\*kwargs)
+
+Return the `dot_digraph` of the `meshed` DAG of the code of `func`.
 
 ### ju.util.ensure_callable_mapper(mapper, , default=Sentinel('NotSpecified'))
 
@@ -137,6 +145,10 @@ Returns the output of a feature based on a featurizer and a list of feature_outp
 ### ju.util.feature_switch(obj, , featurizer, feature_to_output_mapping, default)
 
 Returns the output of a feature based on a featurizer and a mapping
+
+### ju.util.is_jsonable(x)
+
+Return whether `x` can be serialized with `json.dumps`.
 
 ### ju.util.is_type(param, type_)
 
@@ -208,6 +220,10 @@ False
 >>> is_type(optional, Sequence)
 True
 ```
+
+### ju.util.mk_function_returning(\_obj)
+
+Return a function that returns `_obj` whatever it is called with.
 
 ### ju.util.resolve_annotations(func, parameters)
 

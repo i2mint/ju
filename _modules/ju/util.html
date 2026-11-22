@@ -286,12 +286,16 @@
 <span class="n">ju_files</span> <span class="o">=</span> <span class="n">_files</span><span class="p">(</span><span class="s2">"ju"</span><span class="p">)</span>
 
 
+<div class="viewcode-block" id="is_jsonable">
+<a class="viewcode-back" href="../../_autosummary/ju.util.html#ju.util.is_jsonable">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">is_jsonable</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Return whether ``x`` can be serialized with ``json.dumps``."""</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">True</span>
     <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">OverflowError</span><span class="p">):</span>
-        <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
 
 
 <span class="n">SomeType</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="nb">type</span><span class="p">,</span> <span class="n">GenericAlias</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
@@ -300,8 +304,12 @@
 <span class="c1"># `import ju` fail with AttributeError.)</span>
 
 
+<div class="viewcode-block" id="asis">
+<a class="viewcode-back" href="../../_autosummary/ju.util.html#ju.util.asis">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">asis</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">obj</span>
+<span class="w">    </span><span class="sd">"""Return ``obj`` unchanged."""</span>
+    <span class="k">return</span> <span class="n">obj</span></div>
+
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_is_union</span><span class="p">(</span><span class="n">tp</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
@@ -626,8 +634,12 @@
     <span class="k">return</span> <span class="n">_obj</span>
 
 
+<div class="viewcode-block" id="mk_function_returning">
+<a class="viewcode-back" href="../../_autosummary/ju.util.html#ju.util.mk_function_returning">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">mk_function_returning</span><span class="p">(</span><span class="n">_obj</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">partial</span><span class="p">(</span><span class="n">_return_this</span><span class="p">,</span> <span class="n">_obj</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""Return a function that returns ``_obj`` whatever it is called with."""</span>
+    <span class="k">return</span> <span class="n">partial</span><span class="p">(</span><span class="n">_return_this</span><span class="p">,</span> <span class="n">_obj</span><span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="Gettable">
@@ -657,6 +669,7 @@
 <span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="n">KT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">VT</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Return the value for ``k``."""</span>
         <span class="k">pass</span></div>
 
 
@@ -793,10 +806,14 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
 
 
+<div class="viewcode-block" id="display_dag_of_code">
+<a class="viewcode-back" href="../../_autosummary/ju.util.html#ju.util.display_dag_of_code">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">display_dag_of_code</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Return the ``dot_digraph`` of the ``meshed`` DAG of the code of ``func``."""</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">meshed</span><span class="w"> </span><span class="kn">import</span> <span class="n">code_to_dag</span>
 
-    <span class="k">return</span> <span class="n">code_to_dag</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">code_to_dag</span><span class="p">(</span><span class="n">func</span><span class="p">)</span><span class="o">.</span><span class="n">dot_digraph</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="apply">
@@ -920,7 +937,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=eb9509fe"></script>
+</div><script src="../../_static/documentation_options.js?v=42d57d98"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>

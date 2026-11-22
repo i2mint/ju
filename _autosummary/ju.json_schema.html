@@ -296,8 +296,8 @@ a form in a React application.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="#ju.json_schema.get_properties" title="ju.json_schema.get_properties"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_properties</span></code></a>(parameters, *[, ...])</p></td>
 <td><p>Returns the properties dict for the JSON schema.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_required</span></code>(properties)</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ju.json_schema.get_required" title="ju.json_schema.get_required"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_required</span></code></a>(properties)</p></td>
+<td><p>Return the names of the <code class="docutils literal notranslate"><span class="pre">properties</span></code> that have no <code class="docutils literal notranslate"><span class="pre">&quot;default&quot;</span></code>.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#ju.json_schema.json_schema_to_signature" title="ju.json_schema.json_schema_to_signature"><code class="xref py py-obj docutils literal notranslate"><span class="pre">json_schema_to_signature</span></code></a>(json_schema, *[, ...])</p></td>
 <td><p>Transforms a JSON schema or OpenAPI parameters list to a Python function signature.</p></td>
@@ -305,17 +305,17 @@ a form in a React application.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ju.json_schema.merge_with_defaults" title="ju.json_schema.merge_with_defaults"><code class="xref py py-obj docutils literal notranslate"><span class="pre">merge_with_defaults</span></code></a>(defaults, overwrites)</p></td>
 <td><p>Returns a new dictionary that combines two dictionaries by using the keys and order from the first dictionary (defaults) and overwriting its values with those from the second dictionary (overwrites) when they exist.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">parametrized_param_to_type</span></code>(param, *[, ...])</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ju.json_schema.parametrized_param_to_type" title="ju.json_schema.parametrized_param_to_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parametrized_param_to_type</span></code></a>(param, *[, ...])</p></td>
+<td><p>Return the JSON type of <code class="docutils literal notranslate"><span class="pre">param</span></code>: that of the first <code class="docutils literal notranslate"><span class="pre">type_mapping</span></code> pair whose python type matches, else <code class="docutils literal notranslate"><span class="pre">default</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_dict</span></code>(d)</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ju.json_schema.print_dict" title="ju.json_schema.print_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_dict</span></code></a>(d)</p></td>
+<td><p>Print <code class="docutils literal notranslate"><span class="pre">d</span></code> as indented JSON.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_schema</span></code>([func_key, store])</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ju.json_schema.print_schema" title="ju.json_schema.print_schema"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_schema</span></code></a>([func_key, store])</p></td>
+<td><p>Print the rjsf schema of <code class="docutils literal notranslate"><span class="pre">store[func_key]</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pydantic_model_to_type_mapping</span></code>(pydantic_model)</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ju.json_schema.pydantic_model_to_type_mapping" title="ju.json_schema.pydantic_model_to_type_mapping"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pydantic_model_to_type_mapping</span></code></a>(pydantic_model)</p></td>
+<td><p>Map each field annotation of <code class="docutils literal notranslate"><span class="pre">pydantic_model</span></code> to the JSON schema type pydantic gives it.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#ju.json_schema.pyname_to_title" title="ju.json_schema.pyname_to_title"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pyname_to_title</span></code></a>(pyname)</p></td>
 <td><p>Converts a Python name to a title.</p></td>
@@ -329,12 +329,20 @@ a form in a React application.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="#ju.json_schema.title_to_pyname" title="ju.json_schema.title_to_pyname"><code class="xref py py-obj docutils literal notranslate"><span class="pre">title_to_pyname</span></code></a>(title)</p></td>
 <td><p>Converts a title to a Python name.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">wrap_schema_in_opus_spec</span></code>(schema)</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ju.json_schema.wrap_schema_in_opus_spec" title="ju.json_schema.wrap_schema_in_opus_spec"><code class="xref py py-obj docutils literal notranslate"><span class="pre">wrap_schema_in_opus_spec</span></code></a>(schema)</p></td>
+<td><p>Wrap <code class="docutils literal notranslate"><span class="pre">schema</span></code> as <code class="docutils literal notranslate"><span class="pre">{&quot;rjsf&quot;:</span> <span class="pre">{&quot;schema&quot;:</span> <span class="pre">schema}}</span></code>.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
+<dl class="py function">
+<dt class="sig sig-object py" id="ju.json_schema.DFLT_PARAM_TO_TYPE">
+<span class="sig-prename descclassname"><span class="pre">ju.json_schema.</span></span><span class="sig-name descname"><span class="pre">DFLT_PARAM_TO_TYPE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">param,</span> <span class="pre">*,</span> <span class="pre">type_mapping=((&lt;class</span> <span class="pre">'str'&gt;,</span> <span class="pre">'string'),</span> <span class="pre">(&lt;class</span> <span class="pre">'bool'&gt;,</span> <span class="pre">'boolean'),</span> <span class="pre">(&lt;class</span> <span class="pre">'int'&gt;,</span> <span class="pre">'integer'),</span> <span class="pre">(&lt;class</span> <span class="pre">'float'&gt;,</span> <span class="pre">'number'),</span> <span class="pre">(&lt;class</span> <span class="pre">'collections.abc.Mapping'&gt;,</span> <span class="pre">'object'),</span> <span class="pre">(collections.abc.Sequence[str],</span> <span class="pre">'array'),</span> <span class="pre">(&lt;class</span> <span class="pre">'bytes'&gt;,</span> <span class="pre">'string'),</span> <span class="pre">(&lt;class</span> <span class="pre">'bytearray'&gt;,</span> <span class="pre">'string'),</span> <span class="pre">(&lt;class</span> <span class="pre">'memoryview'&gt;,</span> <span class="pre">'string'),</span> <span class="pre">(&lt;class</span> <span class="pre">'collections.UserString'&gt;,</span> <span class="pre">'string'),</span> <span class="pre">(&lt;class</span> <span class="pre">'collections.abc.Sequence'&gt;,</span> <span class="pre">'array')),</span> <span class="pre">default='string'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ju.json_schema.DFLT_PARAM_TO_TYPE" title="Link to this definition">¶</a></dt>
+<dd><p>Return the JSON type of <code class="docutils literal notranslate"><span class="pre">param</span></code>: that of the first <code class="docutils literal notranslate"><span class="pre">type_mapping</span></code> pair whose python type matches, else <code class="docutils literal notranslate"><span class="pre">default</span></code>.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
 <dl class="py data">
 <dt class="sig sig-object py" id="ju.json_schema.OAS_NAME_KEY">
 <span class="sig-prename descclassname"><span class="pre">ju.json_schema.</span></span><span class="sig-name descname"><span class="pre">OAS_NAME_KEY</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'x-oas-name'</span></span><a class="headerlink" href="#ju.json_schema.OAS_NAME_KEY" title="Link to this definition">¶</a></dt>
@@ -399,6 +407,14 @@ return: The JSON schema (as a dict) for the function</p>
 <span class="gp">... </span><span class="p">)</span>
 </pre></div>
 </div>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ju.json_schema.get_required">
+<span class="sig-prename descclassname"><span class="pre">ju.json_schema.</span></span><span class="sig-name descname"><span class="pre">get_required</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">properties</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ju/json_schema.html#get_required"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.json_schema.get_required" title="Link to this definition">¶</a></dt>
+<dd><p>Return the names of the <code class="docutils literal notranslate"><span class="pre">properties</span></code> that have no <code class="docutils literal notranslate"><span class="pre">&quot;default&quot;</span></code>.</p>
 <dl class="field-list simple">
 </dl>
 </dd></dl>
@@ -491,6 +507,37 @@ with those from the second dictionary (overwrites) when they exist.</p>
 <span class="go">{'a': 1, 'b': 4, 'c': 5}</span>
 </pre></div>
 </div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ju.json_schema.parametrized_param_to_type">
+<span class="sig-prename descclassname"><span class="pre">ju.json_schema.</span></span><span class="sig-name descname"><span class="pre">parametrized_param_to_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">param,</span> <span class="pre">*,</span> <span class="pre">type_mapping=((&lt;class</span> <span class="pre">'str'&gt;,</span> <span class="pre">'string'),</span> <span class="pre">(&lt;class</span> <span class="pre">'bool'&gt;,</span> <span class="pre">'boolean'),</span> <span class="pre">(&lt;class</span> <span class="pre">'int'&gt;,</span> <span class="pre">'integer'),</span> <span class="pre">(&lt;class</span> <span class="pre">'float'&gt;,</span> <span class="pre">'number'),</span> <span class="pre">(&lt;class</span> <span class="pre">'collections.abc.Mapping'&gt;,</span> <span class="pre">'object'),</span> <span class="pre">(collections.abc.Sequence[str],</span> <span class="pre">'array'),</span> <span class="pre">(&lt;class</span> <span class="pre">'bytes'&gt;,</span> <span class="pre">'string'),</span> <span class="pre">(&lt;class</span> <span class="pre">'bytearray'&gt;,</span> <span class="pre">'string'),</span> <span class="pre">(&lt;class</span> <span class="pre">'memoryview'&gt;,</span> <span class="pre">'string'),</span> <span class="pre">(&lt;class</span> <span class="pre">'collections.UserString'&gt;,</span> <span class="pre">'string'),</span> <span class="pre">(&lt;class</span> <span class="pre">'collections.abc.Sequence'&gt;,</span> <span class="pre">'array')),</span> <span class="pre">default='string'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ju/json_schema.html#parametrized_param_to_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.json_schema.parametrized_param_to_type" title="Link to this definition">¶</a></dt>
+<dd><p>Return the JSON type of <code class="docutils literal notranslate"><span class="pre">param</span></code>: that of the first <code class="docutils literal notranslate"><span class="pre">type_mapping</span></code> pair whose python type matches, else <code class="docutils literal notranslate"><span class="pre">default</span></code>.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ju.json_schema.print_dict">
+<span class="sig-prename descclassname"><span class="pre">ju.json_schema.</span></span><span class="sig-name descname"><span class="pre">print_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ju/json_schema.html#print_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.json_schema.print_dict" title="Link to this definition">¶</a></dt>
+<dd><p>Print <code class="docutils literal notranslate"><span class="pre">d</span></code> as indented JSON.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ju.json_schema.print_schema">
+<span class="sig-prename descclassname"><span class="pre">ju.json_schema.</span></span><span class="sig-name descname"><span class="pre">print_schema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'olab.objects.dpp.accuracy'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ju/json_schema.html#print_schema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.json_schema.print_schema" title="Link to this definition">¶</a></dt>
+<dd><p>Print the rjsf schema of <code class="docutils literal notranslate"><span class="pre">store[func_key]</span></code>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ju.json_schema.pydantic_model_to_type_mapping">
+<span class="sig-prename descclassname"><span class="pre">ju.json_schema.</span></span><span class="sig-name descname"><span class="pre">pydantic_model_to_type_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pydantic_model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ju/json_schema.html#pydantic_model_to_type_mapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.json_schema.pydantic_model_to_type_mapping" title="Link to this definition">¶</a></dt>
+<dd><p>Map each field annotation of <code class="docutils literal notranslate"><span class="pre">pydantic_model</span></code> to the JSON schema type pydantic gives it.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
@@ -606,6 +653,14 @@ If the title contains camel case, it will be split into words.</p>
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="ju.json_schema.wrap_schema_in_opus_spec">
+<span class="sig-prename descclassname"><span class="pre">ju.json_schema.</span></span><span class="sig-name descname"><span class="pre">wrap_schema_in_opus_spec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schema</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ju/json_schema.html#wrap_schema_in_opus_spec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.json_schema.wrap_schema_in_opus_spec" title="Link to this definition">¶</a></dt>
+<dd><p>Wrap <code class="docutils literal notranslate"><span class="pre">schema</span></code> as <code class="docutils literal notranslate"><span class="pre">{&quot;rjsf&quot;:</span> <span class="pre">{&quot;schema&quot;:</span> <span class="pre">schema}}</span></code>.</p>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
 </section>
 
         </article>
@@ -660,15 +715,22 @@ If the title contains camel case, it will be split into words.</p>
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">ju.json_schema</a><ul>
+<li><a class="reference internal" href="#ju.json_schema.DFLT_PARAM_TO_TYPE"><code class="docutils literal notranslate"><span class="pre">DFLT_PARAM_TO_TYPE()</span></code></a></li>
 <li><a class="reference internal" href="#ju.json_schema.OAS_NAME_KEY"><code class="docutils literal notranslate"><span class="pre">OAS_NAME_KEY</span></code></a></li>
 <li><a class="reference internal" href="#ju.json_schema.function_to_json_schema"><code class="docutils literal notranslate"><span class="pre">function_to_json_schema()</span></code></a></li>
 <li><a class="reference internal" href="#ju.json_schema.get_properties"><code class="docutils literal notranslate"><span class="pre">get_properties()</span></code></a></li>
+<li><a class="reference internal" href="#ju.json_schema.get_required"><code class="docutils literal notranslate"><span class="pre">get_required()</span></code></a></li>
 <li><a class="reference internal" href="#ju.json_schema.json_schema_to_signature"><code class="docutils literal notranslate"><span class="pre">json_schema_to_signature()</span></code></a></li>
 <li><a class="reference internal" href="#ju.json_schema.merge_with_defaults"><code class="docutils literal notranslate"><span class="pre">merge_with_defaults()</span></code></a></li>
+<li><a class="reference internal" href="#ju.json_schema.parametrized_param_to_type"><code class="docutils literal notranslate"><span class="pre">parametrized_param_to_type()</span></code></a></li>
+<li><a class="reference internal" href="#ju.json_schema.print_dict"><code class="docutils literal notranslate"><span class="pre">print_dict()</span></code></a></li>
+<li><a class="reference internal" href="#ju.json_schema.print_schema"><code class="docutils literal notranslate"><span class="pre">print_schema()</span></code></a></li>
+<li><a class="reference internal" href="#ju.json_schema.pydantic_model_to_type_mapping"><code class="docutils literal notranslate"><span class="pre">pydantic_model_to_type_mapping()</span></code></a></li>
 <li><a class="reference internal" href="#ju.json_schema.pyname_to_title"><code class="docutils literal notranslate"><span class="pre">pyname_to_title()</span></code></a></li>
 <li><a class="reference internal" href="#ju.json_schema.schema_param_names"><code class="docutils literal notranslate"><span class="pre">schema_param_names()</span></code></a></li>
 <li><a class="reference internal" href="#ju.json_schema.signature_to_json_schema"><code class="docutils literal notranslate"><span class="pre">signature_to_json_schema()</span></code></a></li>
 <li><a class="reference internal" href="#ju.json_schema.title_to_pyname"><code class="docutils literal notranslate"><span class="pre">title_to_pyname()</span></code></a></li>
+<li><a class="reference internal" href="#ju.json_schema.wrap_schema_in_opus_spec"><code class="docutils literal notranslate"><span class="pre">wrap_schema_in_opus_spec()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -680,7 +742,7 @@ If the title contains camel case, it will be split into words.</p>
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=eb9509fe"></script>
+</div><script src="../_static/documentation_options.js?v=42d57d98"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

@@ -13,11 +13,11 @@ OpenAPI specification tools.
 
 | [`add_property`](#ju.oas.add_property)(schema, sent_as, spec_names, ...)   | Add the parameter or body property `name`, sent in `place`, to the object `schema`, keyed by its name; when that is taken (the same name in another place -- `id` in the query and in a header, a query `name` and a body `name`), by a distinct key.                                                                                                                                                                               |
 |---------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `compare_modules_to_missing_funcs`()                                                              |                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| `compare_modules_to_operationids`()                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| [`compare_modules_to_missing_funcs`](#ju.oas.compare_modules_to_missing_funcs)()               | Compare the generated client modules to the functions missing from them (a development helper).                                                                                                                                                                                                                                                                                                                                     |
+| [`compare_modules_to_operationids`](#ju.oas.compare_modules_to_operationids)()                | Compare the generated client modules to the spec's operation ids (a development helper).                                                                                                                                                                                                                                                                                                                                            |
 | [`default_func_namer`](#ju.oas.default_func_namer)(method, path[, details, ...]) | Default function name generator for OpenAPI routes.                                                                                                                                                                                                                                                                                                                                                                                 |
-| `default_get_response`(method, url, \*\*kwargs)                                                   |                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| `default_response_egress`(method, uri)                                                            |                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| [`default_get_response`](#ju.oas.default_get_response)(method, url, \*\*kwargs)    | Send an HTTP request with `requests` and return the response.                                                                                                                                                                                                                                                                                                                                                                       |
+| [`default_response_egress`](#ju.oas.default_response_egress)(method, uri)             | Return a function calling `.json()` on a response.                                                                                                                                                                                                                                                                                                                                                                                  |
 | [`ensure_openapi_dict`](#ju.oas.ensure_openapi_dict)(spec)                        | Ensure that the OpenAPI specification is a dictionary.                                                                                                                                                                                                                                                                                                                                                                              |
 | [`generate_and_import_openapi_client`](#ju.oas.generate_and_import_openapi_client)(openapi_spec) | openapi_spec: dict, or str (path to YAML/JSON file) output_dir: where to generate the client (default: temp dir) file_format: 'yaml' or 'json' (used if openapi_spec is a dict)                                                                                                                                                                                                                                                     |
 | [`generate_openapi_client`](#ju.oas.generate_openapi_client)(openapi_spec[, ...])     | openapi_spec: dict, or str (path to YAML/JSON file) output_dir: where to generate the client (default: temp dir) file_format: 'yaml' or 'json' (used if openapi_spec is a dict)                                                                                                                                                                                                                                                     |
@@ -26,10 +26,10 @@ OpenAPI specification tools.
 | [`merge_request_body_json_schema`](#ju.oas.merge_request_body_json_schema)(details, ...)     | If the operation has a requestBody with a JSON schema, merge its properties and required fields into param_schema.                                                                                                                                                                                                                                                                                                                  |
 | [`openapi_to_funcs`](#ju.oas.openapi_to_funcs)(spec, \*[, base_url, ...])      | spec: dict or str (YAML/JSON string or file path) base_url: override the spec's server URL default_servers_url: default URL to use if no servers are specified in the spec get_response: function to get the response object (default: requests.request) response_egress: function (method, uri) -> callable to extract result from response Returns a generator yielding OpenApiFunc instances for each route in the OpenAPI spec. |
 | [`openapi_to_generated_funcs`](#ju.oas.openapi_to_generated_funcs)(spec, \*[, ...])      | Like openapi_to_funcs, but yields OpenApiFunc objects for each route, using the generated client for requests.                                                                                                                                                                                                                                                                                                                      |
-| `print_generated_modules`()                                                                       |                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| [`print_generated_modules`](#ju.oas.print_generated_modules)()                        | Print the generated client modules (a development helper).                                                                                                                                                                                                                                                                                                                                                                          |
 | [`properties_of_schema`](#ju.oas.properties_of_schema)(schema)                     | Returns the properties of the given schema, encapsulating in ArrayOf to indicate that the schema is for an array of objects, and not just a single object.                                                                                                                                                                                                                                                                          |
 | [`resolve_refs`](#ju.oas.resolve_refs)(open_api_spec, d)                   | Recursively resolves all references in 'd' using 'open_api_spec'.                                                                                                                                                                                                                                                                                                                                                                   |
-| `return_empty_dict_on_error`(e)                                                                   |                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| [`return_empty_dict_on_error`](#ju.oas.return_empty_dict_on_error)(e)                    | Return an empty dict, whatever the exception `e`.                                                                                                                                                                                                                                                                                                                                                                                   |
 | [`validate_openapi_to_generated_funcs_alignment`](#ju.oas.validate_openapi_to_generated_funcs_alignment)()  | Example usage of openapi_to_generated_funcs.                                                                                                                                                                                                                                                                                                                                                                                        |
 
 ### Classes
@@ -128,9 +128,21 @@ JSON is preferred; then form-urlencoded, then multipart.
 ('multipart/form-data', ['a'])
 ```
 
+#### *property* input_specs
+
+The `parameters` and `requestBody` specs of the route.
+
+#### *property* method_data
+
+The spec of the route’s method on its endpoint.
+
 #### *property* output_properties
 
 Returns the schema for the response with the given status code.
+
+#### *property* output_specs
+
+The `responses` spec of the route.
 
 #### *property* params
 
@@ -206,6 +218,14 @@ to carry between calls.
 ('header', ['id'])
 ```
 
+### ju.oas.compare_modules_to_missing_funcs()
+
+Compare the generated client modules to the functions missing from them (a development helper).
+
+### ju.oas.compare_modules_to_operationids()
+
+Compare the generated client modules to the spec’s operation ids (a development helper).
+
 ### ju.oas.default_func_namer(method, path, details=None, , favor_operation_id=False)
 
 Default function name generator for OpenAPI routes.
@@ -217,6 +237,14 @@ Default function name generator for OpenAPI routes.
 
 * **Return type:**
   [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
+
+### ju.oas.default_get_response(method, url, \*\*kwargs)
+
+Send an HTTP request with `requests` and return the response.
+
+### ju.oas.default_response_egress(method, uri)
+
+Return a function calling `.json()` on a response.
 
 ### ju.oas.ensure_openapi_dict(spec)
 
@@ -251,7 +279,7 @@ file_format: ‘yaml’ or ‘json’ (used if openapi_spec is a dict)
 * **Returns:**
   imported client module
 
-### ju.oas.get_routes(d, include_methods=('delete', 'post', 'put', 'patch', 'head', 'options', 'get'))
+### ju.oas.get_routes(d, include_methods=('options', 'get', 'head', 'delete', 'put', 'post', 'patch'))
 
 Takes OpenAPI specification dict ‘d’ and returns the key-paths to all the endpoints.
 
@@ -298,6 +326,10 @@ Uses func_namer for naming, and parameter schema from the OpenAPI spec.
 * **Return type:**
   [`Iterator`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterator)[[`OpenApiFunc`](#ju.oas.OpenApiFunc)]
 
+### ju.oas.print_generated_modules()
+
+Print the generated client modules (a development helper).
+
 ### ju.oas.properties_of_schema(schema)
 
 Returns the properties of the given schema, encapsulating in ArrayOf to indicate
@@ -317,6 +349,10 @@ Recursively resolves all references in ‘d’ using ‘open_api_spec’.
   [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
 * **Returns:**
   The dictionary with all references resolved.
+
+### ju.oas.return_empty_dict_on_error(e)
+
+Return an empty dict, whatever the exception `e`.
 
 ### ju.oas.validate_openapi_to_generated_funcs_alignment()
 

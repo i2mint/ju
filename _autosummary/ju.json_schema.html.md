@@ -34,18 +34,22 @@ Example usage:
 | [`function_to_json_schema`](#ju.json_schema.function_to_json_schema)(func, \*[, doc, ...])    | Transforms a Python function to a JSON schema.                                                                                                                                                                          |
 |---------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [`get_properties`](#ju.json_schema.get_properties)(parameters, \*[, ...])            | Returns the properties dict for the JSON schema.                                                                                                                                                                        |
-| `get_required`(properties)                                                                        |                                                                                                                                                                                                                         |
+| [`get_required`](#ju.json_schema.get_required)(properties)                         | Return the names of the `properties` that have no `"default"`.                                                                                                                                                          |
 | [`json_schema_to_signature`](#ju.json_schema.json_schema_to_signature)(json_schema, \*[, ...]) | Transforms a JSON schema or OpenAPI parameters list to a Python function signature.                                                                                                                                     |
 | [`merge_with_defaults`](#ju.json_schema.merge_with_defaults)(defaults, overwrites)        | Returns a new dictionary that combines two dictionaries by using the keys and order from the first dictionary (defaults) and overwriting its values with those from the second dictionary (overwrites) when they exist. |
-| `parametrized_param_to_type`(param, \*[, ...])                                                    |                                                                                                                                                                                                                         |
-| `print_dict`(d)                                                                                   |                                                                                                                                                                                                                         |
-| `print_schema`([func_key, store])                                                                 |                                                                                                                                                                                                                         |
-| `pydantic_model_to_type_mapping`(pydantic_model)                                                  |                                                                                                                                                                                                                         |
+| [`parametrized_param_to_type`](#ju.json_schema.parametrized_param_to_type)(param, \*[, ...])     | Return the JSON type of `param`: that of the first `type_mapping` pair whose python type matches, else `default`.                                                                                                       |
+| [`print_dict`](#ju.json_schema.print_dict)(d)                                    | Print `d` as indented JSON.                                                                                                                                                                                             |
+| [`print_schema`](#ju.json_schema.print_schema)([func_key, store])                  | Print the rjsf schema of `store[func_key]`.                                                                                                                                                                             |
+| [`pydantic_model_to_type_mapping`](#ju.json_schema.pydantic_model_to_type_mapping)(pydantic_model)   | Map each field annotation of `pydantic_model` to the JSON schema type pydantic gives it.                                                                                                                                |
 | [`pyname_to_title`](#ju.json_schema.pyname_to_title)(pyname)                          | Converts a Python name to a title.                                                                                                                                                                                      |
 | [`schema_param_names`](#ju.json_schema.schema_param_names)(json_schema, \*[, ...])       | Map the Python parameter names `json_schema_to_signature` gives to the original names in the schema (the SSOT for the renaming, so callers can build requests with the original names).                                 |
 | [`signature_to_json_schema`](#ju.json_schema.signature_to_json_schema)(func, \*[, doc, ...])   | Transforms a Python function to a JSON schema.                                                                                                                                                                          |
 | [`title_to_pyname`](#ju.json_schema.title_to_pyname)(title)                           | Converts a title to a Python name.                                                                                                                                                                                      |
-| `wrap_schema_in_opus_spec`(schema)                                                                |                                                                                                                                                                                                                         |
+| [`wrap_schema_in_opus_spec`](#ju.json_schema.wrap_schema_in_opus_spec)(schema)                 | Wrap `schema` as `{"rjsf": {"schema": schema}}`.                                                                                                                                                                        |
+
+### ju.json_schema.DFLT_PARAM_TO_TYPE(param, \*, type_mapping=((<class 'str'>, 'string'), (<class 'bool'>, 'boolean'), (<class 'int'>, 'integer'), (<class 'float'>, 'number'), (<class 'collections.abc.Mapping'>, 'object'), (collections.abc.Sequence[str], 'array'), (<class 'bytes'>, 'string'), (<class 'bytearray'>, 'string'), (<class 'memoryview'>, 'string'), (<class 'collections.UserString'>, 'string'), (<class 'collections.abc.Sequence'>, 'array')), default='string')
+
+Return the JSON type of `param`: that of the first `type_mapping` pair whose python type matches, else `default`.
 
 ### ju.json_schema.OAS_NAME_KEY *= 'x-oas-name'*
 
@@ -108,6 +112,10 @@ Returns the properties dict for the JSON schema.
 ...     }
 ... )
 ```
+
+### ju.json_schema.get_required(properties)
+
+Return the names of the `properties` that have no `"default"`.
 
 ### ju.json_schema.json_schema_to_signature(json_schema, \*, type_mapper=(('string', <class 'str'>), ('boolean', <class 'bool'>), ('integer', <class 'int'>), ('number', <class 'float'>), ('object', <class 'collections.abc.Mapping'>), ('array', collections.abc.Sequence[str])), default_default=None, title_to_pyname=<function title_to_pyname>, default_annotation, default_description='')
 
@@ -201,6 +209,25 @@ with those from the second dictionary (overwrites) when they exist.
 >>> merge_with_defaults(defaults, overwrites)
 {'a': 1, 'b': 4, 'c': 5}
 ```
+
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
+
+### ju.json_schema.parametrized_param_to_type(param, \*, type_mapping=((<class 'str'>, 'string'), (<class 'bool'>, 'boolean'), (<class 'int'>, 'integer'), (<class 'float'>, 'number'), (<class 'collections.abc.Mapping'>, 'object'), (collections.abc.Sequence[str], 'array'), (<class 'bytes'>, 'string'), (<class 'bytearray'>, 'string'), (<class 'memoryview'>, 'string'), (<class 'collections.UserString'>, 'string'), (<class 'collections.abc.Sequence'>, 'array')), default='string')
+
+Return the JSON type of `param`: that of the first `type_mapping` pair whose python type matches, else `default`.
+
+### ju.json_schema.print_dict(d)
+
+Print `d` as indented JSON.
+
+### ju.json_schema.print_schema(func_key='olab.objects.dpp.accuracy', store=None)
+
+Print the rjsf schema of `store[func_key]`.
+
+### ju.json_schema.pydantic_model_to_type_mapping(pydantic_model)
+
+Map each field annotation of `pydantic_model` to the JSON schema type pydantic gives it.
 
 * **Return type:**
   [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
@@ -310,3 +337,7 @@ If the title contains camel case, it will be split into words.
 
 * **Return type:**
   [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
+
+### ju.json_schema.wrap_schema_in_opus_spec(schema)
+
+Wrap `schema` as `{"rjsf": {"schema": schema}}`.

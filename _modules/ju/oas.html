@@ -264,8 +264,12 @@
 
 <span class="c1"># Make a function that gets the value of a key in a dict, given a path to that key</span>
 <span class="c1"># but returning an empty dict if any element of the path doesn't exist</span>
+<div class="viewcode-block" id="return_empty_dict_on_error">
+<a class="viewcode-back" href="../../_autosummary/ju.oas.html#ju.oas.return_empty_dict_on_error">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">return_empty_dict_on_error</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
-    <span class="k">return</span> <span class="nb">dict</span><span class="p">()</span>
+<span class="w">    </span><span class="sd">"""Return an empty dict, whatever the exception ``e``."""</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">()</span></div>
+
 
 
 <span class="n">path_get</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
@@ -340,12 +344,14 @@
 <span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">type_mapping</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">dflt_type_mapping</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Keep the ``spec`` and make the route factory and title from it."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">spec</span> <span class="o">=</span> <span class="n">spec</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_mk_route</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">Route</span><span class="p">,</span> <span class="n">spec</span><span class="o">=</span><span class="n">spec</span><span class="p">,</span> <span class="n">type_mapping</span><span class="o">=</span><span class="n">type_mapping</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_title</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"info"</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"title"</span><span class="p">,</span> <span class="s2">"OpenAPI spec"</span><span class="p">)</span>
 
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_yaml</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">yaml_str</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Make an instance from a YAML string of an OpenAPI spec."""</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
 
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">yaml_str</span><span class="p">))</span>
@@ -355,12 +361,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="p">[</span><span class="s2">"paths"</span><span class="p">]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Iterate over the ``(method, endpoint)`` routes of the spec."""</span>
         <span class="k">return</span> <span class="n">get_routes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Return the ``Route`` for ``k``, a ``(method, endpoint)`` pair."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mk_route</span><span class="p">(</span><span class="o">*</span><span class="n">k</span><span class="p">,</span> <span class="n">spec</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""Return ``ClassName('title')``, using the title of the spec."""</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">('</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_title</span><span class="si">}</span><span class="s2">')"</span></div>
 
 
@@ -549,10 +558,12 @@
     <span class="n">type_mapping</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">dflt_type_mapping</span><span class="p">,</span> <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Make ``type_mapping`` a plain ``dict`` copy."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">type_mapping</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">type_mapping</span><span class="p">)</span>
 
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">method_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""The spec of the route's method on its endpoint."""</span>
         <span class="n">method</span><span class="p">,</span> <span class="n">endpoint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">endpoint</span>
         <span class="n">path_item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"paths"</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">endpoint</span><span class="p">,</span> <span class="p">{})</span>
         <span class="n">method_data</span> <span class="o">=</span> <span class="n">path_item</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -572,6 +583,7 @@
 
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">input_specs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""The ``parameters`` and ``requestBody`` specs of the route."""</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="s2">"parameters"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"parameters"</span><span class="p">,</span> <span class="p">[]),</span>
             <span class="s2">"requestBody"</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"requestBody"</span><span class="p">,</span> <span class="p">{}),</span>
@@ -604,6 +616,7 @@
 
     <span class="nd">@cached_property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">output_specs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""The ``responses`` spec of the route."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">method_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"responses"</span><span class="p">,</span> <span class="p">{})</span>
 
     <span class="nd">@cached_property</span>
@@ -770,14 +783,22 @@
 
 
 
+<div class="viewcode-block" id="default_get_response">
+<a class="viewcode-back" href="../../_autosummary/ju.oas.html#ju.oas.default_get_response">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">default_get_response</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Send an HTTP request with ``requests`` and return the response."""</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
 
-    <span class="k">return</span> <span class="n">requests</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">method</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">url</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">requests</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">method</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">url</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
+
+<div class="viewcode-block" id="default_response_egress">
+<a class="viewcode-back" href="../../_autosummary/ju.oas.html#ju.oas.default_response_egress">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">default_response_egress</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">uri</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">operations</span><span class="o">.</span><span class="n">methodcaller</span><span class="p">(</span><span class="s2">"json"</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""Return a function calling ``.json()`` on a response."""</span>
+    <span class="k">return</span> <span class="n">operations</span><span class="o">.</span><span class="n">methodcaller</span><span class="p">(</span><span class="s2">"json"</span><span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="OpenApiFunc">
@@ -800,6 +821,7 @@
         <span class="n">qualname</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">doc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Store the request arguments and build the signature from the spec."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="n">method</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">uri</span> <span class="o">=</span> <span class="n">uri</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">base_url</span> <span class="o">=</span> <span class="n">base_url</span>
@@ -846,6 +868,7 @@
         <span class="k">return</span> <span class="n">places</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Map the arguments by where the spec sends them (path, query, headers, cookies, body), make the request and return the egressed response."""</span>
         <span class="n">_kwargs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__signature__</span><span class="o">.</span><span class="n">map_arguments</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
         <span class="c1"># Split the arguments by where the spec sends them, under the spec's names</span>
         <span class="n">path_params</span><span class="p">,</span> <span class="n">query_params</span><span class="p">,</span> <span class="n">headers</span><span class="p">,</span> <span class="n">cookies</span> <span class="o">=</span> <span class="p">{},</span> <span class="p">{},</span> <span class="p">{},</span> <span class="p">{}</span>
@@ -883,6 +906,7 @@
         <span class="k">return</span> <span class="n">egress</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""Return a representation showing the function's signature."""</span>
         <span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
 
         <span class="n">sig</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"__signature__"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
@@ -1275,7 +1299,10 @@
 
 
 
+<div class="viewcode-block" id="print_generated_modules">
+<a class="viewcode-back" href="../../_autosummary/ju.oas.html#ju.oas.print_generated_modules">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">print_generated_modules</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""Print the generated client modules (a development helper)."""</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">ju.oas</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_openapi_client</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
@@ -1284,10 +1311,14 @@
     <span class="n">client_module</span> <span class="o">=</span> <span class="n">generate_openapi_client</span><span class="p">(</span><span class="n">openapi_spec</span><span class="p">)</span>
     <span class="n">api_default_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">client_module</span><span class="o">.</span><span class="n">__path__</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">"api"</span><span class="p">,</span> <span class="s2">"default"</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">"api/default/ modules:"</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="nb">sorted</span><span class="p">([</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">api_default_dir</span><span class="p">)</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">".py"</span><span class="p">)]))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">sorted</span><span class="p">([</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">api_default_dir</span><span class="p">)</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">".py"</span><span class="p">)]))</span></div>
 
 
+
+<div class="viewcode-block" id="compare_modules_to_missing_funcs">
+<a class="viewcode-back" href="../../_autosummary/ju.oas.html#ju.oas.compare_modules_to_missing_funcs">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compare_modules_to_missing_funcs</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""Compare the generated client modules to the functions missing from them (a development helper)."""</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">ju.oas</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_openapi_client</span><span class="p">,</span> <span class="n">openapi_to_funcs</span>
@@ -1311,10 +1342,14 @@
     <span class="c1"># Print all dynamic function names for reference</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Dynamic function names:"</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">dyn_func_names</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"  "</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"  "</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span></div>
 
 
+
+<div class="viewcode-block" id="compare_modules_to_operationids">
+<a class="viewcode-back" href="../../_autosummary/ju.oas.html#ju.oas.compare_modules_to_operationids">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compare_modules_to_operationids</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">"""Compare the generated client modules to the spec's operation ids (a development helper)."""</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">ju.oas</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_openapi_client</span>
@@ -1347,7 +1382,8 @@
         <span class="nb">print</span><span class="p">(</span><span class="s2">"  "</span><span class="p">,</span> <span class="n">opid</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Generated modules with no matching operationId:"</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">mod</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">module_files</span><span class="p">)</span> <span class="o">-</span> <span class="n">operation_ids</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">"  "</span><span class="p">,</span> <span class="n">mod</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">"  "</span><span class="p">,</span> <span class="n">mod</span><span class="p">)</span></div>
+
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">"__main__"</span><span class="p">:</span>
@@ -1380,7 +1416,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=eb9509fe"></script>
+</div><script src="../../_static/documentation_options.js?v=42d57d98"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>

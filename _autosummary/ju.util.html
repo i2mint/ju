@@ -264,11 +264,11 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#ju.util.apply" title="ju.util.apply"><code class="xref py py-obj docutils literal notranslate"><span class="pre">apply</span></code></a>(func, obj)</p></td>
 <td><p>Calls a function to an object, returing the result</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">asis</span></code>(obj)</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#ju.util.asis" title="ju.util.asis"><code class="xref py py-obj docutils literal notranslate"><span class="pre">asis</span></code></a>(obj)</p></td>
+<td><p>Return <code class="docutils literal notranslate"><span class="pre">obj</span></code> unchanged.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">display_dag_of_code</span></code>(func, *args, **kwargs)</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ju.util.display_dag_of_code" title="ju.util.display_dag_of_code"><code class="xref py py-obj docutils literal notranslate"><span class="pre">display_dag_of_code</span></code></a>(func, *args, **kwargs)</p></td>
+<td><p>Return the <code class="docutils literal notranslate"><span class="pre">dot_digraph</span></code> of the <code class="docutils literal notranslate"><span class="pre">meshed</span></code> DAG of the code of <code class="docutils literal notranslate"><span class="pre">func</span></code>.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#ju.util.ensure_callable_mapper" title="ju.util.ensure_callable_mapper"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ensure_callable_mapper</span></code></a>(mapper, *[, default])</p></td>
 <td><p>Will return a CallableMapper from the specification of a Mapper, which could be a Mapping itself, a callable, or (key, value) pairs.</p></td>
@@ -285,14 +285,14 @@
 <tr class="row-even"><td><p><a class="reference internal" href="#ju.util.feature_switch" title="ju.util.feature_switch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_switch</span></code></a>(obj, *, featurizer, ...)</p></td>
 <td><p>Returns the output of a feature based on a featurizer and a mapping</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_jsonable</span></code>(x)</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ju.util.is_jsonable" title="ju.util.is_jsonable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_jsonable</span></code></a>(x)</p></td>
+<td><p>Return whether <code class="docutils literal notranslate"><span class="pre">x</span></code> can be serialized with <code class="docutils literal notranslate"><span class="pre">json.dumps</span></code>.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#ju.util.is_type" title="ju.util.is_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_type</span></code></a>(param, type_)</p></td>
 <td><p>Checks if the type of a parameter's default value or its annotation matches a given type.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mk_function_returning</span></code>(_obj)</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#ju.util.mk_function_returning" title="ju.util.mk_function_returning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mk_function_returning</span></code></a>(_obj)</p></td>
+<td><p>Return a function that returns <code class="docutils literal notranslate"><span class="pre">_obj</span></code> whatever it is called with.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#ju.util.resolve_annotations" title="ju.util.resolve_annotations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resolve_annotations</span></code></a>(func, parameters)</p></td>
 <td><p>Returns <code class="docutils literal notranslate"><span class="pre">parameters</span></code> (a mapping or iterable of <code class="code docutils literal notranslate"><span class="pre">Parameter</span></code>) with the string annotations of <code class="docutils literal notranslate"><span class="pre">func</span></code> evaluated -- all of them under <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">__future__</span> <span class="pre">import</span> <span class="pre">annotations</span></code>.</p></td>
@@ -370,6 +370,18 @@ That is, <code class="docutils literal notranslate"><span class="pre">obj</span>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="ju.util.asis">
+<span class="sig-prename descclassname"><span class="pre">ju.util.</span></span><span class="sig-name descname"><span class="pre">asis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ju/util.html#asis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.util.asis" title="Link to this definition">¶</a></dt>
+<dd><p>Return <code class="docutils literal notranslate"><span class="pre">obj</span></code> unchanged.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ju.util.display_dag_of_code">
+<span class="sig-prename descclassname"><span class="pre">ju.util.</span></span><span class="sig-name descname"><span class="pre">display_dag_of_code</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ju/util.html#display_dag_of_code"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.util.display_dag_of_code" title="Link to this definition">¶</a></dt>
+<dd><p>Return the <code class="docutils literal notranslate"><span class="pre">dot_digraph</span></code> of the <code class="docutils literal notranslate"><span class="pre">meshed</span></code> DAG of the code of <code class="docutils literal notranslate"><span class="pre">func</span></code>.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="ju.util.ensure_callable_mapper">
 <span class="sig-prename descclassname"><span class="pre">ju.util.</span></span><span class="sig-name descname"><span class="pre">ensure_callable_mapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapper</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Sentinel('NotSpecified')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ju/util.html#ensure_callable_mapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.util.ensure_callable_mapper" title="Link to this definition">¶</a></dt>
 <dd><p>Will return a CallableMapper from the specification of a Mapper,
@@ -444,6 +456,12 @@ requested key is not found.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="ju.util.is_jsonable">
+<span class="sig-prename descclassname"><span class="pre">ju.util.</span></span><span class="sig-name descname"><span class="pre">is_jsonable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ju/util.html#is_jsonable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.util.is_jsonable" title="Link to this definition">¶</a></dt>
+<dd><p>Return whether <code class="docutils literal notranslate"><span class="pre">x</span></code> can be serialized with <code class="docutils literal notranslate"><span class="pre">json.dumps</span></code>.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="ju.util.is_type">
 <span class="sig-prename descclassname"><span class="pre">ju.util.</span></span><span class="sig-name descname"><span class="pre">is_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ju/util.html#is_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.util.is_type" title="Link to this definition">¶</a></dt>
 <dd><p>Checks if the type of a parameter’s default value or its annotation matches a
@@ -513,6 +531,12 @@ parameterized generic:</p>
 <span class="go">True</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ju.util.mk_function_returning">
+<span class="sig-prename descclassname"><span class="pre">ju.util.</span></span><span class="sig-name descname"><span class="pre">mk_function_returning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ju/util.html#mk_function_returning"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ju.util.mk_function_returning" title="Link to this definition">¶</a></dt>
+<dd><p>Return a function that returns <code class="docutils literal notranslate"><span class="pre">_obj</span></code> whatever it is called with.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -653,12 +677,16 @@ unchanged if it is not a union, and the single remaining member if there is one.
 <li><a class="reference internal" href="#ju.util.GetWithCaller"><code class="docutils literal notranslate"><span class="pre">GetWithCaller</span></code></a></li>
 <li><a class="reference internal" href="#ju.util.Gettable"><code class="docutils literal notranslate"><span class="pre">Gettable</span></code></a></li>
 <li><a class="reference internal" href="#ju.util.apply"><code class="docutils literal notranslate"><span class="pre">apply()</span></code></a></li>
+<li><a class="reference internal" href="#ju.util.asis"><code class="docutils literal notranslate"><span class="pre">asis()</span></code></a></li>
+<li><a class="reference internal" href="#ju.util.display_dag_of_code"><code class="docutils literal notranslate"><span class="pre">display_dag_of_code()</span></code></a></li>
 <li><a class="reference internal" href="#ju.util.ensure_callable_mapper"><code class="docutils literal notranslate"><span class="pre">ensure_callable_mapper()</span></code></a></li>
 <li><a class="reference internal" href="#ju.util.ensure_mapping_mapper"><code class="docutils literal notranslate"><span class="pre">ensure_mapping_mapper()</span></code></a></li>
 <li><a class="reference internal" href="#ju.util.feature_based_search"><code class="docutils literal notranslate"><span class="pre">feature_based_search()</span></code></a></li>
 <li><a class="reference internal" href="#ju.util.feature_similarity_search"><code class="docutils literal notranslate"><span class="pre">feature_similarity_search()</span></code></a></li>
 <li><a class="reference internal" href="#ju.util.feature_switch"><code class="docutils literal notranslate"><span class="pre">feature_switch()</span></code></a></li>
+<li><a class="reference internal" href="#ju.util.is_jsonable"><code class="docutils literal notranslate"><span class="pre">is_jsonable()</span></code></a></li>
 <li><a class="reference internal" href="#ju.util.is_type"><code class="docutils literal notranslate"><span class="pre">is_type()</span></code></a></li>
+<li><a class="reference internal" href="#ju.util.mk_function_returning"><code class="docutils literal notranslate"><span class="pre">mk_function_returning()</span></code></a></li>
 <li><a class="reference internal" href="#ju.util.resolve_annotations"><code class="docutils literal notranslate"><span class="pre">resolve_annotations()</span></code></a></li>
 <li><a class="reference internal" href="#ju.util.switch_case"><code class="docutils literal notranslate"><span class="pre">switch_case()</span></code></a></li>
 <li><a class="reference internal" href="#ju.util.truncate_dict_values"><code class="docutils literal notranslate"><span class="pre">truncate_dict_values()</span></code></a></li>
@@ -674,7 +702,7 @@ unchanged if it is not a union, and the single remaining member if there is one.
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=eb9509fe"></script>
+</div><script src="../_static/documentation_options.js?v=42d57d98"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>

@@ -299,7 +299,10 @@
     <span class="n">a_sequence</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
 
 
+<div class="viewcode-block" id="pydantic_model_to_type_mapping">
+<a class="viewcode-back" href="../../_autosummary/ju.json_schema.html#ju.json_schema.pydantic_model_to_type_mapping">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">pydantic_model_to_type_mapping</span><span class="p">(</span><span class="n">pydantic_model</span><span class="p">:</span> <span class="n">BaseModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Map each field annotation of ``pydantic_model`` to the JSON schema type pydantic gives it."""</span>
     <span class="n">fields</span> <span class="o">=</span> <span class="n">pydantic_model</span><span class="o">.</span><span class="n">model_fields</span>
     <span class="n">properties</span> <span class="o">=</span> <span class="n">pydantic_model</span><span class="o">.</span><span class="n">model_json_schema</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"properties"</span><span class="p">)</span>
 
@@ -307,7 +310,8 @@
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
             <span class="k">yield</span> <span class="n">fields</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">annotation</span><span class="p">,</span> <span class="n">properties</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s2">"type"</span><span class="p">]</span>
 
-    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">gen</span><span class="p">())</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">gen</span><span class="p">())</span></div>
+
 
 
 <span class="c1"># We use a Pydantic model to get the types of the basic Python types</span>
@@ -348,18 +352,22 @@
 <span class="n">DFLT_JSON_TYPE</span> <span class="o">=</span> <span class="s2">"string"</span>  <span class="c1"># TODO: 'string' or 'object'?</span>
 
 
+<div class="viewcode-block" id="parametrized_param_to_type">
+<a class="viewcode-back" href="../../_autosummary/ju.json_schema.html#ju.json_schema.parametrized_param_to_type">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">parametrized_param_to_type</span><span class="p">(</span>
     <span class="n">param</span><span class="p">:</span> <span class="n">Parameter</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">type_mapping</span><span class="o">=</span><span class="n">DFLT_PY_JSON_TYPE_PAIRS</span><span class="p">,</span>
     <span class="n">default</span><span class="o">=</span><span class="n">DFLT_JSON_TYPE</span><span class="p">,</span>
 <span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Return the JSON type of ``param``: that of the first ``type_mapping`` pair whose python type matches, else ``default``."""</span>
     <span class="c1"># TODO: validate type_mapping. (namely child before parent)</span>
     <span class="c1">#   If parent was before child, the child would never be reached.</span>
     <span class="k">for</span> <span class="n">python_type</span><span class="p">,</span> <span class="n">json_type</span> <span class="ow">in</span> <span class="n">type_mapping</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">is_type</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">python_type</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">json_type</span>
-    <span class="k">return</span> <span class="n">default</span>
+    <span class="k">return</span> <span class="n">default</span></div>
+
 
 
 <span class="n">DFLT_PARAM_TO_TYPE</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
@@ -374,11 +382,16 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
 
 
+<div class="viewcode-block" id="print_dict">
+<a class="viewcode-back" href="../../_autosummary/ju.json_schema.html#ju.json_schema.print_dict">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">print_dict</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+<span class="w">    </span><span class="sd">"""Print ``d`` as indented JSON."""</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span></div>
+
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">print_schema</span><span class="p">(</span><span class="n">func_key</span><span class="p">,</span> <span class="n">store</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Print the rjsf schema of ``store[func_key]``, twice (see also the later redefinition)."""</span>
     <span class="n">print_dict</span><span class="p">(</span><span class="n">store</span><span class="p">[</span><span class="n">func_key</span><span class="p">][</span><span class="s2">"rjsf"</span><span class="p">][</span><span class="s2">"schema"</span><span class="p">])</span>
     <span class="n">print_dict</span><span class="p">(</span><span class="n">store</span><span class="p">[</span><span class="n">func_key</span><span class="p">][</span><span class="s2">"rjsf"</span><span class="p">][</span><span class="s2">"schema"</span><span class="p">])</span>
 
@@ -386,12 +399,20 @@
 <span class="n">form_specs</span> <span class="o">=</span> <span class="kc">None</span>
 
 
+<div class="viewcode-block" id="print_schema">
+<a class="viewcode-back" href="../../_autosummary/ju.json_schema.html#ju.json_schema.print_schema">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">print_schema</span><span class="p">(</span><span class="n">func_key</span><span class="o">=</span><span class="s2">"olab.objects.dpp.accuracy"</span><span class="p">,</span> <span class="n">store</span><span class="o">=</span><span class="n">form_specs</span><span class="p">):</span>
-    <span class="n">print_dict</span><span class="p">(</span><span class="n">store</span><span class="p">[</span><span class="n">func_key</span><span class="p">][</span><span class="s2">"rjsf"</span><span class="p">][</span><span class="s2">"schema"</span><span class="p">])</span>
+<span class="w">    </span><span class="sd">"""Print the rjsf schema of ``store[func_key]``."""</span>
+    <span class="n">print_dict</span><span class="p">(</span><span class="n">store</span><span class="p">[</span><span class="n">func_key</span><span class="p">][</span><span class="s2">"rjsf"</span><span class="p">][</span><span class="s2">"schema"</span><span class="p">])</span></div>
 
 
+
+<div class="viewcode-block" id="wrap_schema_in_opus_spec">
+<a class="viewcode-back" href="../../_autosummary/ju.json_schema.html#ju.json_schema.wrap_schema_in_opus_spec">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">wrap_schema_in_opus_spec</span><span class="p">(</span><span class="n">schema</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">{</span><span class="s2">"rjsf"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"schema"</span><span class="p">:</span> <span class="n">schema</span><span class="p">}}</span>
+<span class="w">    </span><span class="sd">"""Wrap ``schema`` as ``{"rjsf": {"schema": schema}}``."""</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">"rjsf"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"schema"</span><span class="p">:</span> <span class="n">schema</span><span class="p">}}</span></div>
+
 
 
 <div class="viewcode-block" id="merge_with_defaults">
@@ -1026,8 +1047,12 @@
 
 
 
+<div class="viewcode-block" id="get_required">
+<a class="viewcode-back" href="../../_autosummary/ju.json_schema.html#ju.json_schema.get_required">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_required</span><span class="p">(</span><span class="n">properties</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">properties</span> <span class="k">if</span> <span class="s2">"default"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">[</span><span class="n">name</span><span class="p">]]</span>
+<span class="w">    </span><span class="sd">"""Return the names of the ``properties`` that have no ``"default"``."""</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">properties</span> <span class="k">if</span> <span class="s2">"default"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">[</span><span class="n">name</span><span class="p">]]</span></div>
+
 </pre></div>
         </article>
       </div>
@@ -1056,7 +1081,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=eb9509fe"></script>
+</div><script src="../../_static/documentation_options.js?v=42d57d98"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>

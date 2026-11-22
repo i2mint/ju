@@ -1,4 +1,4 @@
-> built 2026-11-18 13:00 UTC from 5faec80 (master) · ju 0.1.42. Details: build_info.json
+> built 2026-11-22 14:09 UTC from 86745a0 (master) · ju 0.1.43. Details: build_info.json
 
 # index.html.md
 
@@ -290,18 +290,22 @@ Example usage:
 | [`function_to_json_schema`](_autosummary/ju.json_schema.html.md#ju.json_schema.function_to_json_schema)(func, \*[, doc, ...])    | Transforms a Python function to a JSON schema.                                                                                                                                                                          |
 |---------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [`get_properties`](_autosummary/ju.json_schema.html.md#ju.json_schema.get_properties)(parameters, \*[, ...])            | Returns the properties dict for the JSON schema.                                                                                                                                                                        |
-| `get_required`(properties)                                                                        |                                                                                                                                                                                                                         |
+| [`get_required`](_autosummary/ju.json_schema.html.md#ju.json_schema.get_required)(properties)                         | Return the names of the `properties` that have no `"default"`.                                                                                                                                                          |
 | [`json_schema_to_signature`](_autosummary/ju.json_schema.html.md#ju.json_schema.json_schema_to_signature)(json_schema, \*[, ...]) | Transforms a JSON schema or OpenAPI parameters list to a Python function signature.                                                                                                                                     |
 | [`merge_with_defaults`](_autosummary/ju.json_schema.html.md#ju.json_schema.merge_with_defaults)(defaults, overwrites)        | Returns a new dictionary that combines two dictionaries by using the keys and order from the first dictionary (defaults) and overwriting its values with those from the second dictionary (overwrites) when they exist. |
-| `parametrized_param_to_type`(param, \*[, ...])                                                    |                                                                                                                                                                                                                         |
-| `print_dict`(d)                                                                                   |                                                                                                                                                                                                                         |
-| `print_schema`([func_key, store])                                                                 |                                                                                                                                                                                                                         |
-| `pydantic_model_to_type_mapping`(pydantic_model)                                                  |                                                                                                                                                                                                                         |
+| [`parametrized_param_to_type`](_autosummary/ju.json_schema.html.md#ju.json_schema.parametrized_param_to_type)(param, \*[, ...])     | Return the JSON type of `param`: that of the first `type_mapping` pair whose python type matches, else `default`.                                                                                                       |
+| [`print_dict`](_autosummary/ju.json_schema.html.md#ju.json_schema.print_dict)(d)                                    | Print `d` as indented JSON.                                                                                                                                                                                             |
+| [`print_schema`](_autosummary/ju.json_schema.html.md#ju.json_schema.print_schema)([func_key, store])                  | Print the rjsf schema of `store[func_key]`.                                                                                                                                                                             |
+| [`pydantic_model_to_type_mapping`](_autosummary/ju.json_schema.html.md#ju.json_schema.pydantic_model_to_type_mapping)(pydantic_model)   | Map each field annotation of `pydantic_model` to the JSON schema type pydantic gives it.                                                                                                                                |
 | [`pyname_to_title`](_autosummary/ju.json_schema.html.md#ju.json_schema.pyname_to_title)(pyname)                          | Converts a Python name to a title.                                                                                                                                                                                      |
 | [`schema_param_names`](_autosummary/ju.json_schema.html.md#ju.json_schema.schema_param_names)(json_schema, \*[, ...])       | Map the Python parameter names `json_schema_to_signature` gives to the original names in the schema (the SSOT for the renaming, so callers can build requests with the original names).                                 |
 | [`signature_to_json_schema`](_autosummary/ju.json_schema.html.md#ju.json_schema.signature_to_json_schema)(func, \*[, doc, ...])   | Transforms a Python function to a JSON schema.                                                                                                                                                                          |
 | [`title_to_pyname`](_autosummary/ju.json_schema.html.md#ju.json_schema.title_to_pyname)(title)                           | Converts a title to a Python name.                                                                                                                                                                                      |
-| `wrap_schema_in_opus_spec`(schema)                                                                |                                                                                                                                                                                                                         |
+| [`wrap_schema_in_opus_spec`](_autosummary/ju.json_schema.html.md#ju.json_schema.wrap_schema_in_opus_spec)(schema)                 | Wrap `schema` as `{"rjsf": {"schema": schema}}`.                                                                                                                                                                        |
+
+### ju.json_schema.DFLT_PARAM_TO_TYPE(param, \*, type_mapping=((<class 'str'>, 'string'), (<class 'bool'>, 'boolean'), (<class 'int'>, 'integer'), (<class 'float'>, 'number'), (<class 'collections.abc.Mapping'>, 'object'), (collections.abc.Sequence[str], 'array'), (<class 'bytes'>, 'string'), (<class 'bytearray'>, 'string'), (<class 'memoryview'>, 'string'), (<class 'collections.UserString'>, 'string'), (<class 'collections.abc.Sequence'>, 'array')), default='string')
+
+Return the JSON type of `param`: that of the first `type_mapping` pair whose python type matches, else `default`.
 
 ### ju.json_schema.OAS_NAME_KEY *= 'x-oas-name'*
 
@@ -364,6 +368,10 @@ Returns the properties dict for the JSON schema.
 ...     }
 ... )
 ```
+
+### ju.json_schema.get_required(properties)
+
+Return the names of the `properties` that have no `"default"`.
 
 ### ju.json_schema.json_schema_to_signature(json_schema, \*, type_mapper=(('string', <class 'str'>), ('boolean', <class 'bool'>), ('integer', <class 'int'>), ('number', <class 'float'>), ('object', <class 'collections.abc.Mapping'>), ('array', collections.abc.Sequence[str])), default_default=None, title_to_pyname=<function title_to_pyname>, default_annotation, default_description='')
 
@@ -457,6 +465,25 @@ with those from the second dictionary (overwrites) when they exist.
 >>> merge_with_defaults(defaults, overwrites)
 {'a': 1, 'b': 4, 'c': 5}
 ```
+
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
+
+### ju.json_schema.parametrized_param_to_type(param, \*, type_mapping=((<class 'str'>, 'string'), (<class 'bool'>, 'boolean'), (<class 'int'>, 'integer'), (<class 'float'>, 'number'), (<class 'collections.abc.Mapping'>, 'object'), (collections.abc.Sequence[str], 'array'), (<class 'bytes'>, 'string'), (<class 'bytearray'>, 'string'), (<class 'memoryview'>, 'string'), (<class 'collections.UserString'>, 'string'), (<class 'collections.abc.Sequence'>, 'array')), default='string')
+
+Return the JSON type of `param`: that of the first `type_mapping` pair whose python type matches, else `default`.
+
+### ju.json_schema.print_dict(d)
+
+Print `d` as indented JSON.
+
+### ju.json_schema.print_schema(func_key='olab.objects.dpp.accuracy', store=None)
+
+Print the rjsf schema of `store[func_key]`.
+
+### ju.json_schema.pydantic_model_to_type_mapping(pydantic_model)
+
+Map each field annotation of `pydantic_model` to the JSON schema type pydantic gives it.
 
 * **Return type:**
   [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
@@ -567,6 +594,10 @@ If the title contains camel case, it will be split into words.
 * **Return type:**
   [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
 
+### ju.json_schema.wrap_schema_in_opus_spec(schema)
+
+Wrap `schema` as `{"rjsf": {"schema": schema}}`.
+
 
 # _autosummary/ju.oas.html.md
 
@@ -585,11 +616,11 @@ OpenAPI specification tools.
 
 | [`add_property`](_autosummary/ju.oas.html.md#ju.oas.add_property)(schema, sent_as, spec_names, ...)   | Add the parameter or body property `name`, sent in `place`, to the object `schema`, keyed by its name; when that is taken (the same name in another place -- `id` in the query and in a header, a query `name` and a body `name`), by a distinct key.                                                                                                                                                                               |
 |---------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `compare_modules_to_missing_funcs`()                                                              |                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| `compare_modules_to_operationids`()                                                               |                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| [`compare_modules_to_missing_funcs`](_autosummary/ju.oas.html.md#ju.oas.compare_modules_to_missing_funcs)()               | Compare the generated client modules to the functions missing from them (a development helper).                                                                                                                                                                                                                                                                                                                                     |
+| [`compare_modules_to_operationids`](_autosummary/ju.oas.html.md#ju.oas.compare_modules_to_operationids)()                | Compare the generated client modules to the spec's operation ids (a development helper).                                                                                                                                                                                                                                                                                                                                            |
 | [`default_func_namer`](_autosummary/ju.oas.html.md#ju.oas.default_func_namer)(method, path[, details, ...]) | Default function name generator for OpenAPI routes.                                                                                                                                                                                                                                                                                                                                                                                 |
-| `default_get_response`(method, url, \*\*kwargs)                                                   |                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| `default_response_egress`(method, uri)                                                            |                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| [`default_get_response`](_autosummary/ju.oas.html.md#ju.oas.default_get_response)(method, url, \*\*kwargs)    | Send an HTTP request with `requests` and return the response.                                                                                                                                                                                                                                                                                                                                                                       |
+| [`default_response_egress`](_autosummary/ju.oas.html.md#ju.oas.default_response_egress)(method, uri)             | Return a function calling `.json()` on a response.                                                                                                                                                                                                                                                                                                                                                                                  |
 | [`ensure_openapi_dict`](_autosummary/ju.oas.html.md#ju.oas.ensure_openapi_dict)(spec)                        | Ensure that the OpenAPI specification is a dictionary.                                                                                                                                                                                                                                                                                                                                                                              |
 | [`generate_and_import_openapi_client`](_autosummary/ju.oas.html.md#ju.oas.generate_and_import_openapi_client)(openapi_spec) | openapi_spec: dict, or str (path to YAML/JSON file) output_dir: where to generate the client (default: temp dir) file_format: 'yaml' or 'json' (used if openapi_spec is a dict)                                                                                                                                                                                                                                                     |
 | [`generate_openapi_client`](_autosummary/ju.oas.html.md#ju.oas.generate_openapi_client)(openapi_spec[, ...])     | openapi_spec: dict, or str (path to YAML/JSON file) output_dir: where to generate the client (default: temp dir) file_format: 'yaml' or 'json' (used if openapi_spec is a dict)                                                                                                                                                                                                                                                     |
@@ -598,10 +629,10 @@ OpenAPI specification tools.
 | [`merge_request_body_json_schema`](_autosummary/ju.oas.html.md#ju.oas.merge_request_body_json_schema)(details, ...)     | If the operation has a requestBody with a JSON schema, merge its properties and required fields into param_schema.                                                                                                                                                                                                                                                                                                                  |
 | [`openapi_to_funcs`](_autosummary/ju.oas.html.md#ju.oas.openapi_to_funcs)(spec, \*[, base_url, ...])      | spec: dict or str (YAML/JSON string or file path) base_url: override the spec's server URL default_servers_url: default URL to use if no servers are specified in the spec get_response: function to get the response object (default: requests.request) response_egress: function (method, uri) -> callable to extract result from response Returns a generator yielding OpenApiFunc instances for each route in the OpenAPI spec. |
 | [`openapi_to_generated_funcs`](_autosummary/ju.oas.html.md#ju.oas.openapi_to_generated_funcs)(spec, \*[, ...])      | Like openapi_to_funcs, but yields OpenApiFunc objects for each route, using the generated client for requests.                                                                                                                                                                                                                                                                                                                      |
-| `print_generated_modules`()                                                                       |                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| [`print_generated_modules`](_autosummary/ju.oas.html.md#ju.oas.print_generated_modules)()                        | Print the generated client modules (a development helper).                                                                                                                                                                                                                                                                                                                                                                          |
 | [`properties_of_schema`](_autosummary/ju.oas.html.md#ju.oas.properties_of_schema)(schema)                     | Returns the properties of the given schema, encapsulating in ArrayOf to indicate that the schema is for an array of objects, and not just a single object.                                                                                                                                                                                                                                                                          |
 | [`resolve_refs`](_autosummary/ju.oas.html.md#ju.oas.resolve_refs)(open_api_spec, d)                   | Recursively resolves all references in 'd' using 'open_api_spec'.                                                                                                                                                                                                                                                                                                                                                                   |
-| `return_empty_dict_on_error`(e)                                                                   |                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| [`return_empty_dict_on_error`](_autosummary/ju.oas.html.md#ju.oas.return_empty_dict_on_error)(e)                    | Return an empty dict, whatever the exception `e`.                                                                                                                                                                                                                                                                                                                                                                                   |
 | [`validate_openapi_to_generated_funcs_alignment`](_autosummary/ju.oas.html.md#ju.oas.validate_openapi_to_generated_funcs_alignment)()  | Example usage of openapi_to_generated_funcs.                                                                                                                                                                                                                                                                                                                                                                                        |
 
 ### Classes
@@ -700,9 +731,21 @@ JSON is preferred; then form-urlencoded, then multipart.
 ('multipart/form-data', ['a'])
 ```
 
+#### *property* input_specs
+
+The `parameters` and `requestBody` specs of the route.
+
+#### *property* method_data
+
+The spec of the route’s method on its endpoint.
+
 #### *property* output_properties
 
 Returns the schema for the response with the given status code.
+
+#### *property* output_specs
+
+The `responses` spec of the route.
 
 #### *property* params
 
@@ -778,6 +821,14 @@ to carry between calls.
 ('header', ['id'])
 ```
 
+### ju.oas.compare_modules_to_missing_funcs()
+
+Compare the generated client modules to the functions missing from them (a development helper).
+
+### ju.oas.compare_modules_to_operationids()
+
+Compare the generated client modules to the spec’s operation ids (a development helper).
+
 ### ju.oas.default_func_namer(method, path, details=None, , favor_operation_id=False)
 
 Default function name generator for OpenAPI routes.
@@ -789,6 +840,14 @@ Default function name generator for OpenAPI routes.
 
 * **Return type:**
   [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
+
+### ju.oas.default_get_response(method, url, \*\*kwargs)
+
+Send an HTTP request with `requests` and return the response.
+
+### ju.oas.default_response_egress(method, uri)
+
+Return a function calling `.json()` on a response.
 
 ### ju.oas.ensure_openapi_dict(spec)
 
@@ -823,7 +882,7 @@ file_format: ‘yaml’ or ‘json’ (used if openapi_spec is a dict)
 * **Returns:**
   imported client module
 
-### ju.oas.get_routes(d, include_methods=('delete', 'post', 'put', 'patch', 'head', 'options', 'get'))
+### ju.oas.get_routes(d, include_methods=('options', 'get', 'head', 'delete', 'put', 'post', 'patch'))
 
 Takes OpenAPI specification dict ‘d’ and returns the key-paths to all the endpoints.
 
@@ -870,6 +929,10 @@ Uses func_namer for naming, and parameter schema from the OpenAPI spec.
 * **Return type:**
   [`Iterator`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterator)[[`OpenApiFunc`](_autosummary/ju.oas.html.md#ju.oas.OpenApiFunc)]
 
+### ju.oas.print_generated_modules()
+
+Print the generated client modules (a development helper).
+
 ### ju.oas.properties_of_schema(schema)
 
 Returns the properties of the given schema, encapsulating in ArrayOf to indicate
@@ -889,6 +952,10 @@ Recursively resolves all references in ‘d’ using ‘open_api_spec’.
   [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
 * **Returns:**
   The dictionary with all references resolved.
+
+### ju.oas.return_empty_dict_on_error(e)
+
+Return an empty dict, whatever the exception `e`.
 
 ### ju.oas.validate_openapi_to_generated_funcs_alignment()
 
@@ -1851,16 +1918,16 @@ Ju base utils.
 
 | [`apply`](_autosummary/ju.util.html.md#ju.util.apply)(func, obj)                                  | Calls a function to an object, returing the result                                                                                                                     |
 |----------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `asis`(obj)                                                                                        |                                                                                                                                                                        |
-| `display_dag_of_code`(func, \*args, \*\*kwargs)                                                    |                                                                                                                                                                        |
+| [`asis`](_autosummary/ju.util.html.md#ju.util.asis)(obj)                                         | Return `obj` unchanged.                                                                                                                                                |
+| [`display_dag_of_code`](_autosummary/ju.util.html.md#ju.util.display_dag_of_code)(func, \*args, \*\*kwargs)     | Return the `dot_digraph` of the `meshed` DAG of the code of `func`.                                                                                                    |
 | [`ensure_callable_mapper`](_autosummary/ju.util.html.md#ju.util.ensure_callable_mapper)(mapper, \*[, default])     | Will return a CallableMapper from the specification of a Mapper, which could be a Mapping itself, a callable, or (key, value) pairs.                                   |
 | [`ensure_mapping_mapper`](_autosummary/ju.util.html.md#ju.util.ensure_mapping_mapper)(mapper, \*[, default])      | Will return a MappingMapper (a dict really) from the specification of a Mapper, which could be a Mapping itself, a callable, or (key, value) pairs.                    |
 | [`feature_based_search`](_autosummary/ju.util.html.md#ju.util.feature_based_search)(...)                         | Returns a function that searches for a feature in a list of feature_processor_pairs                                                                                    |
 | [`feature_similarity_search`](_autosummary/ju.util.html.md#ju.util.feature_similarity_search)(obj, \*, ...[, ...])    | Returns the output of a feature based on a featurizer and a list of feature_output_pairs                                                                               |
 | [`feature_switch`](_autosummary/ju.util.html.md#ju.util.feature_switch)(obj, \*, featurizer, ...)          | Returns the output of a feature based on a featurizer and a mapping                                                                                                    |
-| `is_jsonable`(x)                                                                                   |                                                                                                                                                                        |
+| [`is_jsonable`](_autosummary/ju.util.html.md#ju.util.is_jsonable)(x)                                    | Return whether `x` can be serialized with `json.dumps`.                                                                                                                |
 | [`is_type`](_autosummary/ju.util.html.md#ju.util.is_type)(param, type_)                             | Checks if the type of a parameter's default value or its annotation matches a given type.                                                                              |
-| `mk_function_returning`(_obj)                                                                      |                                                                                                                                                                        |
+| [`mk_function_returning`](_autosummary/ju.util.html.md#ju.util.mk_function_returning)(_obj)                       | Return a function that returns `_obj` whatever it is called with.                                                                                                      |
 | [`resolve_annotations`](_autosummary/ju.util.html.md#ju.util.resolve_annotations)(func, parameters)             | Returns `parameters` (a mapping or iterable of `Parameter`) with the string annotations of `func` evaluated -- all of them under `from __future__ import annotations`. |
 | [`switch_case`](_autosummary/ju.util.html.md#ju.util.switch_case)(mapping, default)                     | Returns a function that switches between cases based on a feature                                                                                                      |
 | [`truncate_dict_values`](_autosummary/ju.util.html.md#ju.util.truncate_dict_values)(d, \*[, max_list_size, ...]) | Returns a new dictionary with the same nested keys structure, where:                                                                                                   |
@@ -1918,6 +1985,14 @@ True
 ### ju.util.apply(func, obj)
 
 Calls a function to an object, returing the result
+
+### ju.util.asis(obj)
+
+Return `obj` unchanged.
+
+### ju.util.display_dag_of_code(func, \*args, \*\*kwargs)
+
+Return the `dot_digraph` of the `meshed` DAG of the code of `func`.
 
 ### ju.util.ensure_callable_mapper(mapper, , default=Sentinel('NotSpecified'))
 
@@ -1982,6 +2057,10 @@ Returns the output of a feature based on a featurizer and a list of feature_outp
 ### ju.util.feature_switch(obj, , featurizer, feature_to_output_mapping, default)
 
 Returns the output of a feature based on a featurizer and a mapping
+
+### ju.util.is_jsonable(x)
+
+Return whether `x` can be serialized with `json.dumps`.
 
 ### ju.util.is_type(param, type_)
 
@@ -2053,6 +2132,10 @@ False
 >>> is_type(optional, Sequence)
 True
 ```
+
+### ju.util.mk_function_returning(\_obj)
+
+Return a function that returns `_obj` whatever it is called with.
 
 ### ju.util.resolve_annotations(func, parameters)
 
@@ -2212,7 +2295,7 @@ See also the online tool: [https://navneethg.github.io/jsonschemaviewer/](https:
 
 # About this build
 
-This documentation was built on **2026-11-18 13:00 UTC** from commit <a href="https://github.com/i2mint/ju/commit/5faec80e5d5196a91082c9723655112934a802ce"><code>5faec80</code></a> on branch <code>master</code>, for **ju 0.1.42** (from <code>setup.cfg</code>).
+This documentation was built on **2026-11-22 14:09 UTC** from commit <a href="https://github.com/i2mint/ju/commit/86745a0b88747c5ded3e30b6ac16a03af1ad0bc7"><code>86745a0</code></a> on branch <code>master</code>, for **ju 0.1.43** (from <code>setup.cfg</code>).
 
 #### NOTE
 Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
@@ -2221,9 +2304,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 |                     |                                                                                                                                                  |
 |---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/i2mint/ju/commit/5faec80e5d5196a91082c9723655112934a802ce"><code>5faec80e5d5196a91082c9723655112934a802ce</code></a> |
+| Commit              | <a href="https://github.com/i2mint/ju/commit/86745a0b88747c5ded3e30b6ac16a03af1ad0bc7"><code>86745a0b88747c5ded3e30b6ac16a03af1ad0bc7</code></a> |
 | Branch              | <code>master</code>                                                                                                                              |
-| Tags at this commit | <code>0.1.42</code>                                                                                                                              |
+| Tags at this commit | <code>0.1.43</code>                                                                                                                              |
 | Working tree        | clean                                                                                                                                            |
 | Remote              | <code>https://github.com/i2mint/ju</code>                                                                                                        |
 
@@ -2232,15 +2315,15 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>i2mint/ju</code>                                                                     |
-| Run          | <a href="https://github.com/i2mint/ju/actions/runs/44309101546">44309101546</a>            |
+| Run          | <a href="https://github.com/i2mint/ju/actions/runs/45031161335">45031161335</a>            |
 | Ref          | <code>refs/heads/master</code>                                                             |
-| Event commit | <code>a0cefab1981c7b46a0aa88d13216739a692b39b9</code> (in the history of the built commit) |
+| Event commit | <code>c793a500d082a191765e4acdc2379640ebd91925</code> (in the history of the built commit) |
 
 ## Tools
 
 |          |         |
 |----------|---------|
-| epythet  | 0.2.22  |
+| epythet  | 0.2.23  |
 | Sphinx   | 9.1.1   |
 | docutils | 0.22.4  |
 | Python   | 3.12.16 |
@@ -2259,14 +2342,14 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/ju/0.1.42/">0.1.42</a>, the same as the documented version.
+Latest release: <a href="https://pypi.org/project/ju/0.1.43/">0.1.43</a>, the same as the documented version.
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/i2mint/ju && cd ju
-git checkout 5faec80e5d5196a91082c9723655112934a802ce
-pip install "epythet==0.2.22"
+git checkout 86745a0b88747c5ded3e30b6ac16a03af1ad0bc7
+pip install "epythet==0.2.23"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```
 
