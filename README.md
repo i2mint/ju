@@ -2,6 +2,8 @@
 
 JSON Schema utilities: turn a Python function's signature into a JSON Schema and back, into a [react-jsonschema-form](https://github.com/rjsf-team/react-jsonschema-form) spec for a web form, or into Pydantic models; and read an OpenAPI spec as a collection of routes.
 
+Write the function once, and get its schema, its web form and its model instead of writing each by hand.
+
 ```
 pip install ju
 ```
@@ -28,7 +30,7 @@ pip install ju
 ...     },
 ...     'required': ['north', 'south'],
 ... }
->>> sig = json_schema_to_signature(schema)
+>>> sig = json_schema_to_signature(schema)  # an i2 Sig: an inspect.Signature that also carries a name and docs
 >>> sig
 <Sig (north: str, south: bool, east: int = 1, west: float = 2.0)>
 >>> sig.name
