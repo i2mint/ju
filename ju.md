@@ -1,4 +1,4 @@
-> built 2026-11-22 19:09 UTC from edbcc7e (master) · ju 0.1.44. Details: build_info.json
+> built 2026-11-22 21:54 UTC from b775358 (master) · ju 0.1.44. Details: build_info.json
 
 # index.html.md
 
@@ -885,7 +885,7 @@ file_format: ‘yaml’ or ‘json’ (used if openapi_spec is a dict)
 * **Returns:**
   imported client module
 
-### ju.oas.get_routes(d, include_methods=('post', 'delete', 'options', 'put', 'patch', 'get', 'head'))
+### ju.oas.get_routes(d, include_methods=('options', 'get', 'delete', 'head', 'put', 'patch', 'post'))
 
 Takes OpenAPI specification dict ‘d’ and returns the key-paths to all the endpoints.
 
@@ -2298,20 +2298,18 @@ See also the online tool: [https://navneethg.github.io/jsonschemaviewer/](https:
 
 # About this build
 
-This documentation was built on **2026-11-22 19:09 UTC** from commit <a href="https://github.com/i2mint/ju/commit/edbcc7e9f60161839f865cafe09e602d3f95cd00"><code>edbcc7e</code></a> on branch <code>master</code>, for **ju 0.1.44** (from <code>setup.cfg</code>).
+This documentation was built on **2026-11-22 21:54 UTC** from commit <a href="https://github.com/i2mint/ju/commit/b775358c4b02a0bc941bea6c78dd84e0ff9e4448"><code>b775358</code></a> on branch <code>master</code>, for **ju 0.1.44** (from <code>pyproject.toml</code>).
 
-#### WARNING
-The documentation and the package may be misaligned:
-
-- The documented version (0.1.44) is ahead of the latest release on PyPI (0.1.43): these docs describe unreleased code.
+#### NOTE
+Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
 
 ## Source
 
 |                     |                                                                                                                                                  |
 |---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/i2mint/ju/commit/edbcc7e9f60161839f865cafe09e602d3f95cd00"><code>edbcc7e9f60161839f865cafe09e602d3f95cd00</code></a> |
+| Commit              | <a href="https://github.com/i2mint/ju/commit/b775358c4b02a0bc941bea6c78dd84e0ff9e4448"><code>b775358c4b02a0bc941bea6c78dd84e0ff9e4448</code></a> |
 | Branch              | <code>master</code>                                                                                                                              |
-| Tags at this commit | <code>0.1.44</code>                                                                                                                              |
+| Tags at this commit | none                                                                                                                                             |
 | Working tree        | clean                                                                                                                                            |
 | Remote              | <code>https://github.com/i2mint/ju</code>                                                                                                        |
 
@@ -2320,9 +2318,9 @@ The documentation and the package may be misaligned:
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>i2mint/ju</code>                                                                     |
-| Run          | <a href="https://github.com/i2mint/ju/actions/runs/45058926551">45058926551</a>            |
+| Run          | <a href="https://github.com/i2mint/ju/actions/runs/45074576788">45074576788</a>            |
 | Ref          | <code>refs/heads/master</code>                                                             |
-| Event commit | <code>e22ae0816011e2932d0a0de09424c637743cff3e</code> (in the history of the built commit) |
+| Event commit | <code>b775358c4b02a0bc941bea6c78dd84e0ff9e4448</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -2347,13 +2345,13 @@ The documentation and the package may be misaligned:
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/ju/0.1.43/">0.1.43</a>, older than the documented version (0.1.44).
+Latest release: <a href="https://pypi.org/project/ju/0.1.44/">0.1.44</a>, the same as the documented version.
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/i2mint/ju && cd ju
-git checkout edbcc7e9f60161839f865cafe09e602d3f95cd00
+git checkout b775358c4b02a0bc941bea6c78dd84e0ff9e4448
 pip install "epythet==0.2.23"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```

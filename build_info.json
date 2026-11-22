@@ -1,34 +1,32 @@
 {
   "schema_version": 1,
-  "built_at": "2026-11-22T19:09:02Z",
+  "built_at": "2026-11-22T21:54:45Z",
   "package": {
     "name": "ju",
     "version": "0.1.44",
     "display_name": "ju",
-    "source": "setup.cfg"
+    "source": "pyproject.toml"
   },
   "git": {
     "available": true,
-    "commit": "edbcc7e9f60161839f865cafe09e602d3f95cd00",
-    "short_commit": "edbcc7e",
+    "commit": "b775358c4b02a0bc941bea6c78dd84e0ff9e4448",
+    "short_commit": "b775358",
     "branch": "master",
-    "tags": [
-      "0.1.44"
-    ],
+    "tags": [],
     "dirty": false,
     "remote_url": "https://github.com/i2mint/ju",
-    "commit_url": "https://github.com/i2mint/ju/commit/edbcc7e9f60161839f865cafe09e602d3f95cd00",
+    "commit_url": "https://github.com/i2mint/ju/commit/b775358c4b02a0bc941bea6c78dd84e0ff9e4448",
     "error": null
   },
   "ci": {
     "provider": "github",
     "repository": "i2mint/ju",
-    "sha": "e22ae0816011e2932d0a0de09424c637743cff3e",
+    "sha": "b775358c4b02a0bc941bea6c78dd84e0ff9e4448",
     "sha_in_history": true,
     "ref": "refs/heads/master",
     "ref_name": "master",
-    "run_id": "45058926551",
-    "run_url": "https://github.com/i2mint/ju/actions/runs/45058926551",
+    "run_id": "45074576788",
+    "run_url": "https://github.com/i2mint/ju/actions/runs/45074576788",
     "server_url": "https://github.com"
   },
   "tools": {
@@ -62,16 +60,14 @@
   },
   "pypi": {
     "checked": true,
-    "latest": "0.1.43",
-    "relation": "ahead",
+    "latest": "0.1.44",
+    "relation": "same",
     "error": null
   },
-  "reproduce": "git clone https://github.com/i2mint/ju && cd ju\ngit checkout edbcc7e9f60161839f865cafe09e602d3f95cd00\npip install \"epythet==0.2.23\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
+  "reproduce": "git clone https://github.com/i2mint/ju && cd ju\ngit checkout b775358c4b02a0bc941bea6c78dd84e0ff9e4448\npip install \"epythet==0.2.23\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
   "warnings": [],
   "alignment": {
-    "aligned": false,
-    "notes": [
-      "The documented version (0.1.44) is ahead of the latest release on PyPI (0.1.43): these docs describe unreleased code."
-    ]
+    "aligned": true,
+    "notes": []
   }
 }
