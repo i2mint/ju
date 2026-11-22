@@ -39,6 +39,7 @@ ju_files = _files("ju")
 
 
 def is_jsonable(x):
+    """Return whether ``x`` can be serialized with ``json.dumps``."""
     try:
         json.dumps(x)
         return True
@@ -53,6 +54,7 @@ SomeType = Union[type, GenericAlias, Any]
 
 
 def asis(obj):
+    """Return ``obj`` unchanged."""
     return obj
 
 
@@ -367,6 +369,7 @@ def _return_this(_obj):
 
 
 def mk_function_returning(_obj):
+    """Return a function that returns ``_obj`` whatever it is called with."""
     return partial(_return_this, _obj)
 
 
@@ -395,6 +398,7 @@ class Gettable(Protocol):
     """
 
     def __getitem__(self, k: KT) -> VT:
+        """Return the value for ``k``."""
         pass
 
 
@@ -522,6 +526,7 @@ from functools import partial
 
 
 def display_dag_of_code(func, *args, **kwargs):
+    """Return the ``dot_digraph`` of the ``meshed`` DAG of the code of ``func``."""
     from meshed import code_to_dag
 
     return code_to_dag(func).dot_digraph(*args, **kwargs)
