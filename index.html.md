@@ -171,6 +171,7 @@ from ju.pydantic_util import is_valid_wrt_model, valid_models
 is_valid = is_valid_wrt_model({"name": "Bob", "age": 25}, UserModel)
 
 # Find all models that validate given data
+AdminModel = data_to_pydantic_model({"name": "Root", "age": 40, "is_admin": True}, "Admin")
 models = [UserModel, ProductModel, AdminModel]
 matching = list(valid_models(data, models))
 ```
@@ -194,6 +195,7 @@ def fix_field_names(schema):
                 schema['properties'][new_name] = schema['properties'].pop(old_name)
     return schema
 
+source_schema = schema  # the JSON schema defined above
 code = pydantic_model_to_code(
     source_schema, 
     ingress_transform=fix_field_names,
@@ -220,6 +222,7 @@ paths = field_paths_and_annotations(UserModel)
 descriptions = model_field_descriptions(UserModel)
 
 # Use models as data extraction templates
+json_data = data  # the dict defined above
 extractor = ModelExtractor([UserModel, AdminModel])
 data_reader = extractor(json_data)  # Returns mapping with model-based paths
 values = data_reader['address.city']  # Extract nested values easily

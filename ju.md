@@ -1,4 +1,4 @@
-> built 2026-11-22 14:09 UTC from 86745a0 (master) · ju 0.1.43. Details: build_info.json
+> built 2026-11-22 19:09 UTC from edbcc7e (master) · ju 0.1.44. Details: build_info.json
 
 # index.html.md
 
@@ -175,6 +175,7 @@ from ju.pydantic_util import is_valid_wrt_model, valid_models
 is_valid = is_valid_wrt_model({"name": "Bob", "age": 25}, UserModel)
 
 # Find all models that validate given data
+AdminModel = data_to_pydantic_model({"name": "Root", "age": 40, "is_admin": True}, "Admin")
 models = [UserModel, ProductModel, AdminModel]
 matching = list(valid_models(data, models))
 ```
@@ -198,6 +199,7 @@ def fix_field_names(schema):
                 schema['properties'][new_name] = schema['properties'].pop(old_name)
     return schema
 
+source_schema = schema  # the JSON schema defined above
 code = pydantic_model_to_code(
     source_schema, 
     ingress_transform=fix_field_names,
@@ -224,6 +226,7 @@ paths = field_paths_and_annotations(UserModel)
 descriptions = model_field_descriptions(UserModel)
 
 # Use models as data extraction templates
+json_data = data  # the dict defined above
 extractor = ModelExtractor([UserModel, AdminModel])
 data_reader = extractor(json_data)  # Returns mapping with model-based paths
 values = data_reader['address.city']  # Extract nested values easily
@@ -882,7 +885,7 @@ file_format: ‘yaml’ or ‘json’ (used if openapi_spec is a dict)
 * **Returns:**
   imported client module
 
-### ju.oas.get_routes(d, include_methods=('options', 'get', 'head', 'delete', 'put', 'post', 'patch'))
+### ju.oas.get_routes(d, include_methods=('post', 'delete', 'options', 'put', 'patch', 'get', 'head'))
 
 Takes OpenAPI specification dict ‘d’ and returns the key-paths to all the endpoints.
 
@@ -2295,18 +2298,20 @@ See also the online tool: [https://navneethg.github.io/jsonschemaviewer/](https:
 
 # About this build
 
-This documentation was built on **2026-11-22 14:09 UTC** from commit <a href="https://github.com/i2mint/ju/commit/86745a0b88747c5ded3e30b6ac16a03af1ad0bc7"><code>86745a0</code></a> on branch <code>master</code>, for **ju 0.1.43** (from <code>setup.cfg</code>).
+This documentation was built on **2026-11-22 19:09 UTC** from commit <a href="https://github.com/i2mint/ju/commit/edbcc7e9f60161839f865cafe09e602d3f95cd00"><code>edbcc7e</code></a> on branch <code>master</code>, for **ju 0.1.44** (from <code>setup.cfg</code>).
 
-#### NOTE
-Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
+#### WARNING
+The documentation and the package may be misaligned:
+
+- The documented version (0.1.44) is ahead of the latest release on PyPI (0.1.43): these docs describe unreleased code.
 
 ## Source
 
 |                     |                                                                                                                                                  |
 |---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/i2mint/ju/commit/86745a0b88747c5ded3e30b6ac16a03af1ad0bc7"><code>86745a0b88747c5ded3e30b6ac16a03af1ad0bc7</code></a> |
+| Commit              | <a href="https://github.com/i2mint/ju/commit/edbcc7e9f60161839f865cafe09e602d3f95cd00"><code>edbcc7e9f60161839f865cafe09e602d3f95cd00</code></a> |
 | Branch              | <code>master</code>                                                                                                                              |
-| Tags at this commit | <code>0.1.43</code>                                                                                                                              |
+| Tags at this commit | <code>0.1.44</code>                                                                                                                              |
 | Working tree        | clean                                                                                                                                            |
 | Remote              | <code>https://github.com/i2mint/ju</code>                                                                                                        |
 
@@ -2315,9 +2320,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>i2mint/ju</code>                                                                     |
-| Run          | <a href="https://github.com/i2mint/ju/actions/runs/45031161335">45031161335</a>            |
+| Run          | <a href="https://github.com/i2mint/ju/actions/runs/45058926551">45058926551</a>            |
 | Ref          | <code>refs/heads/master</code>                                                             |
-| Event commit | <code>c793a500d082a191765e4acdc2379640ebd91925</code> (in the history of the built commit) |
+| Event commit | <code>e22ae0816011e2932d0a0de09424c637743cff3e</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -2342,13 +2347,13 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/ju/0.1.43/">0.1.43</a>, the same as the documented version.
+Latest release: <a href="https://pypi.org/project/ju/0.1.43/">0.1.43</a>, older than the documented version (0.1.44).
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/i2mint/ju && cd ju
-git checkout 86745a0b88747c5ded3e30b6ac16a03af1ad0bc7
+git checkout edbcc7e9f60161839f865cafe09e602d3f95cd00
 pip install "epythet==0.2.23"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```
