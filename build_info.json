@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "built_at": "2026-11-22T21:54:45Z",
+  "built_at": "2026-11-22T23:30:38Z",
   "package": {
     "name": "ju",
     "version": "0.1.44",
@@ -9,24 +9,24 @@
   },
   "git": {
     "available": true,
-    "commit": "b775358c4b02a0bc941bea6c78dd84e0ff9e4448",
-    "short_commit": "b775358",
+    "commit": "960883934b7ccdcd874a7e26234772ae74740bd2",
+    "short_commit": "9608839",
     "branch": "master",
     "tags": [],
     "dirty": false,
     "remote_url": "https://github.com/i2mint/ju",
-    "commit_url": "https://github.com/i2mint/ju/commit/b775358c4b02a0bc941bea6c78dd84e0ff9e4448",
+    "commit_url": "https://github.com/i2mint/ju/commit/960883934b7ccdcd874a7e26234772ae74740bd2",
     "error": null
   },
   "ci": {
     "provider": "github",
     "repository": "i2mint/ju",
-    "sha": "b775358c4b02a0bc941bea6c78dd84e0ff9e4448",
+    "sha": "960883934b7ccdcd874a7e26234772ae74740bd2",
     "sha_in_history": true,
     "ref": "refs/heads/master",
     "ref_name": "master",
-    "run_id": "45074576788",
-    "run_url": "https://github.com/i2mint/ju/actions/runs/45074576788",
+    "run_id": "45083466351",
+    "run_url": "https://github.com/i2mint/ju/actions/runs/45083466351",
     "server_url": "https://github.com"
   },
   "tools": {
@@ -64,7 +64,7 @@
     "relation": "same",
     "error": null
   },
-  "reproduce": "git clone https://github.com/i2mint/ju && cd ju\ngit checkout b775358c4b02a0bc941bea6c78dd84e0ff9e4448\npip install \"epythet==0.2.23\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
+  "reproduce": "git clone https://github.com/i2mint/ju && cd ju\ngit checkout 960883934b7ccdcd874a7e26234772ae74740bd2\npip install \"epythet==0.2.23\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
   "warnings": [],
   "alignment": {
     "aligned": true,

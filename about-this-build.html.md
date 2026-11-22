@@ -2,7 +2,7 @@
 
 # About this build
 
-This documentation was built on **2026-11-22 21:54 UTC** from commit <a href="https://github.com/i2mint/ju/commit/b775358c4b02a0bc941bea6c78dd84e0ff9e4448"><code>b775358</code></a> on branch <code>master</code>, for **ju 0.1.44** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-11-22 23:30 UTC** from commit <a href="https://github.com/i2mint/ju/commit/960883934b7ccdcd874a7e26234772ae74740bd2"><code>9608839</code></a> on branch <code>master</code>, for **ju 0.1.44** (from <code>pyproject.toml</code>).
 
 #### NOTE
 Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
@@ -11,7 +11,7 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 |                     |                                                                                                                                                  |
 |---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/i2mint/ju/commit/b775358c4b02a0bc941bea6c78dd84e0ff9e4448"><code>b775358c4b02a0bc941bea6c78dd84e0ff9e4448</code></a> |
+| Commit              | <a href="https://github.com/i2mint/ju/commit/960883934b7ccdcd874a7e26234772ae74740bd2"><code>960883934b7ccdcd874a7e26234772ae74740bd2</code></a> |
 | Branch              | <code>master</code>                                                                                                                              |
 | Tags at this commit | none                                                                                                                                             |
 | Working tree        | clean                                                                                                                                            |
@@ -22,9 +22,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>i2mint/ju</code>                                                                     |
-| Run          | <a href="https://github.com/i2mint/ju/actions/runs/45074576788">45074576788</a>            |
+| Run          | <a href="https://github.com/i2mint/ju/actions/runs/45083466351">45083466351</a>            |
 | Ref          | <code>refs/heads/master</code>                                                             |
-| Event commit | <code>b775358c4b02a0bc941bea6c78dd84e0ff9e4448</code> (in the history of the built commit) |
+| Event commit | <code>960883934b7ccdcd874a7e26234772ae74740bd2</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -55,7 +55,7 @@ Latest release: <a href="https://pypi.org/project/ju/0.1.44/">0.1.44</a>, the sa
 
 ```bash
 git clone https://github.com/i2mint/ju && cd ju
-git checkout b775358c4b02a0bc941bea6c78dd84e0ff9e4448
+git checkout 960883934b7ccdcd874a7e26234772ae74740bd2
 pip install "epythet==0.2.23"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```

@@ -5,7 +5,7 @@
 
 ## Pages
 
-- [ju](index.html.md): JSON schema Utils
+- [ju](index.html.md): JSON Schema utilities: turn a Python function’s signature into a JSON Schema and back, into a react-...
 - [API reference](api.html.md): | &#96;ju&#96;   | JSON schema Utils   |
 - [ju](_autosummary/ju.html.md): JSON schema Utils
 - [ju.json_schema](_autosummary/ju.json_schema.html.md): This module provides tools to transform Python functions to JSON schemas.
@@ -15,7 +15,7 @@
 - [ju.traitlets_util](_autosummary/ju.traitlets_util.html.md): Utils for traitlets
 - [ju.util](_autosummary/ju.util.html.md): Ju base utils.
 - [ju.viz](_autosummary/ju.viz.html.md): Visualization functions for Ju.
-- [About this build](about-this-build.html.md): This documentation was built on &#42;&#42;2026-11-22 21:54 UTC&#42;&#42; from commit &lt;a href="https://github.com/i2m...
+- [About this build](about-this-build.html.md): This documentation was built on &#42;&#42;2026-11-22 23:30 UTC&#42;&#42; from commit &lt;a href="https://github.com/i2m...
 
 ## Optional
 

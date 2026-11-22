@@ -1,4 +1,4 @@
-> built 2026-11-22 21:54 UTC from b775358 (master) · ju 0.1.44. Details: build_info.json
+> built 2026-11-22 23:30 UTC from 9608839 (master) · ju 0.1.44. Details: build_info.json
 
 # index.html.md
 
@@ -6,27 +6,23 @@
 
 # ju
 
-JSON schema Utils
+JSON Schema utilities: turn a Python function’s signature into a JSON Schema and back, into a [react-jsonschema-form](https://github.com/rjsf-team/react-jsonschema-form) spec for a web form, or into Pydantic models; and read an OpenAPI spec as a collection of routes.
 
-To install:	`pip install ju`
+Write the function once, and get its schema, its web form and its model instead of writing each by hand.
+
+```default
+pip install ju
+```
 
 [Documentation](https://i2mint.github.io/ju/)
 
-# Examples
+## Signature to JSON Schema, and back
 
-## JSON Schema
-
-You have tools to extract JSON schema information from python objects, as well as
-to create python objects from them.
-
-```none
+```python
 >>> from ju import signature_to_json_schema, json_schema_to_signature
->>>
->>>
 >>> def earth(north: str, south: bool, east: int = 1, west: float = 2.0):
 ...     """Earth docs"""
 ...     return f'{north=}, {south=}, {east=}, {west=}'
-...
 >>> schema = signature_to_json_schema(earth)
 >>> assert schema == {
 ...     'description': 'Earth docs',
@@ -40,8 +36,7 @@ to create python objects from them.
 ...     },
 ...     'required': ['north', 'south'],
 ... }
->>>
->>> sig = json_schema_to_signature(schema)
+>>> sig = json_schema_to_signature(schema)  # an i2 Sig: an inspect.Signature that also carries a name and docs
 >>> sig
 <Sig (north: str, south: bool, east: int = 1, west: float = 2.0)>
 >>> sig.name
@@ -50,85 +45,51 @@ to create python objects from them.
 'Earth docs'
 ```
 
-## React JSON Schema Form (rjsf)
+## A web form for a function (rjsf)
 
-You can get a [react-jsonschema-form (rjsf)](https://github.com/rjsf-team/react-jsonschema-form)
-specification
-(see the [rjsf playground](https://rjsf-team.github.io/react-jsonschema-form/))
-from a python function.
+`func_to_form_spec` gives you a [react-jsonschema-form](https://github.com/rjsf-team/react-jsonschema-form) specification for a function (try one in the [rjsf playground](https://rjsf-team.github.io/react-jsonschema-form/)):
 
-```none
->>> def foo(
-    ...     a_bool: bool,
-    ...     a_float=3.14,
-    ...     an_int=2,
-    ...     a_str: str = 'hello',
-    ...     something_else=None
-    ... ):
-    ...     '''A Foo function'''
-    >>>
-    >>> form_spec = func_to_form_spec(foo)
-    >>> assert form_spec == {
-    ...     'rjsf': {
-    ...         'schema': {
-    ...             'title': 'foo',
-    ...             'type': 'object',
-    ...             'properties': {
-    ...                 'a_bool': {'type': 'boolean'},
-    ...                 'a_float': {'type': 'number', 'default': 3.14},
-    ...                 'an_int': {'type': 'integer', 'default': 2},
-    ...                 'a_str': {'type': 'string', 'default': 'hello'},
-    ...                 'something_else': {'type': 'string', 'default': None}
-    ...             },
-    ...             'required': ['a_bool'],
-    ...             'description': 'A Foo function'
-    ...         },
-    ...         'uiSchema': {
-    ...             'ui:submitButtonOptions': {
-    ...                 'submitText': 'Run'
-    ...             },
-    ...             'a_bool': {'ui:autofocus': True}
-    ...         },
-    ...         'liveValidate': False,
-    ...         'disabled': False,
-    ...         'readonly': False,
-    ...         'omitExtraData': False,
-    ...         'liveOmit': False,
-    ...         'noValidate': False,
-    ...         'noHtml5Validate': False,
-    ...         'focusOnFirstError': False,
-    ...         'showErrorList': 'top'
-    ...     }
-    ... }
+```python
+>>> from ju import func_to_form_spec
+>>> def foo(a_bool: bool, a_float=3.14, an_int=2, a_str: str = 'hello', something_else=None):
+...     """A Foo function"""
+>>> spec = func_to_form_spec(foo)
+>>> spec['rjsf']['schema'] == {
+...     'title': 'foo',
+...     'type': 'object',
+...     'properties': {
+...         'a_bool': {'type': 'boolean'},
+...         'a_float': {'type': 'number', 'default': 3.14},
+...         'an_int': {'type': 'integer', 'default': 2},
+...         'a_str': {'type': 'string', 'default': 'hello'},
+...         'something_else': {'type': 'string', 'default': None},
+...     },
+...     'required': ['a_bool'],
+...     'description': 'A Foo function',
+... }
+True
+>>> spec['rjsf']['uiSchema']
+{'ui:submitButtonOptions': {'submitText': 'Run'}, 'a_bool': {'ui:autofocus': True}}
 ```
 
-## OpenAPI Routes
+The rest of `spec['rjsf']` holds the form’s options (`liveValidate`, `disabled`, `showErrorList`, …).
 
-Represents a collection of routes in an OpenAPI specification.
+## OpenAPI routes
 
-Each instance of this class contains a list of `Route` objects, which can be accessed and manipulated as needed.
+`Routes` reads an OpenAPI spec as a mapping of `(method, endpoint)` to `Route` objects:
 
-```none
->>> from yaml import safe_load
->>> spec_yaml = '''
-... openapi: 3.0.3
-... paths:
-...   /items:
-...     get:
-...       summary: List items
-...       responses:
-...         '200':
-...           description: An array of items
-...     post:
-...       summary: Create item
-...       responses:
-...         '201':
-...           description: Item created
-... '''
->>> spec = safe_load(spec_yaml)
+```python
+>>> from ju import Routes
+>>> spec = {
+...     'openapi': '3.0.3',
+...     'paths': {
+...         '/items': {
+...             'get': {'summary': 'List items', 'responses': {'200': {'description': 'An array of items'}}},
+...             'post': {'summary': 'Create item', 'responses': {'201': {'description': 'Item created'}}},
+...         }
+...     },
+... }
 >>> routes = Routes(spec)
->>> len(routes)
-2
 >>> list(routes)
 [('get', '/items'), ('post', '/items')]
 >>> r = routes['get', '/items']
@@ -137,6 +98,8 @@ Route(method='get', endpoint='/items')
 >>> r.method_data
 {'summary': 'List items', 'responses': {'200': {'description': 'An array of items'}}}
 ```
+
+`openapi_to_funcs` goes one step further and makes Python functions that call the routes.
 
 ## pydantic utils
 
@@ -885,7 +848,7 @@ file_format: ‘yaml’ or ‘json’ (used if openapi_spec is a dict)
 * **Returns:**
   imported client module
 
-### ju.oas.get_routes(d, include_methods=('options', 'get', 'delete', 'head', 'put', 'patch', 'post'))
+### ju.oas.get_routes(d, include_methods=('patch', 'post', 'put', 'get', 'options', 'head', 'delete'))
 
 Takes OpenAPI specification dict ‘d’ and returns the key-paths to all the endpoints.
 
@@ -2298,7 +2261,7 @@ See also the online tool: [https://navneethg.github.io/jsonschemaviewer/](https:
 
 # About this build
 
-This documentation was built on **2026-11-22 21:54 UTC** from commit <a href="https://github.com/i2mint/ju/commit/b775358c4b02a0bc941bea6c78dd84e0ff9e4448"><code>b775358</code></a> on branch <code>master</code>, for **ju 0.1.44** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-11-22 23:30 UTC** from commit <a href="https://github.com/i2mint/ju/commit/960883934b7ccdcd874a7e26234772ae74740bd2"><code>9608839</code></a> on branch <code>master</code>, for **ju 0.1.44** (from <code>pyproject.toml</code>).
 
 #### NOTE
 Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
@@ -2307,7 +2270,7 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 |                     |                                                                                                                                                  |
 |---------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/i2mint/ju/commit/b775358c4b02a0bc941bea6c78dd84e0ff9e4448"><code>b775358c4b02a0bc941bea6c78dd84e0ff9e4448</code></a> |
+| Commit              | <a href="https://github.com/i2mint/ju/commit/960883934b7ccdcd874a7e26234772ae74740bd2"><code>960883934b7ccdcd874a7e26234772ae74740bd2</code></a> |
 | Branch              | <code>master</code>                                                                                                                              |
 | Tags at this commit | none                                                                                                                                             |
 | Working tree        | clean                                                                                                                                            |
@@ -2318,9 +2281,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>i2mint/ju</code>                                                                     |
-| Run          | <a href="https://github.com/i2mint/ju/actions/runs/45074576788">45074576788</a>            |
+| Run          | <a href="https://github.com/i2mint/ju/actions/runs/45083466351">45083466351</a>            |
 | Ref          | <code>refs/heads/master</code>                                                             |
-| Event commit | <code>b775358c4b02a0bc941bea6c78dd84e0ff9e4448</code> (in the history of the built commit) |
+| Event commit | <code>960883934b7ccdcd874a7e26234772ae74740bd2</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -2351,7 +2314,7 @@ Latest release: <a href="https://pypi.org/project/ju/0.1.44/">0.1.44</a>, the sa
 
 ```bash
 git clone https://github.com/i2mint/ju && cd ju
-git checkout b775358c4b02a0bc941bea6c78dd84e0ff9e4448
+git checkout 960883934b7ccdcd874a7e26234772ae74740bd2
 pip install "epythet==0.2.23"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```
